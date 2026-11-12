@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="ko">
+<meta charset="utf-8">
+<title>Gemini 사용량 연결</title>
+<style>
+  :root { color-scheme: light dark; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
+  body { width: 310px; margin: 0; padding: 20px; font-size: 13px; line-height: 1.55; }
+  h1 { font-size: 17px; margin: 0 0 10px; }
+  p { margin: 8px 0; }
+  label { display: block; font-size: 12px; opacity: .7; margin-top: 14px; }
+  input { width: 100%; box-sizing: border-box; padding: 7px 8px; margin-top: 5px;
+          border: 1px solid #8886; border-radius: 8px; font: inherit; font-size: 12px; }
+  #hint { font-size: 11px; opacity: .7; margin: 5px 0 0; }
+  #result { font-weight: 600; margin: 16px 0; }
+  button { width: 100%; padding: 9px; margin-top: 7px; border: 1px solid #8886; border-radius: 8px; cursor: pointer; }
+  small { display: block; opacity: .7; margin-top: 14px; }
+</style>
+<h1>Gemini 사용량 연결</h1>
+<p id="result">연결 상태 확인 중…</p>
+<label for="account">사용할 Google 계정 (선택)</label>
+<input id="account" type="email" autocomplete="off" spellcheck="false" placeholder="비워두면 현재 로그인 계정">
+<p id="hint"></p>
+<button id="refresh">지금 갱신</button>
+<button id="usage">사용량 페이지 열기</button>
+<small>크롬에 로그인된 계정으로 5분마다 갱신합니다. 사용량 숫자만 이 Mac의 메뉴바 앱으로 전달합니다.</small>
+<script src="parser.js"></script>
+<script src="popup.js"></script>
+</html>

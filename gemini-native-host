@@ -1,0 +1,4 @@
+#!/bin/sh
+# Chrome owns stdin/stdout here; the Swift host speaks framed JSON only.
+HOST_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+exec "$HOST_DIR/../MacOS/AIUsageBar" --gemini-chrome-host "$@"
