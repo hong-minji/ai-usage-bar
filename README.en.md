@@ -16,25 +16,33 @@ Targets macOS 13+ · One download for Apple Silicon and Intel · Korean app UI �
 
 **Actual app screenshot; values change with usage. GPT displays the plan allowance from ChatGPT Settings → Usage.** There is one GPT entry with real plan figures, rather than a separate empty chat counter. Its menu links to the usage page to check which features count. Every percentage means **remaining, not used**. If a provider has multiple limits, such as a five-hour and weekly window, the menu bar shows the smallest remaining percentage. Open the menu for individual limits and reset times where available.
 
-## Install with AI — share this link
+## Install with AI — guidance or hands-on help
 
-Not familiar with installing apps? **Give your AI assistant the repository URL below and ask it to help.** This README includes the download links, installation steps and provider setup instructions, so you do not need to gather files separately.
+**You can ask an ordinary web chat for installation instructions. To perform the installation on your Mac, the AI needs a local environment with permission to manage files and run commands on that Mac. Typing into a desktop app alone does not enable automatic installation.**
 
-Copy and paste this to get started:
+| AI environment | What it can help with |
+|---|---|
+| Ordinary ChatGPT/Claude web or desktop chat without a connection to your Mac | Read the README and explain steps; you download, move and open the app |
+| A Codex/Claude Code terminal or desktop task running locally on your Mac | Download, extract and move the app within the granted permissions |
+| Work/Cowork or another file-enabled task environment | Capabilities depend on local vs. cloud execution, connected tools and folder permissions; file access alone does not guarantee a complete Mac app installation |
+
+**For hands-on installation, check that the task runs on “This computer” / locally.** Installing into a cloud environment does not install the app on your Mac. Feature names and availability depend on the app version and account. [Codex local environments](https://learn.chatgpt.com/docs/environments/modes) · [Claude Code surfaces](https://code.claude.com/docs/en/overview) · [Claude Cowork permissions](https://support.claude.com/en/articles/13345190-get-started-with-claude-cowork)
+
+Send the repository URL and request below. The README includes downloads and connection instructions.
 
 ```text
 https://github.com/hong-minji/ai-usage-bar
 
-I'd like to install this app on my Mac. Read the README and help me set it up
-for my environment. Prefer the app ZIP from the latest release and connect
-only the AI services I use. Walk me through any sign-in, macOS launch approval
-and Chrome extension steps I need to do myself. At the end, help me check
-that the app appears in the menu bar and its usage readings refresh.
+I'd like to install this app on my Mac. Read the README first.
+Check whether this conversation can manage files and run commands on my Mac.
+If it can, install the app ZIP from the latest release and connect only the
+AI services I use. Otherwise, guide me through the download and installation
+one step at a time. Tell me which sign-in, macOS approval and Chrome extension
+steps I need to perform. Finally, explain how to verify the menu bar display
+and usage refresh in my actual setup.
 ```
 
-An AI chat that can read web links can guide you step by step. **An AI tool with permission to work with files and the terminal on your Mac** can also help download and install the app. What it can do depends on its access; you may need to handle sign-in and first-launch approvals yourself. You do not need to paste passwords or authentication tokens into the chat.
-
-To install it yourself, follow the steps below.
+You may need to complete sign-in and macOS security approvals yourself. Do not paste passwords or authentication tokens into the chat. You can also install without AI by following the steps below.
 
 ## Download and get started
 
