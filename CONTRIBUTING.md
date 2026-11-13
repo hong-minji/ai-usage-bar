@@ -168,11 +168,11 @@ Before publishing, test installation in a fresh macOS account, verify live provi
 The installed app button supports Google Chrome. Developers running `build/AIUsageBar.app` can use `./install-chrome-bridge.sh` to register detected Chromium-family browser profiles, and `--check` to diagnose registrations. This points the host at the `build/` app; release users should use the app button. Other browsers require separate live verification.
 
 
-## 5. 웹 연결과 GPT 구분 / Web connections and GPT separation
+## 5. 웹 연결과 GPT 표시 / Web connections and the GPT label
 
-`ProviderID.codex`의 저장값은 이전 버전 호환을 위해 `chatgpt`입니다. 새 `gpt` 항목은 일반 채팅이며 Codex 캐시를 재사용하면 안 됩니다. GPT 잔여량은 검증된 출처가 없으므로 대시와 바로가기를 표시합니다.
+메뉴바에는 Claude · GPT · Gemini · agy 네 항목을 표시합니다. GPT는 제공되는 플랜 사용량을 읽습니다. `ProviderID.codex`의 저장값 `chatgpt`와 웹 보고서의 `codex`는 기존 캐시·설정·확장 호환을 위해 유지합니다. 빈 일반 채팅 항목을 추가하거나 별도 채팅 잔여량을 추정하지 마세요.
 
-The persisted value of `ProviderID.codex` remains `chatgpt` for compatibility. The new `gpt` category must never inherit Codex caches. It shows a dash and shortcut until a verified source for chat quota exists.
+Use four menu entries: Claude, GPT, Gemini and agy. GPT displays the reported plan allowance. Keep the internal `ProviderID.codex`, persisted `chatgpt` value and `codex` web protocol ID for compatibility. Do not add an empty chat placeholder or infer an unreported chat counter.
 
 `BrowserUsageBridge.swift`와 `ChromeExtension/web-*.js`는 Claude·Codex 웹 연결입니다. 사용량 설정 영역의 개인정보 없는 실제 표시 예시는 `ChromeExtension/fixtures/`에 있습니다. 새 파서는 이 실제 예시를 검증하고 출처 URL·탭·프레임·범위·시각을 검사해야 합니다.
 

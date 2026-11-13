@@ -209,7 +209,7 @@ do {
         states: [.claude: .ok(claude), .codex: .ok(chatgpt), .gemini: .ok(gemini)],
         warnBelow: 20, dangerBelow: 5, now: now
     )
-    equal(barPlainText(segments), "Claude 27% · Codex 28% · Gemini 100%", "bar shows what is left")
+    equal(barPlainText(segments), "Claude 27% · GPT 28% · Gemini 100%", "bar shows what is left")
 
     // The provider tag carries the brand colour; the number carries the warning.
     equal(segments[0].style, .brand(.claude), "tag is brand-coloured")
@@ -232,7 +232,7 @@ do {
         states: [.codex: .stale(old, reason: "401")],
         warnBelow: 20, dangerBelow: 5, now: now
     )
-    equal(barPlainText(stale), "Codex 28%(2일 전)", "stale reading is labelled")
+    equal(barPlainText(stale), "GPT 28%(2일 전)", "stale reading is labelled")
 
     let dead = barSegments(
         for: [.gemini],
@@ -378,8 +378,8 @@ do {
 
 section("Web bridge — provider isolation, privacy and stale state")
 do {
-    equal(ProviderID.allCases.map(\.shortLabel), ["Claude", "GPT", "Codex", "Gemini", "agy"], "requested order")
-    equal(ProviderID(rawValue: "chatgpt"), .codex, "old Codex cache key never migrates to GPT chat")
+    equal(ProviderID.allCases.map(\.shortLabel), ["Claude", "GPT", "Gemini", "agy"], "requested order")
+    equal(ProviderID(rawValue: "chatgpt"), .codex, "existing plan cache key survives the GPT label change")
     let f = ISO8601DateFormatter()
     let base: [String: Any] = ["version": 2, "provider": "codex", "status": "ok",
         "sourceURL": "https://chatgpt.com/settings/usage?tab=overview&private=discard",
@@ -388,7 +388,7 @@ do {
         try! JSONSerialization.data(withJSONObject: base.merging(changes) { _, replacement in replacement })
     }
     let r = try BrowserUsageBridge.validate(data(), now: now)
-    equal(r.reading?.id, .codex, "Codex never becomes GPT")
+    equal(r.reading?.id, .codex, "web report retains the stable plan provider ID")
     equal(r.reading?.lowestRemainingPercent, 13, "observed web quota")
     for changes: [String: Any] in [["provider":"gpt"], ["provider":"claude"], ["used":[101]],
         ["used":[true]], ["labels":["private text"]], ["status":"disabled"],
@@ -405,14 +405,14 @@ do {
     let attrs = try FileManager.default.attributesOfItem(atPath: BrowserUsageBridge.file(.codex, in: folder).path)
     equal((attrs[.posixPermissions] as? NSNumber)?.intValue, 0o600, "web cache owner-only")
     check(BrowserUsageBridge.load(.claude, in: folder) == nil, "provider caches isolated")
-    check(BrowserUsageBridge.load(.gpt, in: folder) == nil, "GPT cannot inherit Codex cache")
+    check(ProviderID(rawValue: "gpt") == nil, "unused GPT placeholder removed")
     equal(BrowserUsageBridge.state(.codex, now: now, in: folder).reading?.lowestRemainingPercent, 13, "fresh cache")
     check(BrowserUsageBridge.state(.codex, now: now.addingTimeInterval(901), in: folder).failureReason != nil, "old cache is explicitly stale")
     let disabled = try BrowserUsageBridge.validate(data(["status":"disabled", "used":[], "labels":[]]), now: now)
     try BrowserUsageBridge.save(disabled, in: folder)
     check(BrowserUsageBridge.state(.codex, now: now, in: folder).reading == nil, "disconnect clears old reading")
-    let bar = barSegments(for: [.gpt], states: [.gpt:.unavailable(reason: BrowserUsageBridge.gptNotice)], warnBelow: 20, dangerBelow: 5, now: now)
-    equal(barPlainText(bar), "GPT –", "unknown GPT quota is not fabricated")
+    let bar = barSegments(for: [.codex], states: [.codex:.ok(r.reading!)], warnBelow: 20, dangerBelow: 5, now: now)
+    equal(barPlainText(bar), "GPT 13%", "GPT displays the observed plan allowance")
 }
 
 print("\n\(checks - failures)/\(checks) checks passed")

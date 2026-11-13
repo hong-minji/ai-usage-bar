@@ -19,8 +19,6 @@
       const start=block.search(/플랜 사용 한도|Plan usage limits/i);
       if(start<0) return null;
       block=block.slice(start);
-      // A future shared Chat allowance must not silently be named Codex-only.
-      if(/Chat(?:GPT)?(?:\s+conversations?)?\s+(?:is|are)\s+included|Chat\s*대화.*(?:포함됩니다)/i.test(block)) return null;
       block=block.split(/최근 플랜 사용량|Recent plan usage|사용 한도 초기화|Usage limit resets|크레딧|Credits/i)[0];
     } else {
       block=block.split(/제한 초기화|Limit resets|사용 크레딧|Usage credits|Extra usage|이번 주 제품별 사용량/i)[0];

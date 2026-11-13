@@ -1,4 +1,4 @@
-AI Usage Bar v1.2.0 — 한국어 / English
+AI Usage Bar v1.2.1 — 한국어 / English
 
 https://github.com/hong-minji/ai-usage-bar
 한국어: https://github.com/hong-minji/ai-usage-bar#readme
@@ -6,16 +6,17 @@ English: https://github.com/hong-minji/ai-usage-bar/blob/main/README.en.md
 
 [한국어]
 macOS 13 이상 대상. Apple Silicon / Intel 통합 앱. 앱 UI는 한국어입니다.
-메뉴바: Claude · GPT · Codex · Gemini · agy
-퍼센트는 남은 양입니다. GPT 일반 채팅은 정확한 잔여 수치를 제공받지 못하므로
-— 로 표시하고 ChatGPT에서 모델별 한도를 확인하는 바로가기를 제공합니다.
+메뉴바: Claude · GPT · Gemini · agy
+퍼센트는 남은 양입니다. GPT는 ChatGPT 설정의 플랜 사용량을 표시합니다.
+현재 Work/Codex가 공유하는 한도이며, 일반 채팅 통합은 공식 안내상 12월 예정입니다.
+포함되는 기능은 ChatGPT 사용량 페이지와 README의 공식 링크에서 확인하세요.
 
 1. AIUsageBar.app을 응용 프로그램 폴더로 옮긴 뒤 실행하세요.
 2. 화면 위쪽 메뉴바에서 설정… → 표시 항목으로 필요한 서비스만 켜세요.
 3. 웹만 사용한다면: Chrome에서 각 서비스에 로그인 → 앱 설정의 Chrome 연결…
    → chrome://extensions/ → 개발자 모드 → 압축해제된 확장 프로그램 로드
    → ⌘⇧G → 붙여넣기 → Enter → 폴더 선택.
-   확장 팝업에서 Claude·Codex 웹 연결을 켜고 '지금 갱신'을 누르세요.
+   확장 팝업에서 Claude·GPT 웹 연결을 켜고 '지금 갱신'을 누르세요.
    Gemini는 자동 연결됩니다. Chrome이 실행 중이어야 갱신됩니다.
 4. 이미 로컬 도구를 쓴다면: Claude Code / Codex 로그인 정보를 사용할 수 있습니다.
    설치뿐 아니라 로그인까지 필요합니다. 터미널 창을 계속 켜 둘 필요는 없습니다.
@@ -39,15 +40,16 @@ AI에게 위 GitHub 주소와 'README를 읽고 내 Mac에 설치하는 걸 도�
 
 [English]
 Targets macOS 13+. Universal Apple Silicon / Intel app. Korean app UI.
-Menu bar: Claude · GPT · Codex · Gemini · agy
-Percentages mean remaining. Exact general GPT chat quota is unavailable, so GPT
-shows a dash and offers a shortcut to check model-specific limits in ChatGPT.
+Menu bar: Claude · GPT · Gemini · agy
+Percentages mean remaining. GPT shows the reported ChatGPT plan allowance.
+Work/Codex currently share it; broader Chat integration is announced for December.
+Check the usage page and official links in the README for the applicable scope.
 
 1. Move AIUsageBar.app to Applications, then open it.
 2. Use 설정… → 표시 항목 (Settings → Visible items) in the top menu bar.
 3. Web-only user: sign into services in Chrome → app Settings → Chrome 연결…
    → chrome://extensions/ → Developer mode → Load unpacked → ⌘⇧G → paste
-   → Enter → select the folder. In the extension popup, enable Claude/Codex
+   → Enter → select the folder. In the extension popup, enable Claude/GPT
    web connections and press 지금 갱신 (Refresh now). Gemini connects automatically.
    Keep Chrome running for updates.
 4. Existing local tools: use your Claude Code / Codex login. Installation alone

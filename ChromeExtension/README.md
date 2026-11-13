@@ -1,15 +1,15 @@
 # AI 사용량 · 웹 연결 / Web usage bridge
 
-Claude·Codex·Gemini 사용량 페이지의 표시값을 이 Mac의 앱에 전달합니다. 터미널용 Claude Code·Codex 설치는 필요하지 않습니다. 일반 GPT 채팅 잔여량은 제공하지 않습니다.
+Claude·GPT·Gemini 사용량 페이지의 표시값을 이 Mac의 앱에 전달합니다. 터미널용 Claude Code·Codex 설치는 필요하지 않습니다. GPT는 ChatGPT 설정의 플랜 사용량을 표시합니다. 포함되는 기능은 사용량 페이지를 확인하세요.
 
-Reads displayed Claude, Codex and Gemini usage figures into the local app. Claude Code and Codex CLI installations are not required. It does not report general GPT chat allowance.
+Reads displayed Claude, GPT and Gemini usage figures into the local app. Claude Code and Codex CLI installations are not required. GPT displays the reported plan allowance; check the usage page for included features.
 
 ## 설치 / Setup
 
 1. 설치된 앱의 **설정 → 웹 연결 → Chrome 연결…**을 누릅니다. / Use the installed app's Connect Chrome button.
 2. 원하는 Chrome 프로필의 `chrome://extensions/`에서 개발자 모드를 켭니다. / Enable Developer mode in the intended Chrome profile.
 3. 압축해제된 확장 프로그램 로드 → `⌘⇧G` → 복사된 경로 붙여넣기 → 폴더 선택. / Load unpacked, press `⌘⇧G`, paste and select the folder.
-4. **AI 사용량 · 웹 연결** 팝업에서 Claude / Codex 연결을 켜고 지금 갱신을 누릅니다. Gemini는 자동 연결됩니다. / Enable Claude and/or Codex in the popup and refresh. Gemini connects automatically.
+4. **AI 사용량 · 웹 연결** 팝업에서 Claude / GPT 연결을 켜고 지금 갱신을 누릅니다. Gemini는 자동 연결됩니다. / Enable Claude and/or GPT in the popup and refresh. Gemini connects automatically.
 
 v1.1.1에서 업데이트하면 확장을 새로고침하고 새 사이트 권한을 확인하세요. / Reload and review new site permissions when upgrading from v1.1.1.
 
@@ -36,3 +36,5 @@ node --test ChromeExtension/*tests.cjs
 ```
 
 `fixtures/` contains only sanitized quota-section excerpts; no names, emails, account IDs, cookies or tokens. Only runtime JS, HTML and the manifest are bundled in the released app.
+
+The internal `codex` report/cache identifier remains unchanged for compatibility. The visible label is GPT.

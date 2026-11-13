@@ -2,21 +2,21 @@
 
 **AI 사용량, 확인하러 다니지 말고 메뉴바에서 보세요.**
 
-Claude · GPT · Codex · Gemini · agy를 Mac 메뉴바에 나란히 표시합니다. **Claude·Codex·Gemini는 웹 로그인으로 연결**할 수 있고, 기존 로컬 로그인과 agy CLI도 지원하는 무료 오픈소스 앱입니다.
+Claude · GPT · Gemini · agy를 Mac 메뉴바에 나란히 표시합니다. **Claude·GPT·Gemini는 웹 로그인으로 연결**할 수 있고, 기존 로컬 로그인과 agy CLI도 지원하는 무료 오픈소스 앱입니다.
 
 **한국어** · [English](README.en.md)
 
-[**↓ Mac용 다운로드 — v1.2.0**](https://github.com/hong-minji/ai-usage-bar/releases/download/v1.2.0/AIUsageBar-1.2.0-universal.zip) · [릴리스 / 최신 버전](https://github.com/hong-minji/ai-usage-bar/releases) · [문제 신고](https://github.com/hong-minji/ai-usage-bar/issues)
+[**↓ Mac용 다운로드 — v1.2.1**](https://github.com/hong-minji/ai-usage-bar/releases/download/v1.2.1/AIUsageBar-1.2.1-universal.zip) · [릴리스 / 최신 버전](https://github.com/hong-minji/ai-usage-bar/releases) · [문제 신고](https://github.com/hong-minji/ai-usage-bar/issues)
 
 macOS 13 이상 대상 · Apple Silicon / Intel 통합 파일 · 앱 UI 한국어 · MIT 라이선스
 
 > 초기 공개 버전입니다. Apple Developer ID 서명·공증은 아직 없어 첫 실행 때 macOS가 차단할 수 있습니다. 아래 [처음 실행할 때](#처음-실행할-때)를 먼저 읽어주세요. Windows·Linux에서는 실행되지 않습니다.
 
 ```text
-Claude 75% · GPT – · Codex 81% · Gemini 93% · agy 0%
+Claude 75% · GPT 81% · Gemini 93% · agy 0%
 ```
 
-**표시 예시입니다. GPT 일반 채팅은 정확한 잔여량을 제공받지 못해 `–`로 표시**하며, 메뉴의 ‘ChatGPT에서 모델별 한도 확인…’으로 연결합니다. Codex 수치를 GPT에 복사하거나 추정하지 않습니다. 모든 퍼센트는 **사용한 양이 아니라 남은 양**입니다. 5시간·주간 한도가 함께 있으면 메뉴바에는 가장 적게 남은 한도를, 펼친 메뉴에는 세부 한도와 제공되는 리셋 시각을 보여줍니다.
+**표시 예시입니다. GPT는 ChatGPT 설정 → 사용량의 플랜 한도를 표시**합니다. 별도의 빈 GPT 채팅 항목은 없습니다. 펼친 메뉴의 ‘ChatGPT 플랜 사용량 확인…’에서 수치의 적용 범위를 확인할 수 있습니다. 모든 퍼센트는 **사용한 양이 아니라 남은 양**입니다. 5시간·주간 한도가 함께 있으면 메뉴바에는 가장 적게 남은 한도를, 펼친 메뉴에는 세부 한도와 제공되는 리셋 시각을 보여줍니다.
 
 ## AI와 함께 설치하기 — 이 링크만 건네세요
 
@@ -39,7 +39,7 @@ https://github.com/hong-minji/ai-usage-bar
 
 ## 다운로드하고 시작하기
 
-1. 위 **Mac용 다운로드**를 눌러 `AIUsageBar-1.2.0-universal.zip`을 받습니다. Apple Silicon·Intel 중 고를 필요가 없습니다.
+1. 위 **Mac용 다운로드**를 눌러 `AIUsageBar-1.2.1-universal.zip`을 받습니다. Apple Silicon·Intel 중 고를 필요가 없습니다.
 2. ZIP을 더블클릭해 압축을 풉니다. `AIUsageBar.app`, `START-HERE.txt`, `LICENSE.txt`가 들어 있습니다.
 3. **앱을 응용 프로그램 폴더로 옮긴 뒤** 실행합니다. Chrome 연결 전에 설치 위치를 정해주세요.
 4. 화면 위쪽 메뉴바에서 앱을 열고 **설정… → 표시 항목**에서 쓰는 서비스만 남겨둡니다. Dock 아이콘은 없습니다.
@@ -58,14 +58,15 @@ Claude 연결 시 macOS가 키체인 접근을 요청할 수 있습니다. 앱�
 | 표시 | 측정 대상 | 터미널 없이 연결 | 기존 로컬 연결 |
 |---|---|---|---|
 | **Claude** | 세션·주간 사용 한도 | Chrome에서 Claude 로그인 + 확장 | Claude Code 로그인 정보 |
-| **GPT** | 일반 ChatGPT 채팅 | 정확한 잔여 수치 미지원. `–` 표시와 ChatGPT 바로가기 | Codex 수치를 대신 쓰지 않음 |
-| **Codex** | 웹 화면의 Codex / Work 사용 한도 | Chrome에서 ChatGPT 로그인 + 확장 | `~/.codex/auth.json`의 ChatGPT 로그인 정보 |
+| **GPT** | ChatGPT의 플랜 사용 한도 | Chrome에서 ChatGPT 로그인 + 확장 | `~/.codex/auth.json`의 ChatGPT 로그인 정보 |
 | **Gemini** | Gemini 웹 사용 한도 | Chrome에서 Gemini 로그인 + 확장 | Chrome 연결 사용 |
 | **agy** | Antigravity 코딩 할당량 | 지원하지 않음 | `agy` CLI 설치·로그인 |
 
-Claude·Codex·Gemini를 웹으로 연결하면 터미널용 도구를 따로 설치할 필요가 없습니다. **이미 로컬 도구를 쓴다면 설치뿐 아니라 로그인까지 되어 있어야** 합니다. 이후 터미널 창을 켜 두거나 직접 명령을 반복할 필요는 없습니다. Codex는 CLI 설치 자체보다 해당 Mac의 로그인 파일 유무가 중요합니다.
+Claude·GPT·Gemini를 웹으로 연결하면 터미널용 도구를 따로 설치할 필요가 없습니다. **이미 로컬 도구를 쓴다면 설치뿐 아니라 로그인까지 되어 있어야** 합니다. 이후 터미널 창을 켜 두거나 직접 명령을 반복할 필요는 없습니다. Codex는 CLI 설치 자체보다 해당 Mac의 로그인 파일 유무가 중요합니다.
 
-GPT 일반 채팅과 Codex / Work는 같은 항목이 아닙니다. 이 버전은 현재 확인한 사용량 화면을 기준으로 구분하며, 제공자가 한도 정책이나 화면을 변경하면 다시 검증해야 합니다. Gemini 웹과 agy도 별도 할당량입니다. API 과금액을 측정하지 않습니다.
+**GPT 수치의 범위 (2026-11-14 확인):** 현재 Codex와 ChatGPT Work는 사용 한도를 공유합니다. OpenAI는 Plus·Pro·Business의 ChatGPT와 Codex 통합 한도를 **12월부터** 적용한다고 안내하며, Instant 채팅은 차감 대상에서 제외합니다. 따라서 모든 일반 채팅이 이미 이 숫자에 포함된다고 가정하지 않습니다. 이 앱은 사용량 페이지가 제공하는 플랜 한도를 그대로 표시하며 채팅 횟수나 별도 모델 한도를 추정하지 않습니다. [공식 통합 한도 안내](https://help.openai.com/en/articles/20001625-understanding-chatgpt-and-codex-usage-limits) · [현재 Work/Codex 공유 한도](https://learn.chatgpt.com/docs/agent-configuration/speed)
+
+Gemini 웹과 agy도 별도 할당량입니다. API 과금액을 측정하지 않습니다.
 
 - 표시 항목은 설정에서 선택합니다. agy는 기본 숨김이며 CLI를 쓰는 사람만 켜면 됩니다.
 - 앱은 기본 5분마다, 메뉴를 열 때 갱신합니다. 간격은 1–120분으로 설정할 수 있습니다.
@@ -81,12 +82,12 @@ GPT 일반 채팅과 Codex / Work는 같은 항목이 아닙니다. 이 버전�
 2. 해당 Chrome 프로필에서 `chrome://extensions/`를 열고 **개발자 모드**를 켭니다.
 3. **압축해제된 확장 프로그램을 로드합니다** → **⌘⇧G → 붙여넣기 → Enter** 후 폴더를 선택합니다.
 4. Chrome 확장 메뉴에서 **AI 사용량 · 웹 연결**을 엽니다.
-5. 사용할 **Claude 웹 연결**, **Codex / Work 웹 연결**을 켭니다. Gemini는 기존처럼 자동 연결됩니다.
+5. 사용할 **Claude 웹 연결**, **GPT 플랜 웹 연결**을 켭니다. Gemini는 기존처럼 자동 연결됩니다.
 6. ‘지금 갱신’을 눌러 수치를 확인합니다. 앱에서는 연결 출처가 **Chrome 웹**으로 표시됩니다.
 
 **v1.1.1에서 업데이트했다면** 확장을 새로고침하고 Claude·ChatGPT 사이트 접근 권한을 확인하세요. 새 연결 토글은 기본적으로 꺼져 있습니다.
 
-앱 설정의 Claude·Codex 연결 방식:
+앱 설정의 Claude·GPT 연결 방식:
 
 | 방식 | 동작 |
 |---|---|
@@ -94,7 +95,7 @@ GPT 일반 채팅과 Codex / Work는 같은 항목이 아닙니다. 이 버전�
 | Chrome 웹만 — 터미널 불필요 | 로컬 인증 정보를 조회하지 않고 Chrome 보고서만 사용 |
 | 기존 로컬 로그인만 | 기존 Claude Code / Codex 인증 정보 사용 |
 
-웹 연결 오류가 나도 다른 로컬 계정으로 몰래 전환하지 않습니다. **Chrome과 로컬 앱이 서로 다른 계정일 수 있으므로 연결할 프로필을 확인하세요.** Claude·Codex 웹 연결은 선택한 Chrome 프로필의 현재 로그인 계정을 사용하며 이메일은 수집하지 않습니다. 한 Chrome 프로필에서 연결하는 것을 권장합니다.
+웹 연결 오류가 나도 다른 로컬 계정으로 몰래 전환하지 않습니다. **Chrome과 로컬 앱이 서로 다른 계정일 수 있으므로 연결할 프로필을 확인하세요.** Claude·GPT 웹 연결은 선택한 Chrome 프로필의 현재 로그인 계정을 사용하며 이메일은 수집하지 않습니다. 한 Chrome 프로필에서 연결하는 것을 권장합니다.
 
 Gemini는 확장 팝업에서 Google 계정을 이메일로 고정할 수 있습니다. 이메일을 비워두면 현재 Google 계정을 사용하며, 페이지에서 계정을 확인할 수 없으면 수치를 채택하지 않습니다.
 
@@ -126,7 +127,7 @@ agy는 CLI 설치·로그인이 필요합니다. 설정의 경로 자동 탐색�
 - 개발자 서버, 분석 도구, 광고, 텔레메트리가 없습니다. 사용량 요청은 해당 서비스 제공자에게 갑니다.
 - Claude·Codex 인증 정보는 읽기만 하며, 앱이 토큰을 갱신하거나 별도 파일에 저장하지 않습니다.
 - 확장은 `claude.ai`, `chatgpt.com`, `gemini.google.com` 접근 권한을 사용합니다. Claude·Codex의 사용량 설정 영역과 Gemini 사용량 페이지에서만 수치를 읽습니다. 쿠키·비밀번호·인증 토큰을 추출하지 않으며 대화 원문을 전송하지 않습니다.
-- Claude·Codex 웹 보고서는 서비스 이름, 고정된 사용량 URL, 시각, 사용 퍼센트와 한도 라벨만 저장합니다. 이메일·사용자명·페이지 원문은 저장하지 않습니다.
+- Claude·GPT 웹 보고서는 서비스 이름, 고정된 사용량 URL, 시각, 사용 퍼센트와 한도 라벨만 저장합니다. 이메일·사용자명·페이지 원문은 저장하지 않습니다.
 - 로컬 캐시에는 사용량, 라벨, 플랜, 시각이 저장됩니다. Gemini 연결 캐시에는 확인한 이메일, 페이지 URL, 연결 상태도 포함되며 파일 권한은 소유자 전용(`0600`)으로 설정합니다.
 - 확장 팝업에 지정한 이메일과 연결 상태는 Chrome 확장 로컬 저장소에도 남습니다. 확장을 삭제하면 해당 저장소도 제거됩니다.
 
@@ -139,8 +140,8 @@ agy는 CLI 설치·로그인이 필요합니다. 설정의 경로 자동 탐색�
 | 앱을 열었는데 창이 없음 | 화면 위쪽 메뉴바를 확인하세요. Dock 아이콘과 일반 앱 창은 없습니다. |
 | macOS에서 실행 차단 | 위의 첫 실행 안내와 Apple 공식 안내를 확인하세요. |
 | Claude 로그인 정보 없음 | Chrome 웹 연결을 켜거나 기존 Claude Code 로그인·키체인 접근을 확인하세요. |
-| Codex 로그인 정보 없음 | Chrome 웹 연결을 켜거나 이 Mac의 기존 Codex 로그인을 확인하세요. |
-| GPT에 `–` 표시 | 일반 채팅 잔여 수치를 확인할 수 없다는 뜻입니다. 메뉴의 ChatGPT 바로가기를 사용하세요. |
+| GPT 로그인 정보 없음 | Chrome 웹 연결을 켜거나 이 Mac의 기존 Codex 로그인을 확인하세요. |
+| GPT에 `–` 표시 | 아직 플랜 사용량을 읽지 못한 상태입니다. Chrome 연결 또는 기존 Codex 로그인을 확인하세요. |
 | 웹 연결 수치가 없음 | 확장 새로고침·사이트 접근 권한·서비스 로그인·연결 토글을 확인하세요. |
 | Gemini에서 메뉴바 앱 연결 필요 | 현재 설치된 앱의 **Chrome 연결…**을 다시 누르고 확장을 새로고침하세요. |
 | Gemini가 오래된 값만 표시 | Chrome 로그인·실행 여부와 확장 팝업의 **지금 갱신** 결과를 확인하세요. |
@@ -167,15 +168,15 @@ node --test ChromeExtension/*tests.cjs # 확장 검사 (Node.js 필요)
 ./build/AIUsageBar.app/Contents/MacOS/AIUsageBar --once # 실제 연결 1회 조회
 ```
 
-`v1.2.0`에서 Swift 검사 144개와 확장 테스트 33개, 통합 빌드, ZIP 압축 해제·서명 검증을 통과했습니다. 실제 연결 검증 범위는 릴리스 노트에 기록합니다. GPT 일반 채팅 잔여 퍼센트는 지원하지 않습니다. **macOS 13 및 모든 Mac 기종에서의 실제 설치·실행을 검증한 것은 아닙니다.**
+`v1.2.1`에서 Swift 검사 144개와 확장 테스트 33개, 통합 빌드, ZIP 압축 해제·서명 검증을 통과했습니다. 실제 연결 검증 범위는 릴리스 노트에 기록합니다. GPT는 제공되는 플랜 사용량을 표시하며 별도 채팅 횟수를 추정하지 않습니다. **macOS 13 및 모든 Mac 기종에서의 실제 설치·실행을 검증한 것은 아닙니다.**
 
 릴리스의 ZIP과 `.sha256` 파일을 같은 폴더에 저장하면 터미널에서 파일 무결성을 확인할 수 있습니다.
 
 ```sh
-shasum -a 256 -c AIUsageBar-1.2.0-universal.zip.sha256
+shasum -a 256 -c AIUsageBar-1.2.1-universal.zip.sha256
 ```
 
-[개발·기여 가이드](CONTRIBUTING.md) · [Gemini 확장](ChromeExtension/) · [릴리스 노트](docs/releases/v1.2.0.md)
+[개발·기여 가이드](CONTRIBUTING.md) · [Gemini 확장](ChromeExtension/) · [릴리스 노트](docs/releases/v1.2.1.md)
 
 ## 라이선스
 

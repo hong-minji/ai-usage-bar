@@ -1,12 +1,12 @@
 import Foundation
 
-/// Display categories; GPT chat is distinct from the persisted Codex category. `gemini` is the gemini.google.com web app's
+/// Four display categories. GPT keeps the existing `chatgpt` cache/settings key.
+/// Its figures come from the plan usage surface, not an estimated chat counter. `gemini` is the web app's
 /// chat quota (read through the Chrome extension); `antigravity` is the separate
 /// coding-agent budget read from the `agy` CLI. Google tracks the two
 /// independently even on the same account, so they are distinct providers.
 enum ProviderID: String, CaseIterable, Codable {
     case claude
-    case gpt
     case codex = "chatgpt"
     case gemini        // gemini.google.com 웹(채팅) 사용량
     case antigravity   // Antigravity 코딩 에이전트 사용량 (별도 집계)
@@ -15,8 +15,7 @@ enum ProviderID: String, CaseIterable, Codable {
     var shortLabel: String {
         switch self {
         case .claude: return "Claude"
-        case .gpt: return "GPT"
-        case .codex: return "Codex"
+        case .codex: return "GPT"
         case .gemini: return "Gemini"
         case .antigravity: return "agy"
         }
@@ -27,7 +26,7 @@ enum ProviderID: String, CaseIterable, Codable {
     var brandHex: String {
         switch self {
         case .claude: return "D97757"          // Anthropic antique brass
-        case .gpt, .codex: return "10A37F"         // OpenAI teal green
+        case .codex: return "10A37F"         // OpenAI teal green
         // Gemini 웹과 Antigravity는 같은 구글 제품군이라 색을 통일 -- 숫자/라벨로 구분.
         case .gemini: return "3186FF"          // Gemini blue
         case .antigravity: return "3186FF"     // same blue, per user request
@@ -37,8 +36,7 @@ enum ProviderID: String, CaseIterable, Codable {
     var displayName: String {
         switch self {
         case .claude: return "Claude"
-        case .gpt: return "GPT (일반 채팅)"
-        case .codex: return "Codex / Work"
+        case .codex: return "GPT (플랜 사용량)"
         case .gemini: return "Gemini (웹)"
         case .antigravity: return "Antigravity"
         }

@@ -6,7 +6,6 @@ import Darwin
 enum BrowserUsageBridge {
     static let updatedNotificationName = Notification.Name("com.local.ai-usage-bar.browser-updated")
     static let maximumAge: TimeInterval = 900
-    static let gptNotice = "일반 GPT 채팅의 정확한 잔여량을 제공받지 못합니다. ChatGPT에서 모델별 한도를 확인하세요."
 
     struct Report: Codable {
         let version: Int

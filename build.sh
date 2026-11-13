@@ -10,8 +10,8 @@ ROOT="$PWD"
 BUILD="$ROOT/build"
 APP="$BUILD/AIUsageBar.app"
 BUNDLE_ID="com.local.ai-usage-bar"
-VERSION="1.2.0"
-BUILD_NUMBER="4"
+VERSION="1.2.1"
+BUILD_NUMBER="5"
 
 if [[ "$(uname -s)" != Darwin ]]; then
     echo "macOS에서 실행하세요 / macOS is required." >&2

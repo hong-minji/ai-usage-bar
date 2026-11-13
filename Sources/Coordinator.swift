@@ -18,7 +18,6 @@ final class UsageCoordinator {
         // Show whatever we knew at launch, marked as not-yet-verified, so the
         // bar is populated before the first network round trip completes.
         for id in ProviderID.allCases {
-            if id == .gpt { states[id] = .unavailable(reason: BrowserUsageBridge.gptNotice); continue }
             if Prefs.shared.usesBrowser(id) { states[id] = BrowserUsageBridge.state(id); continue }
             if let cached = ReadingCache.shared.reading(for: id) {
                 states[id] = .stale(cached, reason: "갱신 대기 중")
@@ -40,7 +39,6 @@ final class UsageCoordinator {
         async let gemini = Self.fetchGeminiWeb(skip: !wanted.contains(.gemini))
 
         var next: [ProviderID: ProviderState] = [:]
-        if wanted.contains(.gpt) { next[.gpt] = .unavailable(reason: BrowserUsageBridge.gptNotice) }
         if let claude = await claude { next[.claude] = claude }
         if let chatgpt = await chatgpt { next[.codex] = chatgpt }
         if let antigravity = await antigravity { next[.antigravity] = antigravity }

@@ -2,21 +2,21 @@
 
 **Your remaining AI quota, right in your Mac menu bar.**
 
-A free, open-source Mac menu bar app with **Claude · GPT · Codex · Gemini · agy** entries. Connect Claude, Codex and Gemini through Chrome, or keep using existing local logins and the agy CLI.
+A free, open-source Mac menu bar app with **Claude · GPT · Gemini · agy** entries. Connect Claude, GPT and Gemini through Chrome, or keep using existing local logins and the agy CLI.
 
 [한국어](README.md) · **English**
 
-[**↓ Download for Mac — v1.2.0**](https://github.com/hong-minji/ai-usage-bar/releases/download/v1.2.0/AIUsageBar-1.2.0-universal.zip) · [Releases / latest version](https://github.com/hong-minji/ai-usage-bar/releases) · [Report an issue](https://github.com/hong-minji/ai-usage-bar/issues)
+[**↓ Download for Mac — v1.2.1**](https://github.com/hong-minji/ai-usage-bar/releases/download/v1.2.1/AIUsageBar-1.2.1-universal.zip) · [Releases / latest version](https://github.com/hong-minji/ai-usage-bar/releases) · [Report an issue](https://github.com/hong-minji/ai-usage-bar/issues)
 
 Targets macOS 13+ · One download for Apple Silicon and Intel · Korean app UI · MIT license
 
 > This is an early public release. It is ad-hoc signed, without Apple Developer ID signing or notarization, so macOS may block the first launch. Read [First launch](#first-launch) below. Windows and Linux are not supported.
 
 ```text
-Claude 75% · GPT – · Codex 81% · Gemini 93% · agy 0%
+Claude 75% · GPT 81% · Gemini 93% · agy 0%
 ```
 
-**These are example values. GPT chat shows `–` because an exact remaining allowance is not available to this app.** Its menu links to ChatGPT for model-specific limits. Codex figures are never substituted for GPT chat. Every percentage means **remaining, not used**. If a provider has multiple limits, such as a five-hour and weekly window, the menu bar shows the smallest remaining percentage. Open the menu for individual limits and reset times where available.
+**These are example values. GPT displays the plan allowance from ChatGPT Settings → Usage.** There is one GPT entry with real plan figures, rather than a separate empty chat counter. Its menu links to the usage page to check which features count. Every percentage means **remaining, not used**. If a provider has multiple limits, such as a five-hour and weekly window, the menu bar shows the smallest remaining percentage. Open the menu for individual limits and reset times where available.
 
 ## Install with AI — share this link
 
@@ -40,7 +40,7 @@ To install it yourself, follow the steps below.
 
 ## Download and get started
 
-1. Use **Download for Mac** above to get `AIUsageBar-1.2.0-universal.zip`. The same file supports Apple Silicon and Intel.
+1. Use **Download for Mac** above to get `AIUsageBar-1.2.1-universal.zip`. The same file supports Apple Silicon and Intel.
 2. Double-click the ZIP to extract it. It contains `AIUsageBar.app`, `START-HERE.txt` and `LICENSE.txt`.
 3. **Move the app to Applications before opening it.** Choose its permanent location before connecting Chrome.
 4. Find the app in the menu bar at the top of the screen. Open **설정…** (Settings) → **표시 항목** (Visible items) and keep only the services you use. There is no Dock icon.
@@ -59,14 +59,15 @@ macOS may also ask for Keychain access when connecting Claude. This lets the app
 | Label | What it measures | Without terminal tools | Existing local connection |
 |---|---|---|---|
 | **Claude** | Session and weekly quota | Claude signed in through Chrome + extension | Claude Code login |
-| **GPT** | General ChatGPT chat | Exact remaining quota unsupported; `–` and a ChatGPT shortcut | Never borrows Codex figures |
-| **Codex** | The web page's Codex / Work quota | ChatGPT signed in through Chrome + extension | ChatGPT login in `~/.codex/auth.json` |
+| **GPT** | ChatGPT plan usage allowance | ChatGPT signed in through Chrome + extension | ChatGPT login in `~/.codex/auth.json` |
 | **Gemini** | Gemini web quota | Gemini signed in through Chrome + extension | Uses Chrome |
 | **agy** | Antigravity coding quota | Not supported | agy CLI installed and signed in |
 
-Web connections for Claude, Codex and Gemini do not require CLI installation. **For local connections, installation alone is insufficient: you must also be signed in.** You do not need to leave a terminal window open or repeatedly enter commands. Codex depends on its local login file, not on whether you personally use its CLI.
+Web connections for Claude, GPT and Gemini do not require CLI installation. **For local connections, installation alone is insufficient: you must also be signed in.** You do not need to leave a terminal window open or repeatedly enter commands. Codex depends on its local login file, not on whether you personally use its CLI.
 
-General GPT chat and Codex / Work are distinct entries. This version reflects the usage surfaces currently verified; provider policy or UI changes require revalidation. Gemini web and agy also have separate quotas. This is not an API billing tracker.
+**GPT scope, checked November 14, 2026:** Codex and ChatGPT Work currently share usage. OpenAI says Plus, Pro and Business will share ChatGPT/Codex allowance starting in December, excluding Instant chat. Do not assume all regular chats already count toward this figure. The app displays the reported plan allowance and does not estimate chat counts or separate model limits. [Official transition notice](https://help.openai.com/en/articles/20001625-understanding-chatgpt-and-codex-usage-limits) · [Current Work/Codex sharing](https://learn.chatgpt.com/docs/agent-configuration/speed)
+
+Gemini web and agy also have separate quotas. This is not an API billing tracker.
 
 - Choose visible services in Settings. agy is hidden by default; enable it only if you use the CLI.
 - The app refreshes every five minutes and when its menu opens; its interval is configurable from 1–120 minutes.
@@ -82,12 +83,12 @@ The extension is bundled in the app and is not on the Chrome Web Store. Usage pa
 2. Open `chrome://extensions/` in that Chrome profile and enable **Developer mode**.
 3. Choose **Load unpacked**, press **⌘⇧G**, paste, press **Enter**, then select the folder.
 4. Open **AI 사용량 · 웹 연결** from Chrome's extension menu.
-5. Turn on **Claude 웹 연결** and/or **Codex / Work 웹 연결**. Gemini connects automatically as before.
+5. Turn on **Claude 웹 연결** and/or **GPT 플랜 웹 연결**. Gemini connects automatically as before.
 6. Press the provider's **지금 갱신** (Refresh now). The app labels these readings **Chrome 웹** (Chrome web).
 
 **Upgrading from v1.1.1?** Reload the extension and review its new Claude and ChatGPT site permissions. The new connection toggles are off by default.
 
-Claude/Codex connection choices in the app:
+Claude/GPT connection choices in the app:
 
 | Choice | Behavior |
 |---|---|
@@ -140,8 +141,8 @@ This is an independent app. Changes to a provider's authentication, responses or
 | No window after opening the app | Look in the top menu bar. There is no Dock icon or regular app window. |
 | macOS blocks launch | Follow First launch above and Apple's official guidance. |
 | Claude login unavailable | Enable Chrome web access or check the existing Claude Code login and Keychain access. |
-| Codex login unavailable | Enable Chrome web access or check the existing local Codex login. |
-| GPT shows `–` | Exact remaining chat quota is unavailable. Use the ChatGPT shortcut in the menu. |
+| GPT login unavailable | Enable Chrome web access or check the existing local Codex login. |
+| GPT shows `–` | No plan reading is available yet. Check Chrome access or the existing local Codex login. |
 | No web reading | Check extension reload, site permissions, service login and connection toggles. |
 | Gemini needs a menu bar app connection | Click **Chrome 연결…** in the currently installed app and reload the extension. |
 | Gemini shows old values | Check that Chrome is running and signed in, then press **지금 갱신** in the extension popup. |
@@ -168,15 +169,15 @@ node --test ChromeExtension/*tests.cjs # Extension tests; requires Node.js
 ./build/AIUsageBar.app/Contents/MacOS/AIUsageBar --once # One live check
 ```
 
-For `v1.2.0`, 144 Swift checks and 33 extension tests passed, along with the universal build, ZIP extraction and signature verification. Live verification scope is recorded in the release notes. Exact remaining GPT chat percentages are unsupported. **Installation and execution have not been verified on macOS 13 or every supported Mac model.**
+For `v1.2.1`, 144 Swift checks and 33 extension tests passed, along with the universal build, ZIP extraction and signature verification. Live verification scope is recorded in the release notes. GPT shows the reported plan allowance; it does not estimate a separate chat counter. **Installation and execution have not been verified on macOS 13 or every supported Mac model.**
 
 To verify file integrity, download the release ZIP and its `.sha256` file into the same folder, then run:
 
 ```sh
-shasum -a 256 -c AIUsageBar-1.2.0-universal.zip.sha256
+shasum -a 256 -c AIUsageBar-1.2.1-universal.zip.sha256
 ```
 
-[Contributing](CONTRIBUTING.md) · [Gemini extension](ChromeExtension/) · [Release notes](docs/releases/v1.2.0.md)
+[Contributing](CONTRIBUTING.md) · [Gemini extension](ChromeExtension/) · [Release notes](docs/releases/v1.2.1.md)
 
 ## License
 

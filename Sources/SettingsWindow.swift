@@ -42,7 +42,7 @@ final class SettingsWindowController: NSObject, NSWindowDelegate {
             [label("갱신 주기"), numberRow(intervalField, suffix: "분")],
             [label("표시 항목"), providerStack()],
             [label("Claude 연결"), connectionRow(.claude)],
-            [label("Codex 연결"), connectionRow(.codex)],
+            [label("GPT 연결"), connectionRow(.codex)],
             [label("agy 경로"), agyRow()],
             [label("웹 연결"), geminiLoginRow()],
             [NSGridCell.emptyContentView, loginRow()],
@@ -57,7 +57,7 @@ final class SettingsWindowController: NSObject, NSWindowDelegate {
         let footer = NSTextField(wrappingLabelWithString:
             "퍼센트는 '남은 양'입니다. 숫자가 작을수록 한도에 가깝습니다. "
             + "모델 표시는 대표색, 퍼센트 숫자는 항상 흰색입니다. 위 주기는 메뉴바 갱신 간격이며, "
-            + "웹 연결은 Chrome 실행 중 5분마다 갱신합니다. GPT 일반 채팅은 정확한 잔여량을 제공받지 못해 — 로 표시합니다.")
+            + "웹 연결은 Chrome 실행 중 5분마다 갱신합니다. GPT는 플랜 사용량을 표시합니다. 포함되는 기능은 ChatGPT 사용량 페이지에서 확인하세요.")
         footer.font = .systemFont(ofSize: 11)
         footer.textColor = .secondaryLabelColor
         footer.preferredMaxLayoutWidth = 380
@@ -156,10 +156,10 @@ final class SettingsWindowController: NSObject, NSWindowDelegate {
         button.bezelStyle = .rounded
         button.font = .systemFont(ofSize: 12)
         let note = NSTextField(wrappingLabelWithString:
-            "Claude · Codex · Gemini를 사용하는 Chrome에 확장을 추가하세요.\n"
+            "Claude · GPT · Gemini를 사용하는 Chrome에 확장을 추가하세요.\n"
             + "개발자 모드 → 압축해제된 확장 프로그램 로드 → 열린 폴더 선택.\n"
             + "선택창에서 ⌘⇧G 후 붙여넣으면 복사된 경로로 이동합니다.\n"
-            + "확장 팝업에서 Claude·Codex 연결을 켜세요. Gemini는 자동 연결됩니다.\n"
+            + "확장 팝업에서 Claude·GPT 연결을 켜세요. Gemini는 자동 연결됩니다.\n"
             + "웹과 로컬 앱은 로그인 계정이 다를 수 있습니다. 사용할 Chrome 프로필을 확인하세요.")
         note.font = .systemFont(ofSize: 11)
         note.textColor = .secondaryLabelColor

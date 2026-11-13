@@ -154,8 +154,9 @@ final class MenuBarController: NSObject, NSMenuDelegate {
             case nil:
                 menu.addItem(noteItem("불러오는 중…"))
             }
-            if id == .gpt {
-                let open = NSMenuItem(title: "ChatGPT에서 모델별 한도 확인…", action: #selector(openChatGPT), keyEquivalent: "")
+            if id == .codex {
+                menu.addItem(noteItem("ChatGPT 설정의 플랜 한도 기준"))
+                let open = NSMenuItem(title: "ChatGPT 플랜 사용량 확인…", action: #selector(openChatGPT), keyEquivalent: "")
                 open.target = self
                 menu.addItem(open)
             }
@@ -220,7 +221,6 @@ final class MenuBarController: NSObject, NSMenuDelegate {
         switch id {
         case .claude: hint = "설정 → Chrome 연결 또는 기존 Claude Code 로그인을 사용하세요"
         case .codex: hint = "설정 → Chrome 연결 또는 기존 Codex 로그인을 사용하세요"
-        case .gpt: hint = "Codex / Work 사용량과 일반 채팅 한도는 다릅니다"
         case .gemini: hint = "설정 → Chrome 연결에서 확장 프로그램을 추가하세요"
         case .antigravity: hint = "agy 를 실행해 로그인하세요"
         }
@@ -245,7 +245,7 @@ final class MenuBarController: NSObject, NSMenuDelegate {
 
     // MARK: - Actions
 
-    @objc private func openChatGPT() { NSWorkspace.shared.open(URL(string: "https://chatgpt.com/")!) }
+    @objc private func openChatGPT() { NSWorkspace.shared.open(URL(string: "https://chatgpt.com/settings/usage?tab=overview")!) }
 
     @objc private func didTapRefresh() { refreshNow() }
 

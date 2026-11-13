@@ -10,6 +10,7 @@ test('observed Codex remaining quota is inverted, discounts are excluded', () =>
   assert.deepEqual(p.parse('codex', fixture('codex-usage-ko.txt')), {used:[87],labels:['주간']});
 });
 test('English labels and two Codex windows', () => {
+  assert.deepEqual(p.parse('codex','Plan usage limits\nChat conversations are included\nWeekly usage limit\n30% remaining'), {used:[70],labels:['주간']});
   assert.deepEqual(p.parse('claude','Usage\nCurrent session\n10% used\nWeekly limits\nAll models\n25% used\nUsage credits\n50% used'), {used:[10,25],labels:['5시간','주간']});
   assert.deepEqual(p.parse('codex','Plan usage limits\n5-hour usage limit\n80% remaining\nWeekly usage limit\n30% remaining\nCredits\n50% remaining'), {used:[20,70],labels:['5시간','주간']});
 });
