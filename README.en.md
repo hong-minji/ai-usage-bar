@@ -20,6 +20,26 @@ C 75% · G 81% · Ge 93% · Ag 0%
 
 These are example values. Every percentage means **remaining, not used**. If a provider has multiple limits, such as a five-hour and weekly window, the menu bar shows the smallest remaining percentage. Open the menu for individual limits and reset times where available.
 
+## Install with AI — share this link
+
+Not familiar with installing apps? **Give your AI assistant the repository URL below and ask it to help.** This README includes the download links, installation steps and provider setup instructions, so you do not need to gather files separately.
+
+Copy and paste this to get started:
+
+```text
+https://github.com/hong-minji/ai-usage-bar
+
+I'd like to install this app on my Mac. Read the README and help me set it up
+for my environment. Prefer the app ZIP from the latest release and connect
+only the AI services I use. Walk me through any sign-in, macOS launch approval
+and Chrome extension steps I need to do myself. At the end, help me check
+that the app appears in the menu bar and its usage readings refresh.
+```
+
+An AI chat that can read web links can guide you step by step. **An AI tool with permission to work with files and the terminal on your Mac** can also help download and install the app. What it can do depends on its access; you may need to handle sign-in and first-launch approvals yourself. You do not need to paste passwords or authentication tokens into the chat.
+
+To install it yourself, follow the steps below.
+
 ## Download and get started
 
 1. Use **Download for Mac** above to get `AIUsageBar-1.1.1-universal.zip`. The same file supports Apple Silicon and Intel.
