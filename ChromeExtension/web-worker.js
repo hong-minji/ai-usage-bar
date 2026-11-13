@@ -61,12 +61,14 @@
     if(m.kind==='webRefresh' && own) return poll(m.provider);
     const v=m.value;
     if(m.kind!=='webSnapshot' || sender.frameId!==0 || sender.tab?.id===undefined ||
-       !p.validate(v) || v.status==='disabled' || v.sourceURL!==sender.url ||
+       !p.validate(v) || v.status==='disabled' ||
        p.providerForURL(sender.url)!==v.provider || !await enabled(v.provider)) return {accepted:false};
     const record=await pending(v.provider);
     // Only the tab opened for this poll can supply data; unrelated profiles/tabs
     // cannot race a current poll or keep overwriting the chosen connection.
     if(!record || record.tabId!==sender.tab.id) return {accepted:false};
+    const current=await chrome.tabs.get(record.tabId);
+    if(current.url!==v.sourceURL) return {accepted:false};
     const accepted=await deliver(v);
     if(accepted) await finish(v.provider);
     return {accepted};

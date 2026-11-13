@@ -58,6 +58,17 @@ test('forged, unrelated, disabled and cross-provider reports do not reach native
   assert.equal((await h.message({kind:'webSnapshot',value:{...v,secret:'must not forward'}},{url:tab.url,frameId:0,tab})).accepted,true);
   assert.equal(h.native.length,1);assert.equal(h.native[0].secret,undefined);assert.deepEqual(h.removed,[tab.id]);
 });
+test('usage redirects preserve document identity but require the current owned URL',async()=>{
+  const h=worker({webEnabled:['claude']});await h.alarm('web-refresh');
+  const tab=[...h.tabs.values()][0],original=tab.url;
+  tab.url='https://claude.ai/new#settings/usage';
+  const v=p.snapshot('claude',fixture('claude-usage-ko.txt'),tab.url);
+  const sender={url:original,frameId:0,tab};
+  tab.url='https://claude.ai/new';
+  assert.equal((await h.message({kind:'webSnapshot',value:v},sender)).accepted,false);
+  tab.url=v.sourceURL;
+  assert.equal((await h.message({kind:'webSnapshot',value:v},sender)).accepted,true);
+});
 test('web polls preserve user-selected tabs and clean redirect/timeouts',async()=>{
   for(const touch of [true,false]){
     const h=worker({webEnabled:['claude']});await h.alarm('web-refresh');

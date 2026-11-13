@@ -1,14 +1,12 @@
 # AI Usage Bar
 
-> **v1.2.0 개발 검토 중:** 아래는 준비 중인 버전의 안내입니다. Claude·Codex 새 웹 연결의 실제 Chrome 통합 검증이 남아 있습니다. 현재 공개 다운로드는 [릴리스 목록](https://github.com/hong-minji/ai-usage-bar/releases)을 확인하세요.
-
 **AI 사용량, 확인하러 다니지 말고 메뉴바에서 보세요.**
 
 Claude · GPT · Codex · Gemini · agy를 Mac 메뉴바에 나란히 표시합니다. **Claude·Codex·Gemini는 웹 로그인으로 연결**할 수 있고, 기존 로컬 로그인과 agy CLI도 지원하는 무료 오픈소스 앱입니다.
 
 **한국어** · [English](README.en.md)
 
-[**↓ 현재 공개된 Mac용 다운로드**](https://github.com/hong-minji/ai-usage-bar/releases) · [릴리스 / 최신 버전](https://github.com/hong-minji/ai-usage-bar/releases) · [문제 신고](https://github.com/hong-minji/ai-usage-bar/issues)
+[**↓ Mac용 다운로드 — v1.2.0**](https://github.com/hong-minji/ai-usage-bar/releases/download/v1.2.0/AIUsageBar-1.2.0-universal.zip) · [릴리스 / 최신 버전](https://github.com/hong-minji/ai-usage-bar/releases) · [문제 신고](https://github.com/hong-minji/ai-usage-bar/issues)
 
 macOS 13 이상 대상 · Apple Silicon / Intel 통합 파일 · 앱 UI 한국어 · MIT 라이선스
 
@@ -169,7 +167,7 @@ node --test ChromeExtension/*tests.cjs # 확장 검사 (Node.js 필요)
 ./build/AIUsageBar.app/Contents/MacOS/AIUsageBar --once # 실제 연결 1회 조회
 ```
 
-`v1.2.0`에서 Swift 검사 144개와 확장 테스트 32개, 통합 빌드, ZIP 압축 해제·서명 검증을 통과했습니다. 실제 연결 검증 범위는 릴리스 노트에 기록합니다. GPT 일반 채팅 잔여 퍼센트는 지원하지 않습니다. **macOS 13 및 모든 Mac 기종에서의 실제 설치·실행을 검증한 것은 아닙니다.**
+`v1.2.0`에서 Swift 검사 144개와 확장 테스트 33개, 통합 빌드, ZIP 압축 해제·서명 검증을 통과했습니다. 실제 연결 검증 범위는 릴리스 노트에 기록합니다. GPT 일반 채팅 잔여 퍼센트는 지원하지 않습니다. **macOS 13 및 모든 Mac 기종에서의 실제 설치·실행을 검증한 것은 아닙니다.**
 
 릴리스의 ZIP과 `.sha256` 파일을 같은 폴더에 저장하면 터미널에서 파일 무결성을 확인할 수 있습니다.
 

@@ -1,14 +1,12 @@
 # AI Usage Bar
 
-> **v1.2.0 under review:** This guide describes the upcoming version. Live Chrome integration testing for the new Claude/Codex web connections is pending. See [published releases](https://github.com/hong-minji/ai-usage-bar/releases) for available downloads.
-
 **Your remaining AI quota, right in your Mac menu bar.**
 
 A free, open-source Mac menu bar app with **Claude · GPT · Codex · Gemini · agy** entries. Connect Claude, Codex and Gemini through Chrome, or keep using existing local logins and the agy CLI.
 
 [한국어](README.md) · **English**
 
-[**↓ Published Mac downloads**](https://github.com/hong-minji/ai-usage-bar/releases) · [Releases / latest version](https://github.com/hong-minji/ai-usage-bar/releases) · [Report an issue](https://github.com/hong-minji/ai-usage-bar/issues)
+[**↓ Download for Mac — v1.2.0**](https://github.com/hong-minji/ai-usage-bar/releases/download/v1.2.0/AIUsageBar-1.2.0-universal.zip) · [Releases / latest version](https://github.com/hong-minji/ai-usage-bar/releases) · [Report an issue](https://github.com/hong-minji/ai-usage-bar/issues)
 
 Targets macOS 13+ · One download for Apple Silicon and Intel · Korean app UI · MIT license
 
@@ -170,7 +168,7 @@ node --test ChromeExtension/*tests.cjs # Extension tests; requires Node.js
 ./build/AIUsageBar.app/Contents/MacOS/AIUsageBar --once # One live check
 ```
 
-For `v1.2.0`, 144 Swift checks and 32 extension tests passed, along with the universal build, ZIP extraction and signature verification. Live verification scope is recorded in the release notes. Exact remaining GPT chat percentages are unsupported. **Installation and execution have not been verified on macOS 13 or every supported Mac model.**
+For `v1.2.0`, 144 Swift checks and 33 extension tests passed, along with the universal build, ZIP extraction and signature verification. Live verification scope is recorded in the release notes. Exact remaining GPT chat percentages are unsupported. **Installation and execution have not been verified on macOS 13 or every supported Mac model.**
 
 To verify file integrity, download the release ZIP and its `.sha256` file into the same folder, then run:
 
