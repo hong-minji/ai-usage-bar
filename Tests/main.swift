@@ -347,6 +347,35 @@ do {
     }
 }
 
+section("Chrome installation — portable app path and private registration")
+do {
+    let fm = FileManager.default
+    let scratch = fm.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+    defer { try? fm.removeItem(at: scratch) }
+    let home = scratch.appendingPathComponent("Test User")
+    let resources = scratch.appendingPathComponent("응용 프로그램/AIUsageBar.app/Contents/Resources")
+    try fm.createDirectory(at: resources, withIntermediateDirectories: true)
+    let host = resources.appendingPathComponent("gemini-native-host")
+    check((try? ChromeInstallation.register(resources: resources, home: home)) == nil,
+          "missing host refuses registration")
+    try Data("#!/bin/sh\nexit 0\n".utf8).write(to: host)
+    try fm.setAttributes([.posixPermissions: 0o755], ofItemAtPath: host.path)
+    try ChromeInstallation.register(resources: resources, home: home)
+    let file = home.appendingPathComponent("Library/Application Support/Google/Chrome/NativeMessagingHosts/com.local.ai_usage_bar.gemini.json")
+    let manifest = try JSONSerialization.jsonObject(with: Data(contentsOf: file)) as! [String: Any]
+    equal(manifest["path"] as? String, host.path, "registration uses actual app path including spaces and Korean")
+    equal(manifest["allowed_origins"] as? [String], [GeminiChromeBridge.allowedExtensionOrigin], "only pinned extension allowed")
+    let attributes = try fm.attributesOfItem(atPath: file.path)
+    equal((attributes[.posixPermissions] as? NSNumber)?.intValue, 0o600, "registration is owner-only")
+    let moved = scratch.appendingPathComponent("Moved.app/Contents/Resources")
+    try fm.createDirectory(at: moved.deletingLastPathComponent(), withIntermediateDirectories: true)
+    try fm.moveItem(at: resources, to: moved)
+    try ChromeInstallation.register(resources: moved, home: home)
+    let updated = try JSONSerialization.jsonObject(with: Data(contentsOf: file)) as! [String: Any]
+    equal(updated["path"] as? String, moved.appendingPathComponent("gemini-native-host").path,
+          "reconnecting repairs registration after app move")
+}
+
 print("\n\(checks - failures)/\(checks) checks passed")
 if failures > 0 {
     print("\(failures) FAILED")

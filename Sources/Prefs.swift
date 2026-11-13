@@ -105,6 +105,7 @@ final class ReadingCache {
     private func persist() {
         guard let data = try? JSONEncoder().encode(readings) else { return }
         try? data.write(to: fileURL, options: .atomic)
+        try? FileManager.default.setAttributes([.posixPermissions: 0o600], ofItemAtPath: fileURL.path)
     }
 }
 

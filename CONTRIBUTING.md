@@ -141,3 +141,28 @@ Run both suites and look at `--once` output yourself. "Should pass" and "passed"
 - **버그** — macOS 버전, 어느 프로바이더인지, `--once` 출력(계정 이메일은 지우고)을 함께 적어주세요.
 
 If a provider changes its response shape, paste the **real** response (with tokens removed) into the issue — that is the one thing that makes the fix quick.
+
+
+## 4. 배포 준비 / Preparing a release
+
+`./package.sh`는 Swift 검사, 확장 테스트, macOS 13을 대상으로 한 arm64/x86_64 빌드, 임시 코드서명 검증을 수행합니다. 결과물은 `build/AIUsageBar-버전-universal.zip`과 `.sha256`입니다. ZIP에는 앱, 한·영 `START-HERE.txt`, `LICENSE.txt`가 들어 있습니다. 버전은 `build.sh`에서 관리하며 릴리스 시 README 다운로드 링크와 `docs/START-HERE.txt`의 버전도 갱신하세요.
+
+`./package.sh` runs the Swift checks and extension tests, builds both Mac architectures targeting macOS 13, and verifies the ad-hoc signature. It produces a ZIP and checksum in `build/`. The ZIP includes the app, bilingual `START-HERE.txt` and `LICENSE.txt`. Versions are defined in `build.sh`; update the README download links and the version in `docs/START-HERE.txt` for each release.
+
+공개 릴리스 전 확인:
+
+- 새 macOS 사용자 계정에서 설치 안내대로 앱을 설치하고 메뉴바와 설정 창을 확인합니다.
+- 사용하는 서비스마다 실제 로그인으로 수치를 확인합니다. 픽스처 테스트 통과만으로 서버나 웹 페이지와의 호환성을 보장할 수는 없습니다.
+- Gemini는 앱의 Chrome 연결 버튼, 확장 수동 로드, 팝업 새로고침, 앱 이동 후 재연결을 확인합니다.
+- Apple Silicon과 Intel, 지원하는 최소 macOS에서 실제 실행을 확인합니다. 두 아키텍처의 컴파일 성공과 실행 검증은 별개입니다.
+- 다운로드 배포에서 불필요한 보안 경고를 줄이려면 Developer ID 서명과 Apple 공증을 적용합니다. 현재 패키징 스크립트에는 공증이 포함되어 있지 않습니다.
+- ZIP과 체크섬을 릴리스에 첨부하고 README의 다운로드 안내를 실제 릴리스 주소로 바꿉니다.
+
+Before publishing, test installation in a fresh macOS account, verify live provider readings and Gemini setup, and test on both architectures and the minimum supported OS. The packaging script does not perform Developer ID signing or notarization. Attach the ZIP and checksum to a release and update the README download instructions when a release is available.
+
+
+### 개발용 Chrome 연결 / Developer Chrome setup
+
+설치된 앱의 버튼은 Google Chrome에 연결합니다. 소스에서 `build/AIUsageBar.app`을 직접 실행하는 개발자는 `./install-chrome-bridge.sh`로 감지된 Chromium 계열 브라우저 프로필에 연결을 등록할 수 있습니다. `./install-chrome-bridge.sh --check`는 등록 상태를 진단합니다. 이 스크립트는 호스트 경로를 `build/` 앱으로 바꾸므로 일반 다운로드 사용자는 앱의 연결 버튼을 쓰세요. 다른 브라우저의 실제 연결은 별도 검증이 필요합니다.
+
+The installed app button supports Google Chrome. Developers running `build/AIUsageBar.app` can use `./install-chrome-bridge.sh` to register detected Chromium-family browser profiles, and `--check` to diagnose registrations. This points the host at the `build/` app; release users should use the app button. Other browsers require separate live verification.

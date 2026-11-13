@@ -1,0 +1,24 @@
+name: Build and test
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v6
+      - name: Verify and package both Mac architectures
+        run: bash ./package.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AIUsageBar-universal-unsigned
+          path: |
+            build/AIUsageBar-*-universal.zip
+            build/AIUsageBar-*-universal.zip.sha256
+          if-no-files-found: error

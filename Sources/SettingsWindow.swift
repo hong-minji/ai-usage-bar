@@ -145,6 +145,7 @@ final class SettingsWindowController: NSObject, NSWindowDelegate {
         let note = NSTextField(wrappingLabelWithString:
             "Gemini를 사용하는 Chrome 프로필에 확장 프로그램을 한 번 추가하세요.\n"
             + "개발자 모드 → 압축해제된 확장 프로그램 로드 → 열린 폴더 선택.\n"
+            + "선택창에서 ⌘⇧G 후 붙여넣으면 복사된 폴더 경로로 이동합니다.\n"
             + "기존 Chrome 로그인을 사용하며, Chrome 실행 중 자동 갱신됩니다.\n"
             + "계정이 여러 개라면 확장 프로그램 팝업에서 사용할 계정을 지정하세요.")
         note.font = .systemFont(ofSize: 11)
