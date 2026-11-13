@@ -107,16 +107,37 @@ Gemini has no local credential to read, so instead of a second browser login thi
 ./install-chrome-bridge.sh   # 최초 빌드 후 1회 / once, after the first build
 ```
 
-Gemini에 로그인된 Chrome 프로필에서 / Then, in the Chrome profile signed in to Gemini:
+이 스크립트가 할 수 있는 건 전부 합니다 — 이 맥에 있는 **모든 크로미움 계열 브라우저**(Chrome·Brave·Edge·Arc·Vivaldi·Chromium)에 로컬 호스트를 등록하고, 확장 폴더 경로를 **클립보드에 복사**하고, 확장 관리 화면과 Finder를 열어줍니다. 그리고 연결이 실제로 들어올 때까지 기다렸다가 **확인된 수치를 보여줍니다.**
 
-1. `chrome://extensions/` 열기 / open `chrome://extensions/`
-2. 오른쪽 위 **개발자 모드** 켜기 / turn on **Developer mode**
-3. **압축해제된 확장 프로그램을 로드합니다** → 이 프로젝트의 `ChromeExtension` 폴더 선택 / **Load unpacked** → select this project's `ChromeExtension` folder
-4. 확장 팝업에서 **지금 갱신**을 눌러 연결 확인 / press **지금 갱신** (Refresh now) in the popup
+The script does everything that can be automated: it registers the local host for **every Chromium-family browser** on the Mac, copies the extension folder path to your **clipboard**, opens the extensions page and the folder, then waits and confirms the connection with real numbers.
 
-앱의 **설정 → Gemini 웹 → Chrome 연결…** 버튼이 확장 관리 화면과 해당 폴더를 한 번에 열어줍니다.
+마지막 세 번의 클릭은 브라우저가 직접 승인해야 합니다. 웹 스토어에 올리지 않은 확장을 스크립트가 프로필에 설치하는 길은 Chrome이 보안상 막아두었습니다.
 
-In the app, **설정 → Gemini 웹 → Chrome 연결…** opens both the extensions page and the right folder.
+The last three clicks must be yours — Chrome deliberately offers no way for a script to load an unpacked extension into your profile.
+
+1. 오른쪽 위 **개발자 모드**를 켭니다 / turn on **Developer mode** (top right)
+2. **압축해제된 확장 프로그램을 로드합니다** / click **Load unpacked**
+3. 파일 선택창에서 **⌘⇧G → 붙여넣기 → Enter** (경로는 이미 클립보드에 있습니다) / press **⌘⇧G**, paste, Enter — the path is already on your clipboard
+
+성공하면 이렇게 나옵니다 / On success:
+
+```
+✅ 연결 확인 / connected · you@example.com · 5시간 79% 남음 · 주간 93% 남음
+```
+
+언제든 상태를 다시 점검할 수 있습니다 / Re-check the setup any time:
+
+```sh
+./install-chrome-bridge.sh --check
+```
+
+브라우저별 등록 상태, 확장 ID 일치 여부, 마지막으로 수치를 받은 시각을 한 번에 보여주고 무엇을 고쳐야 하는지 알려줍니다.
+
+It reports per-browser registration, extension-ID match, and when figures last arrived — with the fix for whatever is wrong.
+
+앱의 **설정 → Gemini 웹 → Chrome 연결…** 버튼도 확장 관리 화면과 폴더를 열어줍니다.
+
+In the app, **설정 → Gemini 웹 → Chrome 연결…** also opens the extensions page and the folder.
 
 **구글 계정이 여러 개라면** 팝업의 계정 칸에 주소를 입력해 하나로 고정하세요. 비워두면 현재 프로필에 로그인된 계정을 그대로 씁니다.
 
@@ -185,10 +206,18 @@ To undo everything: remove the extension in Chrome and delete that file.
 
 ## 문제 해결 / Troubleshooting
 
+**Gemini 관련 문제는 먼저 이것부터** / For anything Gemini-related, start here:
+
+```sh
+./install-chrome-bridge.sh --check
+```
+
 | 증상 · Symptom | 해결 · Fix |
 |---|---|
 | `설정에서 Gemini 크롬 연결을 완료하세요` | `./install-chrome-bridge.sh` 실행 후 확장 로드 / run the script, then load the extension |
 | 팝업에 `메뉴바 앱 연결이 필요합니다` | 빌드 후 `./install-chrome-bridge.sh` 재실행 / re-run it after a build |
+| 앱을 다른 폴더로 옮긴 뒤 안 됨 | 등록 파일이 옛 경로를 가리킵니다. 설치를 다시 실행하세요 / re-run the installer |
+| Chrome 말고 Brave·Arc 등을 씀 | 설치 스크립트가 전부 등록합니다. 빌드 후 한 번 실행하세요 / the installer covers them all |
 | Gemini가 옛날 값에서 멈춤 | Chrome이 켜져 있어야 합니다. 팝업에서 지금 갱신 / Chrome must be running |
 | 확장을 고쳤는데 반영이 안 됨 | `chrome://extensions`에서 새로고침(↻) / press reload on the extension card |
 | 다시 빌드한 뒤 Claude 오류 | macOS가 키체인 접근을 다시 묻습니다. 한 번 허용 / allow Keychain access once more |
