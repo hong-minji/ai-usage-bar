@@ -118,11 +118,13 @@ enum ChatGPTSource {
         for case let url as URL in walker where url.pathExtension == "jsonl" {
             let values = try? url.resourceValues(forKeys: [.contentModificationDateKey])
             candidates.append((url, values?.contentModificationDate ?? .distantPast))
+            candidates.sort { $0.1 > $1.1 }
+            if candidates.count > 5 { candidates.removeLast() }
         }
 
         // Newest first, and only a handful -- these directories grow without bound.
-        for (url, _) in candidates.sorted(by: { $0.1 > $1.1 }).prefix(5) {
-            guard let text = try? String(contentsOf: url, encoding: .utf8) else { continue }
+        for (url, _) in candidates {
+            guard let text = try? sessionLogTail(url) else { continue }
             for line in text.split(separator: "\n").reversed() where line.contains("rate_limits") {
                 if let reading = try? parseCodexSessionRateLimits(line: String(line), now: Date()) {
                     return reading

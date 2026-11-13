@@ -19,8 +19,16 @@
     }
     return '';
   }
+  let inFlight = false;
   async function read() {
-    if(stopped || Date.now()<retry) return;
+    if (inFlight) return;
+    inFlight = true;
+    try { await readOnce(); } finally { inFlight = false; }
+  }
+  async function readOnce() {
+    if(stopped) return;
+    if(Date.now()-started>45000) { stopped=true; clearInterval(timer); return; }
+    if(Date.now()<retry) return;
     const provider=p.providerForURL(location.href);
     if(!provider) return;
     const stored=await chrome.storage.local.get('webEnabled');
@@ -31,7 +39,7 @@
     if(last===key) return;
     try {
       const reply=await chrome.runtime.sendMessage({kind:'webSnapshot',value});
-      if(reply?.accepted) last=key;
+      if(reply?.accepted) { last=key; stopped=true; clearInterval(timer); }
       else retry=Date.now()+30000;
     } catch (_) { stopped=true; clearInterval(timer); }
   }

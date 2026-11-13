@@ -17,6 +17,8 @@
 </style>
 <h1>AI 사용량 웹 연결</h1>
 <p>연결할 Chrome 프로필과 로그인 계정을 확인하세요. 웹 연결은 터미널 설치가 필요 없습니다.</p>
+<label><input style="width:auto" type="checkbox" id="auto-refresh"> 웹 자동 조회 (10분마다)</label>
+<small>끄면 백그라운드 사용량 탭을 자동으로 열지 않습니다. 필요할 때 아래 ‘지금 갱신’을 누르세요.</small>
 <section><label><input style="width:auto" type="checkbox" id="claude-enabled"> Claude 웹 연결</label>
 <p id="claude-result"></p><button id="claude-refresh">Claude 지금 갱신</button><button id="claude-page">Claude 사용량 열기</button></section>
 <section><label><input style="width:auto" type="checkbox" id="codex-enabled"> GPT 플랜 웹 연결</label>
@@ -28,7 +30,7 @@
 <p id="hint"></p>
 <button id="refresh">지금 갱신</button>
 <button id="usage">사용량 페이지 열기</button>
-<small>크롬에 로그인된 계정으로 5분마다 갱신합니다. 사용량 수치를 이 Mac으로 전달합니다. Gemini는 계정 확인을 위해 이메일도 로컬에 저장합니다. GPT는 ChatGPT 설정의 플랜 사용량입니다. 포함되는 기능은 사용량 페이지에서 확인하세요.</small>
+<small>크롬에 로그인된 계정으로 자동 조회를 켜면 10분마다 갱신합니다. 사용량 수치를 이 Mac으로 전달합니다. Gemini는 계정 확인을 위해 이메일도 로컬에 저장합니다. GPT는 ChatGPT 설정의 플랜 사용량입니다. 포함되는 기능은 사용량 페이지에서 확인하세요.</small>
 <script src="parser.js"></script>
 <script src="popup.js"></script>
 <script src="web-parser.js"></script>

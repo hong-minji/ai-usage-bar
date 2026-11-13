@@ -57,7 +57,7 @@ final class SettingsWindowController: NSObject, NSWindowDelegate {
         let footer = NSTextField(wrappingLabelWithString:
             "퍼센트는 '남은 양'입니다. 숫자가 작을수록 한도에 가깝습니다. "
             + "모델 표시는 대표색, 퍼센트 숫자는 항상 흰색입니다. 위 주기는 메뉴바 갱신 간격이며, "
-            + "웹 연결은 Chrome 실행 중 5분마다 갱신합니다. GPT는 플랜 사용량을 표시합니다. 포함되는 기능은 ChatGPT 사용량 페이지에서 확인하세요.")
+            + "웹 자동 조회는 Chrome 실행 중 10분마다입니다. 확장에서 자동 조회를 끌 수 있습니다. GPT는 플랜 사용량을 표시합니다. 포함되는 기능은 ChatGPT 사용량 페이지에서 확인하세요.")
         footer.font = .systemFont(ofSize: 11)
         footer.textColor = .secondaryLabelColor
         footer.preferredMaxLayoutWidth = 380
@@ -133,7 +133,7 @@ final class SettingsWindowController: NSObject, NSWindowDelegate {
 
     private func connectionRow(_ id: ProviderID) -> NSView {
         let menu = NSPopUpButton()
-        menu.addItems(withTitles: ["자동 (연결된 Chrome 우선)", "Chrome 웹만 — 터미널 불필요", "기존 로컬 로그인만"])
+        menu.addItems(withTitles: ["자동 — 웹 연결 시 웹 사용", "Chrome 웹만 — 터미널 불필요", "로컬 로그인 — 앱 직접 조회"])
         menu.font = .systemFont(ofSize: 11)
         menu.target = self
         menu.action = #selector(commit)
@@ -160,7 +160,9 @@ final class SettingsWindowController: NSObject, NSWindowDelegate {
             + "개발자 모드 → 압축해제된 확장 프로그램 로드 → 열린 폴더 선택.\n"
             + "선택창에서 ⌘⇧G 후 붙여넣으면 복사된 경로로 이동합니다.\n"
             + "확장 팝업에서 Claude·GPT 연결을 켜세요. Gemini는 자동 연결됩니다.\n"
-            + "웹과 로컬 앱은 로그인 계정이 다를 수 있습니다. 사용할 Chrome 프로필을 확인하세요.")
+            + "자동: 웹 연결을 켰으면 웹, 아니면 로컬 로그인을 사용합니다.\n"
+            + "로컬 조회는 사용량 탭을 열지 않습니다. 로컬만 쓸 때 확장의 해당 웹 연결도 끄세요.\n"
+            + "웹과 로컬 앱의 계정은 다를 수 있습니다.")
         note.font = .systemFont(ofSize: 11)
         note.textColor = .secondaryLabelColor
         note.preferredMaxLayoutWidth = 250

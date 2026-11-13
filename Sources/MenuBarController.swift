@@ -124,11 +124,11 @@ final class MenuBarController: NSObject, NSMenuDelegate {
 
     // MARK: - Dropdown
 
-    /// Opening the menu triggers a refresh, so the numbers you are looking at
-    /// are the current ones even between scheduled polls.
+    /// Opening the menu only renders the current state; scheduled refreshes and
+    /// the explicit Refresh action do the I/O. Repeated clicks never launch agy.
     func menuWillOpen(_ menu: NSMenu) {
+        renderBar()
         rebuildMenu()
-        refreshNow()
     }
 
     private func rebuildMenu() {

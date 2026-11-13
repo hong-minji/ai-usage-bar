@@ -149,7 +149,7 @@ test('periodic polling creates one inactive tab and coalesces concurrent polls',
   await Promise.all([h.chrome.alarms.onAlarm.emit({ name: 'gemini-usage-refresh' }), h.message({ kind: 'refresh' }, { url: 'chrome-extension://test/popup.html' })]);
   assert.equal(h.tabs.size, 1);
   assert.equal([...h.tabs.values()][0].active, false);
-  assert.equal(h.alarms.get('gemini-usage-refresh').periodInMinutes, 5);
+  assert.equal(h.alarms.get('gemini-usage-refresh').periodInMinutes, 10);
 });
 test('valid usage is forwarded and only the owned background tab is closed', async () => {
   const h = harness();
@@ -241,4 +241,12 @@ test('the pinned account is read back from extension storage', async () => {
     delete globalThis.chrome;
     parser.setExpectedAccount('');
   }
+});
+
+test('manual mode stops Gemini automatic polls but permits explicit refresh', async () => {
+  const h=harness();h.chrome.storage.local.data.autoRefresh=false;
+  await h.start(); await h.chrome.alarms.onAlarm.emit({name:'gemini-usage-refresh'});
+  assert.equal(h.tabs.size,0);
+  await h.message({kind:'refresh'},{url:'chrome-extension://test/popup.html'});
+  assert.equal(h.tabs.size,1);
 });

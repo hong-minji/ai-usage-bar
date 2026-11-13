@@ -101,12 +101,14 @@ chrome.runtime.onMessage.addListener((message, sender, respond) => {
   return true;
 });
 chrome.alarms.onAlarm.addListener(alarm => {
-  if (alarm.name === PERIODIC) return serial(poll);
+  if (alarm.name === PERIODIC) return serial(async () => {
+    if ((await chrome.storage.local.get('autoRefresh')).autoRefresh !== false) return poll();
+  });
   if (alarm.name === DEADLINE) return serial(timedOut);
 });
 async function startup() {
-  await chrome.alarms.create(PERIODIC, { periodInMinutes: 5 });
-  await poll();
+  await chrome.alarms.create(PERIODIC, { periodInMinutes: 10 });
+  if ((await chrome.storage.local.get('autoRefresh')).autoRefresh !== false) await poll();
 }
 chrome.runtime.onInstalled.addListener(() => serial(startup));
 chrome.runtime.onStartup.addListener(() => serial(startup));

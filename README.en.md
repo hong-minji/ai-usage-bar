@@ -6,7 +6,11 @@ A free, open-source Mac menu bar app with **Claude · GPT · Gemini · agy** ent
 
 [한국어](README.md) · **English**
 
-[**↓ Download for Mac — v1.2.1**](https://github.com/hong-minji/ai-usage-bar/releases/download/v1.2.1/AIUsageBar-1.2.1-universal.zip) · [Releases / latest version](https://github.com/hong-minji/ai-usage-bar/releases) · [Report an issue](https://github.com/hong-minji/ai-usage-bar/issues)
+> **Usage checks do not request AI-generated answers.** The app sends no prompts to models; the verified agy `/quota` response also reported zero model tokens. **Memory use is not zero:** the app, Chrome usage tabs and temporary agy process use memory. Existing local logins allow direct API queries; web users can choose 10-minute automatic checks or manual refresh. Asking an AI to help install the app may consume that assistant's usage allowance.
+
+**For ordinary installation, follow option 1 below.** Download the app ZIP without installing an AI tool or terminal CLI. AI-assisted installation is explained separately under option 2.
+
+[**↓ Download for Mac — v1.3.0**](https://github.com/hong-minji/ai-usage-bar/releases/download/v1.3.0/AIUsageBar-1.3.0-universal.zip) · [Releases / latest version](https://github.com/hong-minji/ai-usage-bar/releases) · [Report an issue](https://github.com/hong-minji/ai-usage-bar/issues)
 
 Targets macOS 13+ · One download for Apple Silicon and Intel · Korean app UI · MIT license
 
@@ -16,37 +20,9 @@ Targets macOS 13+ · One download for Apple Silicon and Intel · Korean app UI �
 
 **Actual app screenshot; values change with usage. GPT displays the plan allowance from ChatGPT Settings → Usage.** There is one GPT entry with real plan figures, rather than a separate empty chat counter. Its menu links to the usage page to check which features count. Every percentage means **remaining, not used**. If a provider has multiple limits, such as a five-hour and weekly window, the menu bar shows the smallest remaining percentage. Open the menu for individual limits and reset times where available.
 
-## Install with AI — guidance or hands-on help
+## Installation option 1 — download the app (no terminal required)
 
-**You can ask an ordinary web chat for installation instructions. To perform the installation on your Mac, the AI needs a local environment with permission to manage files and run commands on that Mac. Typing into a desktop app alone does not enable automatic installation.**
-
-| AI environment | What it can help with |
-|---|---|
-| Ordinary ChatGPT/Claude web or desktop chat without a connection to your Mac | Read the README and explain steps; you download, move and open the app |
-| A Codex/Claude Code terminal or desktop task running locally on your Mac | Download, extract and move the app within the granted permissions |
-| Work/Cowork or another file-enabled task environment | Capabilities depend on local vs. cloud execution, connected tools and folder permissions; file access alone does not guarantee a complete Mac app installation |
-
-**For hands-on installation, check that the task runs on “This computer” / locally.** Installing into a cloud environment does not install the app on your Mac. Feature names and availability depend on the app version and account. [Codex local environments](https://learn.chatgpt.com/docs/environments/modes) · [Claude Code surfaces](https://code.claude.com/docs/en/overview) · [Claude Cowork permissions](https://support.claude.com/en/articles/13345190-get-started-with-claude-cowork)
-
-Send the repository URL and request below. The README includes downloads and connection instructions.
-
-```text
-https://github.com/hong-minji/ai-usage-bar
-
-I'd like to install this app on my Mac. Read the README first.
-Check whether this conversation can manage files and run commands on my Mac.
-If it can, install the app ZIP from the latest release and connect only the
-AI services I use. Otherwise, guide me through the download and installation
-one step at a time. Tell me which sign-in, macOS approval and Chrome extension
-steps I need to perform. Finally, explain how to verify the menu bar display
-and usage refresh in my actual setup.
-```
-
-You may need to complete sign-in and macOS security approvals yourself. Do not paste passwords or authentication tokens into the chat. You can also install without AI by following the steps below.
-
-## Download and get started
-
-1. Use **Download for Mac** above to get `AIUsageBar-1.2.1-universal.zip`. The same file supports Apple Silicon and Intel.
+1. Use **Download for Mac** above to get `AIUsageBar-1.3.0-universal.zip`. The same file supports Apple Silicon and Intel.
 2. Double-click the ZIP to extract it. It contains `AIUsageBar.app`, `START-HERE.txt` and `LICENSE.txt`.
 3. **Move the app to Applications before opening it.** Choose its permanent location before connecting Chrome.
 4. Find the app in the menu bar at the top of the screen. Open **설정…** (Settings) → **표시 항목** (Visible items) and keep only the services you use. There is no Dock icon.
@@ -76,8 +52,8 @@ Web connections for Claude, GPT and Gemini do not require CLI installation. **Fo
 Gemini web and agy also have separate quotas. This is not an API billing tracker.
 
 - Choose visible services in Settings. agy is hidden by default; enable it only if you use the CLI.
-- The app refreshes every five minutes and when its menu opens; its interval is configurable from 1–120 minutes.
-- Chrome polls every five minutes while running. Opening the app menu reads the latest report; use Refresh now in the extension for an immediate web fetch.
+- The app refreshes every five minutes; opening its menu does not trigger extra API queries or launch agy; its interval is configurable from 1–120 minutes.
+- Chrome polls every ten minutes while running. Turn off **웹 자동 조회** (automatic web checks) to prevent scheduled usage tabs; use the per-service Refresh now buttons when needed. An in-progress check finishes normally. Manual mode keeps the previous reading and shows its age when stale.
 - Failures show the previous successful reading with its age and an error, never a fabricated `0%`.
 - Only usage queries are made. No model prompts are sent.
 
@@ -98,9 +74,9 @@ Claude/GPT connection choices in the app:
 
 | Choice | Behavior |
 |---|---|
-| 자동 (연결된 Chrome 우선) / Automatic | Uses an enabled Chrome connection when present, otherwise the existing local login |
+| 자동 — 웹 연결 시 웹 사용 / Automatic | Uses an enabled Chrome connection when present, otherwise the existing local login |
 | Chrome 웹만 — 터미널 불필요 / Chrome only | Reads browser reports without querying local credentials |
-| 기존 로컬 로그인만 / Local only | Uses existing Claude Code / Codex credentials |
+| 로컬 로그인 — 앱 직접 조회 / Local only | Uses existing Claude Code / Codex credentials |
 
 A browser error does not silently switch to a different local account. **Your browser and local apps may be signed into different accounts: check the Chrome profile you choose.** Claude/Codex reports use that profile's current signed-in account without collecting its email. Use one Chrome profile for the connection.
 
@@ -110,9 +86,48 @@ The extension opens inactive usage tabs and closes them after reading. Tabs you 
 
 ## Connect existing local logins
 
-If you already signed into Claude Code or Codex, you can continue using that login. To choose the local account while Chrome is also connected, select **기존 로컬 로그인만** (Local only) in app Settings. Claude may ask for Keychain access.
+If you already signed into Claude Code or Codex, you can continue using that login. To choose the local account while Chrome is also connected, select **로컬 로그인 — 앱 직접 조회** (Local only) in app Settings. Claude may ask for Keychain access.
 
 agy requires CLI installation and sign-in. Set its executable path if automatic discovery fails. Hide agy if you do not use it.
+
+## Reduce resource use
+
+- **Already signed into local Claude Code/Codex?** Select **로컬 로그인 — 앱 직접 조회** (direct local-login query). This reads usage through HTTP using the existing login, without launching Claude Code/Codex agents or Chrome usage tabs. Also disable that provider in the extension to stop duplicate browser polling.
+- **Web-only user?** Download the app and connect Chrome. Turn off **웹 자동 조회** to refresh only when needed; no CLI installation is required.
+- **Do not use agy?** Hide it in app Settings. When enabled, its CLI runs briefly for each quota check. The verified `/quota` response reported zero input, output and thinking tokens and zero turns.
+- Increase the app refresh interval to reduce local API/agy checks. The extension's automatic interval is independently set to ten minutes.
+
+Automatic mode uses an explicitly enabled web connection, otherwise the local login. It does not benchmark memory or select the cheaper connection. Verify the account before switching: browser and local logins can differ.
+
+Large Codex logs are read from a bounded tail of recent files. Content scripts stop watching after a report is accepted and avoid duplicate in-flight sends. Total app, browser and CLI memory depends on the environment; zero memory or a fixed reduction percentage is not promised.
+
+## Installation option 2 — ask AI for guidance or hands-on help
+
+**You can ask an ordinary web chat for installation instructions. To perform the installation on your Mac, the AI needs a local environment with permission to manage files and run commands on that Mac. Typing into a desktop app alone does not enable automatic installation.**
+
+| AI environment | What it can help with |
+|---|---|
+| Ordinary ChatGPT/Claude web or desktop chat without a connection to your Mac | Read the README and explain steps; you download, move and open the app |
+| A Codex/Claude Code terminal or desktop task running locally on your Mac | Download, extract and move the app within the granted permissions |
+| Work/Cowork or another file-enabled task environment | Capabilities depend on local vs. cloud execution, connected tools and folder permissions; file access alone does not guarantee a complete Mac app installation |
+
+**For hands-on installation, check that the task runs on “This computer” / locally.** Installing into a cloud environment does not install the app on your Mac. Feature names and availability depend on the app version and account. [Codex local environments](https://learn.chatgpt.com/docs/environments/modes) · [Claude Code surfaces](https://code.claude.com/docs/en/overview) · [Claude Cowork permissions](https://support.claude.com/en/articles/13345190-get-started-with-claude-cowork)
+
+Send the repository URL and request below. The README includes downloads and connection instructions.
+
+```text
+https://github.com/hong-minji/ai-usage-bar
+
+I'd like to install this app on my Mac. Read the README first.
+Check whether this conversation can manage files and run commands on my Mac.
+If it can, install the app ZIP from the latest release and connect only the
+AI services I use. Otherwise, guide me through the download and installation
+one step at a time. Tell me which sign-in, macOS approval and Chrome extension
+steps I need to perform. Finally, explain how to verify the menu bar display
+and usage refresh in my actual setup.
+```
+
+You may need to complete sign-in and macOS security approvals yourself. Do not paste passwords or authentication tokens into the chat. You can also install without AI by following installation option 1 above.
 
 ## Update and uninstall
 
@@ -175,15 +190,15 @@ node --test ChromeExtension/*tests.cjs # Extension tests; requires Node.js
 ./build/AIUsageBar.app/Contents/MacOS/AIUsageBar --once # One live check
 ```
 
-For `v1.2.1`, 144 Swift checks and 33 extension tests passed, along with the universal build, ZIP extraction and signature verification. Live verification scope is recorded in the release notes. GPT shows the reported plan allowance; it does not estimate a separate chat counter. **Installation and execution have not been verified on macOS 13 or every supported Mac model.**
+For `v1.3.0`, 149 Swift checks and 41 extension tests passed, along with the universal build, ZIP extraction and signature verification. Live verification scope is recorded in the release notes. GPT shows the reported plan allowance; it does not estimate a separate chat counter. **Installation and execution have not been verified on macOS 13 or every supported Mac model.**
 
 To verify file integrity, download the release ZIP and its `.sha256` file into the same folder, then run:
 
 ```sh
-shasum -a 256 -c AIUsageBar-1.2.1-universal.zip.sha256
+shasum -a 256 -c AIUsageBar-1.3.0-universal.zip.sha256
 ```
 
-[Contributing](CONTRIBUTING.md) · [Gemini extension](ChromeExtension/) · [Release notes](docs/releases/v1.2.1.md)
+[Contributing](CONTRIBUTING.md) · [Gemini extension](ChromeExtension/) · [Release notes](docs/releases/v1.3.0.md)
 
 ## License
 

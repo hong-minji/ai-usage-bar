@@ -94,3 +94,11 @@ test('host failure is explicit and timeout releases the owned background tab',as
   await h.alarm('web-timeout.codex');assert.equal(h.tabs.size,0);
   assert.equal(h.chrome.storage.local.data['webStatus.codex'].state,'host_unavailable');
 });
+
+test('manual mode suppresses automatic web polling without losing enabled providers',async()=>{
+  const h=worker({webEnabled:['claude','codex'],autoRefresh:false});
+  await h.chrome.runtime.onInstalled.emit();await h.alarm('web-refresh');
+  assert.equal(h.tabs.size,0);
+  await h.message({kind:'webRefresh',provider:'codex'});
+  assert.equal(h.tabs.size,1);assert.deepEqual(h.chrome.storage.local.data.webEnabled,['claude','codex']);
+});

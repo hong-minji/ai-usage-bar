@@ -78,15 +78,16 @@
     serial(()=>receive(m,s)).then(r).catch(()=>r({accepted:false})); return true;
   });
   chrome.alarms.onAlarm.addListener(a=>serial(async()=>{
-    if(a.name==='web-refresh') { for(const id of Object.keys(p.URLS)) await poll(id); }
+    if(a.name==='web-refresh' && (await chrome.storage.local.get('autoRefresh')).autoRefresh!==false) { for(const id of Object.keys(p.URLS)) await poll(id); }
     if(a.name.startsWith('web-timeout.')) {
       const id=a.name.slice('web-timeout.'.length);
       if(Object.hasOwn(p.URLS,id) && await pending(id)) { await deliver(failure(id)); await finish(id); }
     }
   }));
   async function startup() {
-    await chrome.alarms.create('web-refresh',{periodInMinutes:5});
-    for(const id of Object.keys(p.URLS)) await poll(id);
+    await chrome.alarms.create('web-refresh',{periodInMinutes:10});
+    if((await chrome.storage.local.get('autoRefresh')).autoRefresh!==false)
+      for(const id of Object.keys(p.URLS)) await poll(id);
   }
   chrome.runtime.onInstalled.addListener(()=>serial(startup));
   chrome.runtime.onStartup.addListener(()=>serial(startup));

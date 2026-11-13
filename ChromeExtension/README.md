@@ -15,7 +15,7 @@ v1.1.1에서 업데이트하면 확장을 새로고침하고 새 사이트 권�
 
 ## 데이터 / Data
 
-- Claude·Codex는 명시적으로 켰을 때만 5분마다 비활성 탭을 열어 확인합니다. / Claude and Codex polling is opt-in.
+- Claude·Codex는 명시적으로 켰을 때만 10분마다 비활성 탭을 열어 확인합니다. / Claude and Codex polling is opt-in.
 - 다른 페이지·프레임·요청한 탭이 아닌 곳의 메시지는 거부합니다. / Reports from unrelated pages, frames and tabs are rejected.
 - 사용자가 선택한 탭은 자동으로 닫지 않습니다. / User-selected tabs are retained.
 - 새 웹 연결은 이메일·사용자명·쿠키·토큰·페이지 원문을 저장하거나 앱에 보내지 않습니다. / New web connections never store or forward identity, credentials or page text.
@@ -38,3 +38,5 @@ node --test ChromeExtension/*tests.cjs
 `fixtures/` contains only sanitized quota-section excerpts; no names, emails, account IDs, cookies or tokens. Only runtime JS, HTML and the manifest are bundled in the released app.
 
 The internal `codex` report/cache identifier remains unchanged for compatibility. The visible label is GPT.
+
+자동 조회를 끄면 예약된 사용량 탭을 열지 않습니다. 서비스별 지금 갱신은 계속 사용할 수 있습니다. / Disable automatic checks for manual refresh only. Content scripts stop after a report or a bounded timeout.

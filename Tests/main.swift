@@ -415,6 +415,22 @@ do {
     equal(barPlainText(bar), "GPT 13%", "GPT displays the observed plan allowance")
 }
 
+section("Bounded session log reads")
+do {
+    let file = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+    defer { try? FileManager.default.removeItem(at: file) }
+    let suffix = "\n{\"rate_limits\":1}\n{\"rate_limits\":2}\n"
+    try (String(repeating: "x", count: 2 * 1024 * 1024) + suffix).write(to: file, atomically: true, encoding: .utf8)
+    let tail = try sessionLogTail(file, maximumBytes: 128)
+    check(tail.utf8.count <= 128, "large log read is bounded")
+    equal(tail, String(suffix.dropFirst()), "partial leading line discarded; newest events retained")
+    try "whole line\n".write(to: file, atomically: true, encoding: .utf8)
+    equal(try sessionLogTail(file, maximumBytes: 128), "whole line\n", "small complete file is preserved")
+    equal(try sessionLogTail(file, maximumBytes: 0), "", "zero budget performs no read")
+    try String(repeating: "x", count: 256).write(to: file, atomically: true, encoding: .utf8)
+    equal(try sessionLogTail(file, maximumBytes: 128), "", "oversized partial event is not parsed")
+}
+
 print("\n\(checks - failures)/\(checks) checks passed")
 if failures > 0 {
     print("\(failures) FAILED")

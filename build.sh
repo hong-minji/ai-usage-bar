@@ -10,8 +10,8 @@ ROOT="$PWD"
 BUILD="$ROOT/build"
 APP="$BUILD/AIUsageBar.app"
 BUNDLE_ID="com.local.ai-usage-bar"
-VERSION="1.2.1"
-BUILD_NUMBER="5"
+VERSION="1.3.0"
+BUILD_NUMBER="6"
 
 if [[ "$(uname -s)" != Darwin ]]; then
     echo "macOS에서 실행하세요 / macOS is required." >&2
@@ -26,7 +26,7 @@ TARGET="$ARCH-apple-macosx13.0"
 
 # Pure-logic files only -- these must stay free of AppKit so they can be linked
 # into the test binary.
-TESTABLE=(Sources/Model.swift Sources/Parsing.swift Sources/BarFormatter.swift Sources/FetchError.swift Sources/GeminiChromeBridge.swift Sources/ChromeInstallation.swift Sources/BrowserUsageBridge.swift)
+TESTABLE=(Sources/Model.swift Sources/Parsing.swift Sources/BarFormatter.swift Sources/FetchError.swift Sources/GeminiChromeBridge.swift Sources/ChromeInstallation.swift Sources/BrowserUsageBridge.swift Sources/SessionLogTail.swift)
 
 run_tests() {
     echo "==> 테스트"

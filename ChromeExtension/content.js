@@ -26,8 +26,16 @@
     return values;
   }
 
+  let inFlight = false;
   async function read() {
-    if (!ready || stopped || Date.now() < retryAfter || !parser.isUsageURL(location.href)) return;
+    if (inFlight) return;
+    inFlight = true;
+    try { await readOnce(); } finally { inFlight = false; }
+  }
+  async function readOnce() {
+    if (!ready || stopped) return;
+    if (Date.now() - started > 45000) { stop(); return; }
+    if (Date.now() < retryAfter || !parser.isUsageURL(location.href)) return;
     const value = parser.snapshot({ text: document.body?.innerText || '', accountLabels: accountLabels(), sourceURL: location.href });
     // A loading page and an unknown account are not evidence of a zero balance.
     if (!value || (value.status !== 'ok' && Date.now() - started < 20000)) return;
@@ -35,16 +43,17 @@
     if (fingerprint === lastFingerprint) return;
     try {
       const response = await chrome.runtime.sendMessage({ kind: 'snapshot', value });
-      if (response?.accepted) lastFingerprint = fingerprint;
+      if (response?.accepted) { lastFingerprint = fingerprint; stop(); }
       else retryAfter = Date.now() + 30000;
     } catch (_) {
       // Extension reload invalidates this document's context; navigation restores it.
-      stopped = true;
-      observer.disconnect();
-      clearInterval(timer);
+      stop();
     }
   }
 
+  function stop() {
+    stopped = true; observer.disconnect(); clearInterval(timer); clearTimeout(observer.debounce);
+  }
   const observer = new MutationObserver(() => {
     clearTimeout(observer.debounce);
     observer.debounce = setTimeout(read, 250);
