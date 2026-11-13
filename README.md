@@ -1,150 +1,226 @@
 # AI Usage Bar
 
+맥 메뉴바에 Claude · ChatGPT(Codex) · Gemini 웹 · Antigravity의 **남은 사용량**을 한 줄로 표시합니다.
+
 A macOS menu bar app that shows **how much of your AI quota is left** — Claude, ChatGPT (Codex), Gemini web and Antigravity — in one line.
 
-<img src="docs/screenshot.png" width="440" alt="AI Usage Bar menu showing remaining quota for Claude, ChatGPT, Gemini and Antigravity">
+<img src="docs/screenshot.png" width="440" alt="Claude, ChatGPT, Gemini, Antigravity의 남은 사용량을 보여주는 메뉴 / the menu showing remaining quota for each provider">
 
 ```
 C 75% · G 81% · Ge 93% · Ag 0%
 ```
 
+모든 숫자는 **남은 양**입니다. 작을수록 한도에 가깝습니다. 모델 표시는 각 서비스의 대표색을 쓰고 퍼센트는 항상 흰색입니다. 한도가 여러 개면 메뉴바에는 가장 적게 남은 것을 띄우고, 메뉴를 열면 전부 보여줍니다.
+
 Every number is **remaining**, not used — the smaller it gets, the closer you are to the limit. Each provider keeps its brand colour; the percentage is always white. When a provider has several windows (5-hour, weekly), the bar shows the tightest one and the dropdown lists them all.
 
-> **Note** · The app UI is in Korean. Everything below works regardless of your system language. Korean documentation: [README.ko.md](README.ko.md)
+> 앱 UI는 한국어입니다. 시스템 언어와 무관하게 동작합니다.
+> The app UI is in Korean; it works regardless of your system language.
 
-## Why
+---
 
-Every AI subscription has its own limit, its own reset clock and its own page to check it. Hitting a weekly cap in the middle of a task is annoying; discovering it only when the model refuses you is worse. This puts all four numbers where you already look — the menu bar — and keeps every credential where it already lives.
+## 왜 만들었나 / Why
 
-## What it reads, and how
+AI 구독마다 한도도, 리셋 시각도, 확인하는 페이지도 전부 다릅니다. 그래서 작업이 끊기는 지점은 늘 같았습니다 — 모델이 "한도에 도달했습니다"라고 답하는 순간. 네 개의 숫자를 이미 늘 보고 있는 곳에 모으고, 인증 정보는 원래 있던 자리에 그대로 두었습니다.
 
-| Bar | Provider | Source | Auth |
+Every AI subscription has its own limit, its own reset clock and its own page to check it. Hitting a weekly cap mid-task is annoying; discovering it only when the model refuses you is worse. This puts all four numbers where you already look, and keeps every credential where it already lives.
+
+---
+
+## 무엇을 어떻게 읽나 / What it reads
+
+| 표시 · Bar | 서비스 · Provider | 데이터 · Source | 인증 · Auth |
 |---|---|---|---|
-| `C` | Claude 5-hour + weekly limits | `api.anthropic.com/api/oauth/usage` | The login Claude Code already stored in your Keychain |
-| `G` | ChatGPT **Codex** limits | `~/.codex/auth.json` + Codex usage log | Your existing Codex login |
-| `Ge` | **Gemini web** limits | `gemini.google.com/usage` | Your existing Chrome session, via a scoped extension |
-| `Ag` | Antigravity coding quota | `agy /quota` | The `agy` CLI's own login |
+| `C` | Claude 5시간 + 주간 한도 | `api.anthropic.com/api/oauth/usage` | Claude Code가 키체인에 저장해 둔 로그인 |
+| `G` | ChatGPT **Codex** 한도 | `~/.codex/auth.json` + Codex 사용량 기록 | 기존 Codex 로그인 |
+| `Ge` | **Gemini 웹** 한도 | `gemini.google.com/usage` | 기존 Chrome 로그인 (전용 확장 경유) |
+| `Ag` | Antigravity 코딩 할당량 | `agy /quota` | `agy` CLI 자체 로그인 |
+
+`G`는 일반 ChatGPT 채팅 한도가 아니라 **Codex** 한도입니다. Gemini 웹과 Antigravity도 서로 다른 예산입니다.
 
 `G` is the **Codex** quota, not the ChatGPT chat quota. Gemini web and Antigravity are separate budgets.
 
-The app refreshes every 5 minutes by default and again when you open the menu. If a provider fails, only that entry degrades: it keeps showing the last good value with its age (`72% · 2 days ago`) instead of a misleading `0%`.
+기본 5분마다, 그리고 메뉴를 열 때 갱신합니다. 한 서비스가 실패하면 그 항목만 영향을 받고, `0%`로 표시하는 대신 마지막 성공값과 경과 시간을 함께 보여줍니다(`72% · 2일 전`).
 
-## Requirements
+It refreshes every 5 minutes and again when you open the menu. If one provider fails, only that row degrades: it keeps the last good value with its age instead of a misleading `0%`.
 
-- macOS 13 or later
-- Xcode Command Line Tools (`xcode-select --install`) — no Xcode, no Swift package manager, no dependencies
-- Whichever providers you actually use: Claude Code signed in, Codex signed in, Chrome signed in to Google, `agy` installed. Missing ones can be hidden in Settings.
+### 조회 자체는 사용량을 소모하지 않습니다 / Polling costs you nothing
 
-## Install
+| | |
+|---|---|
+| Claude · ChatGPT | 사용량 **조회 전용** 엔드포인트입니다. 모델을 호출하는 `/messages` 류가 아니라 "얼마 남았나"를 묻는 메타데이터 요청입니다. <br> Usage-reporting endpoints, not inference endpoints. |
+| Gemini | 확장이 사용량 **페이지를 읽을 뿐** 대화를 걸지 않습니다. <br> The extension reads the usage page; it never sends a prompt. |
+| Antigravity | `/quota`는 `agy`가 로컬에서 처리하는 슬래시 명령입니다. 실제 출력이 `num_turns: 0`, `total_tokens: 0`입니다. <br> A local slash command — it reports zero turns and zero tokens. |
+
+즉 5분마다 돌려도, 하루 288번 돌려도 측정 대상인 할당량은 1토큰도 줄지 않습니다.
+
+So polling never spends any of the quota it measures.
+
+---
+
+## 요구 사항 / Requirements
+
+- macOS 13 이상 · macOS 13 or later
+- Xcode Command Line Tools (`xcode-select --install`) — Xcode도 패키지 매니저도 외부 의존성도 필요 없습니다 / no Xcode, no package manager, no dependencies
+- 실제로 쓰는 서비스의 로그인만 있으면 됩니다. 안 쓰는 건 숨기면 됩니다 (아래 참고) / only the providers you actually use; hide the rest
+
+---
+
+## 설치 / Install
 
 ```sh
 git clone https://github.com/hong-minji/ai-usage-bar.git
 cd ai-usage-bar
-./build.sh                 # runs the tests, then builds build/AIUsageBar.app
+./build.sh                 # 테스트 후 build/AIUsageBar.app 생성 / tests, then builds the app
 open build/AIUsageBar.app
 ```
 
-The app is menu-bar only — no Dock icon. If an older copy is already running, quit it from its menu first.
+메뉴바 전용 앱이라 Dock 아이콘이 없습니다. 이전 버전이 돌고 있으면 메뉴에서 먼저 종료하세요.
 
-It is signed ad-hoc (locally), not notarised. Because you built it yourself it is not quarantined, so it opens without a Gatekeeper prompt. macOS will ask once for Keychain access so the app can read the Claude login; it only reads, and never refreshes or rotates anyone's token.
+Menu bar only — no Dock icon. Quit any older copy from its menu first.
 
-Enable **로그인 시 자동 실행** (launch at login) in Settings if you want it to start with your Mac.
+공증(notarize) 없이 로컬 임시 서명만 합니다. 직접 빌드한 앱이라 격리 속성이 없어 Gatekeeper 경고 없이 열립니다. Claude 로그인을 읽기 위해 macOS가 키체인 접근을 한 번 묻습니다 — 읽기만 하며 어떤 토큰도 갱신하거나 변경하지 않습니다.
 
-## Gemini: use the Chrome session you already have
+Signed ad-hoc, not notarised. Because you built it yourself it is not quarantined, so it opens without a Gatekeeper prompt. macOS asks once for Keychain access to read the Claude login; the app only ever reads, and never refreshes or rotates a token.
 
-Gemini has no local credential file to read, so instead of a second browser login this project ships a **Gemini-only Chrome extension** that reads the usage page in your existing profile and hands the two numbers to the app over Chrome Native Messaging.
+---
+
+## 안 쓰는 서비스 숨기기 / Hide what you don't use
+
+네 개를 다 쓰는 사람은 드뭅니다. **설정 → 표시 항목**에서 체크를 끄면 그 서비스는 메뉴바에서 사라지고, **조회도 하지 않습니다.** 없는 로그인 때문에 빨간 오류가 뜨는 일이 없습니다.
+
+Few people use all four. Untick a provider in **설정 → 표시 항목** (Settings → Visible items) and it disappears from the bar — and is **not fetched at all**, so a provider you never signed into cannot sit there as an error.
+
+- Antigravity는 기본적으로 꺼져 있습니다 / Antigravity is off by default.
+- 껐다 켜도 기록은 지워지지 않습니다. 다시 켜면 마지막 값부터 보여줍니다 / Toggling does not erase history; a re-enabled provider resumes from its last reading.
+- Claude 하나만 쓴다면 나머지 셋을 끄면 됩니다. 그러면 메뉴바는 `C 75%` 한 칸만 차지합니다 / Using only Claude? Turn off the other three and the bar is just `C 75%`.
+
+---
+
+## Gemini: 이미 로그인된 Chrome 세션 사용 / Use the Chrome session you already have
+
+Gemini는 로컬에서 읽을 인증 파일이 없습니다. 그래서 별도 브라우저 로그인 대신 **Gemini 전용 Chrome 확장**이 기존 프로필에서 사용량 페이지를 읽고, Chrome Native Messaging으로 숫자만 앱에 넘깁니다.
+
+Gemini has no local credential to read, so instead of a second browser login this project ships a **Gemini-only Chrome extension** that reads the usage page in your existing profile and hands just the numbers to the app over Chrome Native Messaging.
 
 ```sh
-./install-chrome-bridge.sh   # once, after the first build
+./install-chrome-bridge.sh   # 최초 빌드 후 1회 / once, after the first build
 ```
 
-Then, in the Chrome profile that is signed in to Gemini:
+Gemini에 로그인된 Chrome 프로필에서 / Then, in the Chrome profile signed in to Gemini:
 
-1. Open `chrome://extensions/`.
-2. Turn on **Developer mode** (top right).
-3. Click **Load unpacked** and select this project's `ChromeExtension` folder.
-4. Open the extension popup and press **지금 갱신** (Refresh now) to confirm the connection.
+1. `chrome://extensions/` 열기 / open `chrome://extensions/`
+2. 오른쪽 위 **개발자 모드** 켜기 / turn on **Developer mode**
+3. **압축해제된 확장 프로그램을 로드합니다** → 이 프로젝트의 `ChromeExtension` 폴더 선택 / **Load unpacked** → select this project's `ChromeExtension` folder
+4. 확장 팝업에서 **지금 갱신**을 눌러 연결 확인 / press **지금 갱신** (Refresh now) in the popup
 
-In the app, **설정 → Gemini 웹 → Chrome 연결…** opens both the extensions page and the right folder for you.
+앱의 **설정 → Gemini 웹 → Chrome 연결…** 버튼이 확장 관리 화면과 해당 폴더를 한 번에 열어줍니다.
 
-**Multiple Google accounts?** Leave the popup's account field empty to use whichever account the profile is signed in to, or type one address to pin it — the app then accepts readings from that account only, and reports a mismatch instead of guessing.
+In the app, **설정 → Gemini 웹 → Chrome 연결…** opens both the extensions page and the right folder.
 
-Install either the source folder or the copy inside the app bundle, not both; the extension ID is the same for each.
+**구글 계정이 여러 개라면** 팝업의 계정 칸에 주소를 입력해 하나로 고정하세요. 비워두면 현재 프로필에 로그인된 계정을 그대로 씁니다.
 
-How it behaves:
+**Multiple Google accounts?** Type one address in the popup's account field to pin it, or leave it empty to use whichever account the profile is signed in to.
 
-- While Chrome runs, the extension opens a background usage tab every 5 minutes, reads it, and closes it. A tab you have selected yourself is never closed.
-- Cookies, passwords and tokens are never read or copied. Only the account shown on the page and the usage percentages reach the app.
-- Numbers are only accepted when the account rendered on the page can be verified. Another account's figures, or an unreadable page, surface as an error — never as `0%`.
-- If Chrome is closed or the session expires, the app shows the last good value with its age. Nothing is fetched without Chrome.
-- The page must render in Korean or English for the percentages to be parsed.
+소스 폴더와 앱 번들 안의 복사본 중 **하나만** 설치하세요. 확장 ID는 둘 다 같습니다.
 
-The extension reaches `gemini.google.com` only, and the native messaging host accepts requests from this one extension ID:
+Install either the source folder or the copy inside the app bundle, not both; the extension ID is the same.
+
+동작 방식 / How it behaves:
+
+- Chrome이 실행 중이면 5분마다 비활성 사용량 탭을 열어 읽고 닫습니다. 사용자가 직접 선택한 탭은 닫지 않습니다. <br> Opens a background usage tab every 5 minutes and closes it; a tab you selected yourself is never closed.
+- 쿠키·비밀번호·토큰은 읽거나 복사하지 않습니다. 페이지에 표시된 계정과 퍼센트만 전달됩니다. <br> Cookies, passwords and tokens are never read or copied.
+- 페이지에 렌더링된 계정을 확인할 수 있을 때만 수치를 채택합니다. 다른 계정의 수치나 못 읽은 페이지는 `0%`가 아니라 오류로 표시됩니다. <br> Numbers are accepted only when the account on the page can be verified; anything else surfaces as an error, never as `0%`.
+- Chrome이 꺼져 있으면 마지막 성공값과 경과 시간을 보여줍니다. <br> With Chrome closed, the last good value is shown with its age.
+- 퍼센트를 읽으려면 페이지가 한국어 또는 영어로 표시되어야 합니다. <br> The page must render in Korean or English to be parsed.
+
+확장은 `gemini.google.com`에만 접근하고, 로컬 호스트는 아래 확장 ID의 요청만 받습니다.
+
+The extension reaches `gemini.google.com` only, and the native host accepts this one extension ID:
 
 ```
 edmmoiejceaokbohcdedkehoabkgkole
 ```
 
-The ID is pinned by the public key in `manifest.json` — a public value, so the ID stays stable for everyone. The matching private key is not in this repository, and the extension is not published on the Chrome Web Store.
+이 ID는 `manifest.json`의 공개키로 고정됩니다 — 공개 값이라 누가 설치해도 ID가 같습니다. 서명용 개인키는 이 저장소에 없고, 확장은 Chrome 웹 스토어에 게시되지 않았습니다.
 
-The install script writes exactly one file:
+The ID is pinned by the public key in `manifest.json` — a public value, so the ID is stable for everyone. The private key is not in this repository and the extension is not on the Web Store.
+
+설치 스크립트가 만드는 파일은 하나뿐입니다 / The install script writes exactly one file:
 
 ```
 ~/Library/Application Support/Google/Chrome/NativeMessagingHosts/com.local.ai_usage_bar.gemini.json
 ```
 
-To undo the whole thing: remove the extension in Chrome and delete that file.
+전부 되돌리려면 Chrome에서 확장을 삭제하고 이 파일을 지우면 됩니다.
 
-## Settings
+To undo everything: remove the extension in Chrome and delete that file.
 
-Open the menu bar icon → **설정…** (`⌘,`):
+---
 
-| Setting | Meaning |
+## 설정 / Settings
+
+메뉴바 아이콘 → **설정…** (`⌘,`)
+
+| 항목 · Setting | 의미 · Meaning |
 |---|---|
-| 갱신 주기 | Refresh interval in minutes (1–120, default 5) |
-| 표시 항목 | Which providers appear in the bar — Antigravity is off by default |
-| agy 경로 | Path to the `agy` binary if it is not auto-detected |
-| Gemini 웹 | Opens the Chrome extension setup |
-| 로그인 시 자동 실행 | Launch at login, via a plain LaunchAgent |
+| 갱신 주기 | 분 단위 갱신 간격 (1–120, 기본 5) / refresh interval in minutes |
+| 표시 항목 | 메뉴바에 표시하고 조회할 서비스 / which providers are shown and fetched |
+| agy 경로 | `agy` 자동 탐색 실패 시 지정 / path to `agy` if not auto-detected |
+| Gemini 웹 | Chrome 확장 설치 화면 열기 / opens the extension setup |
+| 로그인 시 자동 실행 | LaunchAgent로 로그인 시 실행 / launch at login |
 
-Warning and danger colour thresholds default to 20% and 5% remaining.
+경고·위험 색상 임계값은 각각 남은 20%, 5%가 기본입니다. / Warning and danger thresholds default to 20% and 5% remaining.
 
-## Privacy
+---
 
-- Nothing is sent anywhere. Every request goes to the provider you already have an account with, and every value stays on your Mac.
-- No analytics, no telemetry, no server, no third-party dependency.
-- Credentials are read, never written: the Claude Keychain item, the Codex auth file and the Chrome session are only ever consumed.
-- Cached state lives in `~/Library/Application Support/AIUsageBar/`, written with `0600` permissions.
+## 개인정보 / Privacy
 
-## Troubleshooting
+- 아무 데로도 전송하지 않습니다. 모든 요청은 이미 계정이 있는 서비스로만 갑니다. <br> Nothing is sent anywhere; every request goes to a provider you already have an account with.
+- 분석·텔레메트리·서버·외부 의존성이 없습니다. <br> No analytics, telemetry, server or third-party dependency.
+- 인증 정보는 읽기만 합니다. 토큰은 메모리에서 해당 서비스의 `Authorization` 헤더로만 쓰이고 디스크에 저장되지 않습니다. <br> Credentials are read, never written; tokens live in memory only and are never persisted.
+- 캐시는 `~/Library/Application Support/AIUsageBar/`에 `0600` 권한으로 저장되며, 퍼센트·라벨·시각만 담깁니다. <br> Cached state holds only percentages, labels and timestamps.
 
-| Symptom | Fix |
+---
+
+## 문제 해결 / Troubleshooting
+
+| 증상 · Symptom | 해결 · Fix |
 |---|---|
-| `설정에서 Gemini 크롬 연결을 완료하세요` | Run `./install-chrome-bridge.sh` and load the extension. |
-| `메뉴바 앱 연결이 필요합니다` in the popup | The native host is not registered — rerun `./install-chrome-bridge.sh` after a build. |
-| Gemini stuck on an old value | Chrome must be running. Open the popup and press 지금 갱신. |
-| Claude shows an error after a rebuild | macOS asks for Keychain access again; allow it once. |
-| Antigravity missing | It is hidden by default. Enable it in Settings and set the `agy` path if needed. |
+| `설정에서 Gemini 크롬 연결을 완료하세요` | `./install-chrome-bridge.sh` 실행 후 확장 로드 / run the script, then load the extension |
+| 팝업에 `메뉴바 앱 연결이 필요합니다` | 빌드 후 `./install-chrome-bridge.sh` 재실행 / re-run it after a build |
+| Gemini가 옛날 값에서 멈춤 | Chrome이 켜져 있어야 합니다. 팝업에서 지금 갱신 / Chrome must be running |
+| 확장을 고쳤는데 반영이 안 됨 | `chrome://extensions`에서 새로고침(↻) / press reload on the extension card |
+| 다시 빌드한 뒤 Claude 오류 | macOS가 키체인 접근을 다시 묻습니다. 한 번 허용 / allow Keychain access once more |
+| 안 쓰는 서비스가 오류로 뜸 | 설정 → 표시 항목에서 끄세요 / untick it in Settings |
 
-## Development
+---
+
+## 개발 / Development
 
 ```sh
-./build.sh test                                   # Swift unit tests (117 checks)
-node --test ChromeExtension/tests.cjs             # extension parser + worker tests
-./build/AIUsageBar.app/Contents/MacOS/AIUsageBar --once   # one real fetch, printed
+./build.sh test                                   # Swift 단위 테스트 / Swift unit tests
+node --test ChromeExtension/tests.cjs             # 확장 파서·워커 테스트 / extension tests
+./build/AIUsageBar.app/Contents/MacOS/AIUsageBar --once   # 실제 조회 1회 출력 / one real fetch
 ```
 
-Layout:
+두 테스트 모두 네트워크나 로그인 없이 실행됩니다. / Both suites run without network access or a signed-in account.
 
-- `Sources/Sources.swift`, `Parsing.swift` — per-provider fetching and response parsing
-- `Sources/GeminiChromeBridge.swift` — native messaging host, message validation, freshness, last-good retention
-- `Sources/Coordinator.swift` — scheduling, per-provider error isolation
-- `Sources/MenuBarController.swift`, `BarFormatter.swift` — the bar string and dropdown
-- `ChromeExtension/` — usage page observation, account verification, background polling, popup
-- `Tests/main.swift` — Swift parsing and bridge-message fixtures
+**쓰는 모델을 추가하고 싶다면** — 어떤 파일을 어떤 순서로 건드려야 하는지, 그리고 AI와 함께 작업할 때 무엇을 먼저 주면 되는지 [CONTRIBUTING.md](CONTRIBUTING.md)에 정리해 두었습니다.
 
-Both test suites run without network access or a signed-in account.
+**Want to add a provider you use?** [CONTRIBUTING.md](CONTRIBUTING.md) walks through which files to touch in what order, and how to work through it with an AI assistant.
 
-## License
+구조 / Layout:
 
-MIT — see [LICENSE](LICENSE).
+- `Sources/Sources.swift`, `Parsing.swift` — 서비스별 조회와 응답 파싱 / fetching and parsing
+- `Sources/GeminiChromeBridge.swift` — Native Messaging 호스트, 메시지 검증, 신선도 검사 / the bridge
+- `Sources/Coordinator.swift` — 스케줄링, 서비스별 오류 격리 / scheduling and error isolation
+- `Sources/MenuBarController.swift`, `BarFormatter.swift` — 메뉴바 문자열과 상세 메뉴 / the bar and dropdown
+- `ChromeExtension/` — 페이지 관찰, 계정 확인, 백그라운드 조회, 팝업 / the extension
+- `Tests/main.swift` — Swift 파싱과 연동 메시지 픽스처 / fixtures
+
+---
+
+## 라이선스 / License
+
+MIT — [LICENSE](LICENSE)
