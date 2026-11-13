@@ -43,6 +43,19 @@ final class Prefs {
         set { store.set(min(100, max(0, newValue)), forKey: Key.dangerRemaining) }
     }
 
+    // Automatic prefers an explicitly enabled browser connection; otherwise
+    // preserves the existing local login. Never switches accounts after a web error.
+    func connectionMode(_ id: ProviderID) -> Int {
+        let value = store.integer(forKey: "connectionMode.\(id.rawValue)")
+        return (0...2).contains(value) ? value : 0
+    }
+    func setConnectionMode(_ id: ProviderID, _ value: Int) {
+        store.set(value, forKey: "connectionMode.\(id.rawValue)")
+    }
+    func usesBrowser(_ id: ProviderID) -> Bool {
+        connectionMode(id) == 1 || (connectionMode(id) == 0 && BrowserUsageBridge.isConnected(id))
+    }
+
     var agyPath: String? {
         get { store.string(forKey: Key.agyPath) }
         set { store.set(newValue, forKey: Key.agyPath) }

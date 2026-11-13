@@ -6,7 +6,7 @@ const messages = {
   login_required: '크롬의 Gemini 로그인이 필요합니다.',
   account_mismatch: '지정한 계정과 다른 Google 계정이 선택되어 있습니다.',
   unavailable: '사용량을 확인하지 못했습니다. 아래 페이지에서 로그인과 사용량 표시를 확인하세요.',
-  host_unavailable: '메뉴바 앱 연결이 필요합니다. 프로젝트의 install-chrome-bridge.sh를 실행하세요.',
+  host_unavailable: '메뉴바 앱 연결이 필요합니다. 앱 설정의 Chrome 연결…을 누르세요.',
 };
 
 async function render() {

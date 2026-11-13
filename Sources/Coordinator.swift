@@ -18,6 +18,8 @@ final class UsageCoordinator {
         // Show whatever we knew at launch, marked as not-yet-verified, so the
         // bar is populated before the first network round trip completes.
         for id in ProviderID.allCases {
+            if id == .gpt { states[id] = .unavailable(reason: BrowserUsageBridge.gptNotice); continue }
+            if Prefs.shared.usesBrowser(id) { states[id] = BrowserUsageBridge.state(id); continue }
             if let cached = ReadingCache.shared.reading(for: id) {
                 states[id] = .stale(cached, reason: "갱신 대기 중")
             }
@@ -33,13 +35,14 @@ final class UsageCoordinator {
         let agyPath = Prefs.shared.agyPath
 
         async let claude = Self.fetchClaude(skip: !wanted.contains(.claude))
-        async let chatgpt = Self.fetchChatGPT(skip: !wanted.contains(.chatgpt))
+        async let chatgpt = Self.fetchChatGPT(skip: !wanted.contains(.codex))
         async let antigravity = Self.fetchAntigravity(skip: !wanted.contains(.antigravity), override: agyPath)
         async let gemini = Self.fetchGeminiWeb(skip: !wanted.contains(.gemini))
 
         var next: [ProviderID: ProviderState] = [:]
+        if wanted.contains(.gpt) { next[.gpt] = .unavailable(reason: BrowserUsageBridge.gptNotice) }
         if let claude = await claude { next[.claude] = claude }
-        if let chatgpt = await chatgpt { next[.chatgpt] = chatgpt }
+        if let chatgpt = await chatgpt { next[.codex] = chatgpt }
         if let antigravity = await antigravity { next[.antigravity] = antigravity }
         if let gemini = await gemini { next[.gemini] = gemini }
 
@@ -66,8 +69,16 @@ final class UsageCoordinator {
         }
     }
 
+    func refreshBrowserOnly() {
+        for id in [ProviderID.claude, .codex] where Prefs.shared.isVisible(id) && Prefs.shared.usesBrowser(id) {
+            states[id] = BrowserUsageBridge.state(id)
+        }
+        onUpdate?()
+    }
+
     private static func fetchClaude(skip: Bool) async -> ProviderState? {
         guard !skip else { return nil }
+        if Prefs.shared.usesBrowser(.claude) { return BrowserUsageBridge.state(.claude) }
         do {
             let reading = try await ClaudeSource.fetch()
             ReadingCache.shared.store(reading)
@@ -79,6 +90,7 @@ final class UsageCoordinator {
 
     private static func fetchChatGPT(skip: Bool) async -> ProviderState? {
         guard !skip else { return nil }
+        if Prefs.shared.usesBrowser(.codex) { return BrowserUsageBridge.state(.codex) }
         do {
             let reading = try await ChatGPTSource.fetch()
             ReadingCache.shared.store(reading)
@@ -88,7 +100,7 @@ final class UsageCoordinator {
             // Codex writes its rate limits into every session log, which may be
             // fresher than our own cache if the app has been closed a while.
             let fromSessions = ChatGPTSource.lastKnownFromSessions()
-            let cached = ReadingCache.shared.reading(for: .chatgpt)
+            let cached = ReadingCache.shared.reading(for: .codex)
             let best = [fromSessions, cached]
                 .compactMap { $0 }
                 .max(by: { $0.fetchedAt < $1.fetchedAt })

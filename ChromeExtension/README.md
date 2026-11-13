@@ -1,24 +1,38 @@
-# Gemini 크롬 연결
+# AI 사용량 · 웹 연결 / Web usage bridge
 
-이 폴더를 크롬 확장 프로그램으로 한 번 추가하면, 현재 크롬 프로필의 Gemini 로그인을 이용해 사용량을 읽습니다. 별도의 구글 로그인 창이나 쿠키 복사는 사용하지 않습니다.
+Claude·Codex·Gemini 사용량 페이지의 표시값을 이 Mac의 앱에 전달합니다. 터미널용 Claude Code·Codex 설치는 필요하지 않습니다. 일반 GPT 채팅 잔여량은 제공하지 않습니다.
 
-1. 설치된 앱의 **설정 → Gemini 웹 → Chrome 연결…**을 누릅니다. 로컬 연결이 등록되고 확장 폴더 경로가 복사됩니다.
-2. Gemini에 로그인된 크롬 프로필에서 `chrome://extensions`를 엽니다.
-3. 개발자 모드를 켜고 **압축해제된 확장 프로그램을 로드합니다**를 눌러 `⌘⇧G`를 누른 뒤 복사된 경로를 붙여넣어 앱이 안내한 `ChromeExtension` 폴더를 선택합니다.
-4. 확장 프로그램 버튼에서 **지금 갱신**을 누르면 연결 상태를 확인할 수 있습니다.
+Reads displayed Claude, Codex and Gemini usage figures into the local app. Claude Code and Codex CLI installations are not required. It does not report general GPT chat allowance.
 
-구글 계정이 여러 개라면 팝업의 **사용할 Google 계정** 칸에 주소를 입력해 하나로 고정할 수 있습니다. 비워두면 현재 프로필에 로그인된 계정을 그대로 사용합니다. 이 설정은 확장 저장소에 저장됩니다. 페이지에서 확인한 계정 이메일은 로컬 앱의 연결 캐시에도 저장되며, URL만으로 계정을 확인했다고 판단하지 않습니다.
+## 설치 / Setup
 
-고정 확장 ID: `edmmoiejceaokbohcdedkehoabkgkole`
+1. 설치된 앱의 **설정 → 웹 연결 → Chrome 연결…**을 누릅니다. / Use the installed app's Connect Chrome button.
+2. 원하는 Chrome 프로필의 `chrome://extensions/`에서 개발자 모드를 켭니다. / Enable Developer mode in the intended Chrome profile.
+3. 압축해제된 확장 프로그램 로드 → `⌘⇧G` → 복사된 경로 붙여넣기 → 폴더 선택. / Load unpacked, press `⌘⇧G`, paste and select the folder.
+4. **AI 사용량 · 웹 연결** 팝업에서 Claude / Codex 연결을 켜고 지금 갱신을 누릅니다. Gemini는 자동 연결됩니다. / Enable Claude and/or Codex in the popup and refresh. Gemini connects automatically.
 
-크롬 실행 중 5분마다 비활성 임시 사용량 탭을 만들고, 화면에 표시된 계정과 사용 퍼센트를 읽어 로컬 메뉴바 앱에 전달합니다. 임시 탭은 조회 후 닫습니다. 사용자가 직접 선택한 탭은 닫지 않습니다. 다른 계정의 수치, 읽지 못한 수치를 정상 사용량으로 표시하지 않습니다.
+v1.1.1에서 업데이트하면 확장을 새로고침하고 새 사이트 권한을 확인하세요. / Reload and review new site permissions when upgrading from v1.1.1.
 
-접근 권한은 `gemini.google.com`과 로컬 Native Messaging 연결입니다. 콘텐츠 스크립트는 `/usage`와 `/u/숫자/usage`에서만 동작합니다. 비밀번호·쿠키·대화 내용은 읽거나 저장하지 않습니다. 페이지 구조 변경이나 Google 로그아웃이 발생하면 조회 실패 상태를 전달합니다.
+## 데이터 / Data
 
-단위 검증:
+- Claude·Codex는 명시적으로 켰을 때만 5분마다 비활성 탭을 열어 확인합니다. / Claude and Codex polling is opt-in.
+- 다른 페이지·프레임·요청한 탭이 아닌 곳의 메시지는 거부합니다. / Reports from unrelated pages, frames and tabs are rejected.
+- 사용자가 선택한 탭은 자동으로 닫지 않습니다. / User-selected tabs are retained.
+- 새 웹 연결은 이메일·사용자명·쿠키·토큰·페이지 원문을 저장하거나 앱에 보내지 않습니다. / New web connections never store or forward identity, credentials or page text.
+- Gemini만 Google 계정 확인을 위해 이메일을 사용합니다. 선택적으로 고정할 수 있으며 로컬 캐시에도 저장됩니다. / Gemini uses a verified email for account matching, with optional pinning and a local cache.
+- Claude·Codex는 현재 Chrome 로그인 계정을 사용합니다. 로컬 앱의 계정과 다를 수 있습니다. / Claude and Codex use the current Chrome account, which may differ from local apps.
+- 계정 전환·페이지 변경·로그아웃 때 갱신 실패 또는 오래된 값이 표시될 수 있습니다. / Account changes, page changes and logout can produce an error or stale values.
+
+권한 / Permissions: `alarms`, `nativeMessaging`, `storage`; site access to `gemini.google.com`, `claude.ai`, `chatgpt.com`.
+
+Claude 콘텐츠 스크립트는 `/settings/usage`와 `/new`에서 로드되지만, `/new#settings/usage` 사용량 설정이 열렸을 때만 읽습니다. ChatGPT는 `/settings/usage`, Gemini는 `/usage`와 `/u/숫자/usage`만 읽습니다. / Claude's script loads on the usage route and `/new`, but reads `/new` only when the usage-settings fragment is active. ChatGPT and Gemini scripts are limited to their usage routes.
+
+고정 ID / Fixed extension ID: `edmmoiejceaokbohcdedkehoabkgkole`. `manifest.json`의 키는 공개키이며 인증 비밀이 아닙니다. / The manifest key is public, not a credential.
+
+## 개발 / Development
 
 ```sh
-node --test ChromeExtension/tests.cjs
+node --test ChromeExtension/*tests.cjs
 ```
 
-`manifest.json`의 공개키는 확장 ID를 일정하게 유지하기 위한 값입니다. 서명용 개인키는 파일로 저장하지 않았습니다.
+`fixtures/` contains only sanitized quota-section excerpts; no names, emails, account IDs, cookies or tokens. Only runtime JS, HTML and the manifest are bundled in the released app.

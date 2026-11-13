@@ -96,6 +96,7 @@ async function receive(message, sender) {
 }
 
 chrome.runtime.onMessage.addListener((message, sender, respond) => {
+  if (!['refresh', 'snapshot'].includes(message?.kind)) return false;
   serial(() => receive(message, sender)).then(respond).catch(() => respond({ accepted: false }));
   return true;
 });
@@ -130,3 +131,5 @@ chrome.tabs.onRemoved.addListener(tabId => serial(async () => {
     await chrome.alarms.clear(DEADLINE);
   }
 }));
+
+importScripts('web-parser.js', 'web-worker.js');

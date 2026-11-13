@@ -183,12 +183,12 @@ do {
 section("Brand colours")
 do {
     equal(ProviderID.claude.brandHex, "D97757", "Anthropic antique brass")
-    equal(ProviderID.chatgpt.brandHex, "10A37F", "OpenAI teal green")
+    equal(ProviderID.codex.brandHex, "10A37F", "OpenAI teal green")
     equal(ProviderID.gemini.brandHex, "3186FF", "Gemini blue")
     equal(ProviderID.antigravity.brandHex, ProviderID.gemini.brandHex,
           "Antigravity shares Gemini's blue, per request")
-    equal(ProviderID.claude.shortLabel, "C", "distinct tags separate same-coloured providers")
-    equal(ProviderID.antigravity.shortLabel, "Ag", "Antigravity tag")
+    equal(ProviderID.claude.shortLabel, "Claude", "distinct tags separate same-coloured providers")
+    equal(ProviderID.antigravity.shortLabel, "agy", "Antigravity tag")
 }
 
 section("Menu bar composition")
@@ -197,7 +197,7 @@ do {
         UsageWindow(label: "5시간", usedPercent: 6, resetsAt: nil),
         UsageWindow(label: "7일", usedPercent: 73, resetsAt: nil),
     ], fetchedAt: now)
-    let chatgpt = ProviderReading(id: .chatgpt, planLabel: "Pro", windows: [
+    let chatgpt = ProviderReading(id: .codex, planLabel: "Pro", windows: [
         UsageWindow(label: "7일", usedPercent: 72, resetsAt: nil),
     ], fetchedAt: now)
     let gemini = ProviderReading(id: .gemini, planLabel: nil, windows: [
@@ -205,11 +205,11 @@ do {
     ], fetchedAt: now)
 
     let segments = barSegments(
-        for: [.claude, .chatgpt, .gemini],
-        states: [.claude: .ok(claude), .chatgpt: .ok(chatgpt), .gemini: .ok(gemini)],
+        for: [.claude, .codex, .gemini],
+        states: [.claude: .ok(claude), .codex: .ok(chatgpt), .gemini: .ok(gemini)],
         warnBelow: 20, dangerBelow: 5, now: now
     )
-    equal(barPlainText(segments), "C 27% · G 28% · Ge 100%", "bar shows what is left")
+    equal(barPlainText(segments), "Claude 27% · Codex 28% · Gemini 100%", "bar shows what is left")
 
     // The provider tag carries the brand colour; the number carries the warning.
     equal(segments[0].style, .brand(.claude), "tag is brand-coloured")
@@ -221,25 +221,25 @@ do {
         states: [.claude: .ok(claude), .gemini: .ok(gemini)],
         warnBelow: 20, dangerBelow: 5, now: now
     )
-    equal(barPlainText(two), "C 27% · Ge 100%", "hidden provider drops cleanly")
+    equal(barPlainText(two), "Claude 27% · Gemini 100%", "hidden provider drops cleanly")
 
     // Stale readings keep the number but admit their age.
-    let old = ProviderReading(id: .chatgpt, planLabel: "Pro", windows: [
+    let old = ProviderReading(id: .codex, planLabel: "Pro", windows: [
         UsageWindow(label: "7일", usedPercent: 72, resetsAt: nil),
     ], fetchedAt: now.addingTimeInterval(-2 * 86400))
     let stale = barSegments(
-        for: [.chatgpt],
-        states: [.chatgpt: .stale(old, reason: "401")],
+        for: [.codex],
+        states: [.codex: .stale(old, reason: "401")],
         warnBelow: 20, dangerBelow: 5, now: now
     )
-    equal(barPlainText(stale), "G 28%(2일 전)", "stale reading is labelled")
+    equal(barPlainText(stale), "Codex 28%(2일 전)", "stale reading is labelled")
 
     let dead = barSegments(
         for: [.gemini],
         states: [.gemini: .unavailable(reason: "agy 없음")],
         warnBelow: 20, dangerBelow: 5, now: now
     )
-    equal(barPlainText(dead), "Ge –", "unavailable provider shows a dash")
+    equal(barPlainText(dead), "Gemini –", "unavailable provider shows a dash")
 
     // Colour must track the emptiest window, not the first one.
     let hot = ProviderReading(id: .claude, planLabel: nil, windows: [
@@ -248,7 +248,7 @@ do {
     ], fetchedAt: now)
     let hotSegments = barSegments(for: [.claude], states: [.claude: .ok(hot)],
                                   warnBelow: 20, dangerBelow: 5, now: now)
-    equal(barPlainText(hotSegments), "C 4%", "reports the emptiest window")
+    equal(barPlainText(hotSegments), "Claude 4%", "reports the emptiest window")
     equal(hotSegments[1].style, .severity(.danger), "emptiest window drives the colour")
 }
 
@@ -374,6 +374,45 @@ do {
     let updated = try JSONSerialization.jsonObject(with: Data(contentsOf: file)) as! [String: Any]
     equal(updated["path"] as? String, moved.appendingPathComponent("gemini-native-host").path,
           "reconnecting repairs registration after app move")
+}
+
+section("Web bridge — provider isolation, privacy and stale state")
+do {
+    equal(ProviderID.allCases.map(\.shortLabel), ["Claude", "GPT", "Codex", "Gemini", "agy"], "requested order")
+    equal(ProviderID(rawValue: "chatgpt"), .codex, "old Codex cache key never migrates to GPT chat")
+    let f = ISO8601DateFormatter()
+    let base: [String: Any] = ["version": 2, "provider": "codex", "status": "ok",
+        "sourceURL": "https://chatgpt.com/settings/usage?tab=overview&private=discard",
+        "observedAt": f.string(from: now), "used": [87], "labels": ["주간"], "email": "fixture@example.com"]
+    func data(_ changes: [String: Any] = [:]) -> Data {
+        try! JSONSerialization.data(withJSONObject: base.merging(changes) { _, replacement in replacement })
+    }
+    let r = try BrowserUsageBridge.validate(data(), now: now)
+    equal(r.reading?.id, .codex, "Codex never becomes GPT")
+    equal(r.reading?.lowestRemainingPercent, 13, "observed web quota")
+    for changes: [String: Any] in [["provider":"gpt"], ["provider":"claude"], ["used":[101]],
+        ["used":[true]], ["labels":["private text"]], ["status":"disabled"],
+        ["observedAt":f.string(from: now.addingTimeInterval(61))],
+        ["observedAt":f.string(from: now.addingTimeInterval(-901))],
+        ["sourceURL":"https://chatgpt.com/c/private"], ["sourceURL":"https://chatgpt.com.evil.test/settings/usage"]] {
+        check((try? BrowserUsageBridge.validate(data(changes), now: now)) == nil, "bad web report rejected")
+    }
+    let folder = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+    defer { try? FileManager.default.removeItem(at: folder) }
+    try BrowserUsageBridge.save(r, in: folder)
+    let saved = try String(contentsOf: BrowserUsageBridge.file(.codex, in: folder), encoding: .utf8)
+    check(!saved.contains("fixture@example.com") && !saved.contains("private=discard"), "cache strips identity and query")
+    let attrs = try FileManager.default.attributesOfItem(atPath: BrowserUsageBridge.file(.codex, in: folder).path)
+    equal((attrs[.posixPermissions] as? NSNumber)?.intValue, 0o600, "web cache owner-only")
+    check(BrowserUsageBridge.load(.claude, in: folder) == nil, "provider caches isolated")
+    check(BrowserUsageBridge.load(.gpt, in: folder) == nil, "GPT cannot inherit Codex cache")
+    equal(BrowserUsageBridge.state(.codex, now: now, in: folder).reading?.lowestRemainingPercent, 13, "fresh cache")
+    check(BrowserUsageBridge.state(.codex, now: now.addingTimeInterval(901), in: folder).failureReason != nil, "old cache is explicitly stale")
+    let disabled = try BrowserUsageBridge.validate(data(["status":"disabled", "used":[], "labels":[]]), now: now)
+    try BrowserUsageBridge.save(disabled, in: folder)
+    check(BrowserUsageBridge.state(.codex, now: now, in: folder).reading == nil, "disconnect clears old reading")
+    let bar = barSegments(for: [.gpt], states: [.gpt:.unavailable(reason: BrowserUsageBridge.gptNotice)], warnBelow: 20, dangerBelow: 5, now: now)
+    equal(barPlainText(bar), "GPT –", "unknown GPT quota is not fabricated")
 }
 
 print("\n\(checks - failures)/\(checks) checks passed")

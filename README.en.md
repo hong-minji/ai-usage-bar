@@ -1,24 +1,24 @@
 # AI Usage Bar
 
+> **v1.2.0 under review:** This guide describes the upcoming version. Live Chrome integration testing for the new Claude/Codex web connections is pending. See [published releases](https://github.com/hong-minji/ai-usage-bar/releases) for available downloads.
+
 **Your remaining AI quota, right in your Mac menu bar.**
 
-A free, open-source macOS app that puts **Claude, Codex, Gemini web and Antigravity** usage in one place.
+A free, open-source Mac menu bar app with **Claude · GPT · Codex · Gemini · agy** entries. Connect Claude, Codex and Gemini through Chrome, or keep using existing local logins and the agy CLI.
 
 [한국어](README.md) · **English**
 
-[**↓ Download for Mac — v1.1.1**](https://github.com/hong-minji/ai-usage-bar/releases/download/v1.1.1/AIUsageBar-1.1.1-universal.zip) · [Releases / latest version](https://github.com/hong-minji/ai-usage-bar/releases) · [Report an issue](https://github.com/hong-minji/ai-usage-bar/issues)
+[**↓ Published Mac downloads**](https://github.com/hong-minji/ai-usage-bar/releases) · [Releases / latest version](https://github.com/hong-minji/ai-usage-bar/releases) · [Report an issue](https://github.com/hong-minji/ai-usage-bar/issues)
 
 Targets macOS 13+ · One download for Apple Silicon and Intel · Korean app UI · MIT license
 
 > This is an early public release. It is ad-hoc signed, without Apple Developer ID signing or notarization, so macOS may block the first launch. Read [First launch](#first-launch) below. Windows and Linux are not supported.
 
-<img src="docs/screenshot.png" width="440" alt="AI Usage Bar menu bar and dropdown showing remaining quota by provider">
-
 ```text
-C 75% · G 81% · Ge 93% · Ag 0%
+Claude 75% · GPT – · Codex 81% · Gemini 93% · agy 0%
 ```
 
-These are example values. Every percentage means **remaining, not used**. If a provider has multiple limits, such as a five-hour and weekly window, the menu bar shows the smallest remaining percentage. Open the menu for individual limits and reset times where available.
+**These are example values. GPT chat shows `–` because an exact remaining allowance is not available to this app.** Its menu links to ChatGPT for model-specific limits. Codex figures are never substituted for GPT chat. Every percentage means **remaining, not used**. If a provider has multiple limits, such as a five-hour and weekly window, the menu bar shows the smallest remaining percentage. Open the menu for individual limits and reset times where available.
 
 ## Install with AI — share this link
 
@@ -42,11 +42,11 @@ To install it yourself, follow the steps below.
 
 ## Download and get started
 
-1. Use **Download for Mac** above to get `AIUsageBar-1.1.1-universal.zip`. The same file supports Apple Silicon and Intel.
+1. Use **Download for Mac** above to get `AIUsageBar-1.2.0-universal.zip`. The same file supports Apple Silicon and Intel.
 2. Double-click the ZIP to extract it. It contains `AIUsageBar.app`, `START-HERE.txt` and `LICENSE.txt`.
-3. **Move the app to Applications before opening it.** Choose its permanent location before connecting Gemini.
+3. **Move the app to Applications before opening it.** Choose its permanent location before connecting Chrome.
 4. Find the app in the menu bar at the top of the screen. Open **설정…** (Settings) → **표시 항목** (Visible items) and keep only the services you use. There is no Dock icon.
-5. Check the sign-in requirements below. For Gemini, complete the one-time [Chrome setup](#connect-gemini-web).
+5. Check the sign-in requirements below. For web logins, complete the one-time [Chrome setup](#connect-through-chrome-without-a-terminal).
 
 The downloaded app does not require Xcode, Homebrew or Node.js. A provider's login tool or Chrome is needed only for that provider. GitHub's **Code → Download ZIP** and the **Source code** release assets contain source files; the runnable app is in `AIUsageBar-…-universal.zip` linked above.
 
@@ -58,41 +58,62 @@ macOS may also ask for Keychain access when connecting Claude. This lets the app
 
 ## Supported services
 
-| Menu bar | Quota shown | What you need |
-|---|---|---|
-| `C` | Claude five-hour and weekly limits | Claude Code signed in on this Mac, with credentials in the macOS Keychain |
-| `G` | **Codex** limits | A ChatGPT account login saved in `~/.codex/auth.json` on this Mac |
-| `Ge` | **Gemini web** limits | Google Chrome signed into Gemini, plus the bundled extension |
-| `Ag` | Antigravity coding quota | The `agy` CLI installed and signed in; set its path in Settings if needed |
+| Label | What it measures | Without terminal tools | Existing local connection |
+|---|---|---|---|
+| **Claude** | Session and weekly quota | Claude signed in through Chrome + extension | Claude Code login |
+| **GPT** | General ChatGPT chat | Exact remaining quota unsupported; `–` and a ChatGPT shortcut | Never borrows Codex figures |
+| **Codex** | The web page's Codex / Work quota | ChatGPT signed in through Chrome + extension | ChatGPT login in `~/.codex/auth.json` |
+| **Gemini** | Gemini web quota | Gemini signed in through Chrome + extension | Uses Chrome |
+| **agy** | Antigravity coding quota | Not supported | agy CLI installed and signed in |
 
-**`G` does not show general ChatGPT chat limits.** Gemini web and Antigravity also have separate quotas. Signing into the Claude or ChatGPT website alone is insufficient. This app does not track API-key billing or usage.
+Web connections for Claude, Codex and Gemini do not require CLI installation. **For local connections, installation alone is insufficient: you must also be signed in.** You do not need to leave a terminal window open or repeatedly enter commands. Codex depends on its local login file, not on whether you personally use its CLI.
 
-- Enable only the services you use. Hidden services are not queried. Antigravity is off by default.
-- Refreshes every five minutes and when you open the menu. The app's interval is configurable from 1–120 minutes.
-- On failure, it shows the last successful reading with its age and an error. With no previous reading, it shows that usage is unavailable. A failed request never becomes a fabricated `0%`.
-- It sends no model prompts. It uses quota requests, the usage page and `agy /quota`.
+General GPT chat and Codex / Work are distinct entries. This version reflects the usage surfaces currently verified; provider policy or UI changes require revalidation. Gemini web and agy also have separate quotas. This is not an API billing tracker.
 
-## Connect Gemini web
+- Choose visible services in Settings. agy is hidden by default; enable it only if you use the CLI.
+- The app refreshes every five minutes and when its menu opens; its interval is configurable from 1–120 minutes.
+- Chrome polls every five minutes while running. Opening the app menu reads the latest report; use Refresh now in the extension for an immediate web fetch.
+- Failures show the previous successful reading with its age and an error, never a fabricated `0%`.
+- Only usage queries are made. No model prompts are sent.
 
-Google Chrome is required. The extension is bundled inside the app; it is not published on the Chrome Web Store.
+## Connect through Chrome without a terminal
 
-1. In the installed app, open **설정…** (Settings) → **Gemini 웹** → **Chrome 연결…** (Connect Chrome). This registers the current app location and copies the extension folder path to your clipboard.
-2. In the Chrome profile signed into Gemini, open `chrome://extensions/`.
-3. Turn on **Developer mode** in the top right and choose **Load unpacked**.
-4. In the folder picker, press **⌘⇧G**, paste, press **Enter**, then select that folder.
-5. Open **AI 사용량 · Gemini 연결** from Chrome's extensions menu and press **지금 갱신** (Refresh now).
+The extension is bundled in the app and is not on the Chrome Web Store. Usage pages must be in Korean or English. Sign into the services in the Chrome profile you want to use.
 
-If you use multiple Google accounts, enter the desired email in the extension popup to pin an account. Leave it empty to use the current Chrome profile's account. Readings are rejected when the displayed account cannot be verified or does not match the pinned account.
+1. In the installed app, open **설정… → 웹 연결 → Chrome 연결…** (Settings → Web connection → Connect Chrome). This registers the app and copies the extension folder path.
+2. Open `chrome://extensions/` in that Chrome profile and enable **Developer mode**.
+3. Choose **Load unpacked**, press **⌘⇧G**, paste, press **Enter**, then select the folder.
+4. Open **AI 사용량 · 웹 연결** from Chrome's extension menu.
+5. Turn on **Claude 웹 연결** and/or **Codex / Work 웹 연결**. Gemini connects automatically as before.
+6. Press the provider's **지금 갱신** (Refresh now). The app labels these readings **Chrome 웹** (Chrome web).
 
-While Chrome is running, the extension opens an inactive usage tab every five minutes, reads it and closes it. A tab you select yourself is not automatically closed. The usage page must be in **Korean or English**. If Chrome is closed or the page cannot be read, previous readings become stale.
+**Upgrading from v1.1.1?** Reload the extension and review its new Claude and ChatGPT site permissions. The new connection toggles are off by default.
 
-Load only the extension folder supplied by the app and keep the app in its installed location. If you move it, click **Chrome 연결…** again and load the extension from the new location. The app button supports Google Chrome. See [Contributing](CONTRIBUTING.md) for the developer tool for other Chromium browsers.
+Claude/Codex connection choices in the app:
+
+| Choice | Behavior |
+|---|---|
+| 자동 (연결된 Chrome 우선) / Automatic | Uses an enabled Chrome connection when present, otherwise the existing local login |
+| Chrome 웹만 — 터미널 불필요 / Chrome only | Reads browser reports without querying local credentials |
+| 기존 로컬 로그인만 / Local only | Uses existing Claude Code / Codex credentials |
+
+A browser error does not silently switch to a different local account. **Your browser and local apps may be signed into different accounts: check the Chrome profile you choose.** Claude/Codex reports use that profile's current signed-in account without collecting its email. Use one Chrome profile for the connection.
+
+For Gemini, you can optionally pin a Google email in the extension popup. Otherwise it uses the current Google account. Unverifiable account identity is rejected.
+
+The extension opens inactive usage tabs and closes them after reading. Tabs you select yourself are preserved. If you move the app, reconnect Chrome and load the extension from the new location. Keep the app and extension folder in place.
+
+## Connect existing local logins
+
+If you already signed into Claude Code or Codex, you can continue using that login. To choose the local account while Chrome is also connected, select **기존 로컬 로그인만** (Local only) in app Settings. Claude may ask for Keychain access.
+
+agy requires CLI installation and sign-in. Set its executable path if automatic discovery fails. Hide agy if you do not use it.
 
 ## Update and uninstall
 
-**Update:** Quit the existing app from its menu → download the new ZIP from [Releases](https://github.com/hong-minji/ai-usage-bar/releases) → replace the app in the same Applications location → reopen it. Updates are manual. Reload the Gemini extension at `chrome://extensions/`. If the app moved, reconnect Chrome and toggle launch at login off and on.
+**Update:** Quit the existing app from its menu → download the new ZIP from [Releases](https://github.com/hong-minji/ai-usage-bar/releases) → replace the app in the same Applications location → reopen it. Updates are manual. Reload the web extension at `chrome://extensions/`. If the app moved, reconnect Chrome and toggle launch at login off and on.
 
-**Uninstall:** In Settings, turn off **로그인 시 자동 실행** (Launch at login), quit, then move the app to Trash. If you connected Gemini, remove its Chrome extension and the registration file below. Remove the cache folder to erase usage history, and the preferences file to erase settings.
+**Uninstall:** In Settings, turn off **로그인 시 자동 실행** (Launch at login), quit, then move the app to Trash. If you connected Chrome, remove the extension and the registration file below. Remove the cache folder to erase usage history, and the preferences file to erase settings.
 
 ```text
 Chrome registration: ~/Library/Application Support/Google/Chrome/NativeMessagingHosts/com.local.ai_usage_bar.gemini.json
@@ -107,7 +128,8 @@ Turning off launch at login removes its file. If you used the developer installe
 
 - No developer server, analytics, advertising or telemetry. Usage requests go to the relevant service provider.
 - Claude and Codex credentials are read only. The app never refreshes tokens or saves its own copy of them.
-- The Gemini extension reads account identity and figures from usage pages on `gemini.google.com`. It does not copy cookies, passwords or conversations.
+- The extension has site access to `claude.ai`, `chatgpt.com` and `gemini.google.com`. It extracts figures only from Claude/Codex usage settings and Gemini usage pages. It does not extract cookies, passwords or authentication tokens, or transmit conversation text.
+- Claude/Codex web reports store only the provider, a fixed usage URL, time, percentages and quota labels. No emails, display names or page text are stored.
 - Local caches contain usage, labels, plan information and timestamps. The Gemini bridge cache also contains the verified email, page URL and connection status. Cache file permissions are set to owner-only (`0600`).
 - A pinned email and connection state are also kept in Chrome extension local storage, which is removed when the extension is uninstalled.
 
@@ -119,8 +141,10 @@ This is an independent app. Changes to a provider's authentication, responses or
 |---|---|
 | No window after opening the app | Look in the top menu bar. There is no Dock icon or regular app window. |
 | macOS blocks launch | Follow First launch above and Apple's official guidance. |
-| Claude login unavailable | Check Claude Code sign-in and Keychain access. |
-| Codex login unavailable | A ChatGPT login must be saved in `~/.codex/auth.json` on this Mac. |
+| Claude login unavailable | Enable Chrome web access or check the existing Claude Code login and Keychain access. |
+| Codex login unavailable | Enable Chrome web access or check the existing local Codex login. |
+| GPT shows `–` | Exact remaining chat quota is unavailable. Use the ChatGPT shortcut in the menu. |
+| No web reading | Check extension reload, site permissions, service login and connection toggles. |
 | Gemini needs a menu bar app connection | Click **Chrome 연결…** in the currently installed app and reload the extension. |
 | Gemini shows old values | Check that Chrome is running and signed in, then press **지금 갱신** in the extension popup. |
 | An unused service shows an error | Disable it under **설정… → 표시 항목**. |
@@ -141,20 +165,20 @@ open build/AIUsageBar.app
 
 ```sh
 ./build.sh test                       # Swift checks
-node --test ChromeExtension/tests.cjs # Extension tests; requires Node.js
+node --test ChromeExtension/*tests.cjs # Extension tests; requires Node.js
 ./package.sh                         # Both architectures, ZIP and SHA-256
 ./build/AIUsageBar.app/Contents/MacOS/AIUsageBar --once # One live check
 ```
 
-For `v1.1.1`, 122 Swift checks and 21 extension tests passed, along with the universal build, ZIP extraction and signature verification. All four providers were checked on the development Mac. **Installation and execution have not been verified on macOS 13 or every supported Mac model.**
+For `v1.2.0`, 144 Swift checks and 32 extension tests passed, along with the universal build, ZIP extraction and signature verification. Live verification scope is recorded in the release notes. Exact remaining GPT chat percentages are unsupported. **Installation and execution have not been verified on macOS 13 or every supported Mac model.**
 
 To verify file integrity, download the release ZIP and its `.sha256` file into the same folder, then run:
 
 ```sh
-shasum -a 256 -c AIUsageBar-1.1.1-universal.zip.sha256
+shasum -a 256 -c AIUsageBar-1.2.0-universal.zip.sha256
 ```
 
-[Contributing](CONTRIBUTING.md) · [Gemini extension](ChromeExtension/) · [Release notes](docs/releases/v1.1.1.md)
+[Contributing](CONTRIBUTING.md) · [Gemini extension](ChromeExtension/) · [Release notes](docs/releases/v1.2.0.md)
 
 ## License
 

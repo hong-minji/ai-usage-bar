@@ -42,7 +42,7 @@ final class GeminiWebSource {
 
     private func showError(_ message: String) {
         let alert = NSAlert()
-        alert.messageText = "Gemini Chrome 연결"
+        alert.messageText = "AI 사용량 Chrome 연결"
         alert.informativeText = message
         alert.runModal()
     }

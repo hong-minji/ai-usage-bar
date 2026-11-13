@@ -50,6 +50,11 @@ final class MenuBarController: NSObject, NSMenuDelegate {
         ) { [weak self] _ in
             Task { @MainActor in await self?.coordinator.refreshGeminiOnly() }
         }
+        DistributedNotificationCenter.default().addObserver(
+            forName: BrowserUsageBridge.updatedNotificationName, object: nil, queue: .main
+        ) { [weak self] _ in
+            Task { @MainActor in self?.coordinator.refreshBrowserOnly() }
+        }
         refreshNow()
     }
 
@@ -142,12 +147,17 @@ final class MenuBarController: NSObject, NSMenuDelegate {
             case .stale(let reading, let reason):
                 addWindowRows(reading, to: menu)
                 menu.addItem(noteItem("\(reason) · \(koreanRelativeAge(from: reading.fetchedAt, to: Date())) 기준"))
-                if id == .chatgpt { menu.addItem(noteItem("codex 를 한 번 실행하면 갱신됩니다")) }
+                if id == .codex && !Prefs.shared.usesBrowser(id) { menu.addItem(noteItem("로컬 로그인 또는 설정의 Chrome 웹 연결을 확인하세요")) }
             case .unavailable(let reason):
                 menu.addItem(noteItem(reason))
                 menu.addItem(hintItem(for: id))
             case nil:
                 menu.addItem(noteItem("불러오는 중…"))
+            }
+            if id == .gpt {
+                let open = NSMenuItem(title: "ChatGPT에서 모델별 한도 확인…", action: #selector(openChatGPT), keyEquivalent: "")
+                open.target = self
+                menu.addItem(open)
             }
             menu.addItem(.separator())
         }
@@ -208,8 +218,9 @@ final class MenuBarController: NSObject, NSMenuDelegate {
     private func hintItem(for id: ProviderID) -> NSMenuItem {
         let hint: String
         switch id {
-        case .claude: hint = "claude 를 실행해 로그인하세요"
-        case .chatgpt: hint = "codex 를 실행해 로그인하세요"
+        case .claude: hint = "설정 → Chrome 연결 또는 기존 Claude Code 로그인을 사용하세요"
+        case .codex: hint = "설정 → Chrome 연결 또는 기존 Codex 로그인을 사용하세요"
+        case .gpt: hint = "Codex / Work 사용량과 일반 채팅 한도는 다릅니다"
         case .gemini: hint = "설정 → Chrome 연결에서 확장 프로그램을 추가하세요"
         case .antigravity: hint = "agy 를 실행해 로그인하세요"
         }
@@ -233,6 +244,8 @@ final class MenuBarController: NSObject, NSMenuDelegate {
     }
 
     // MARK: - Actions
+
+    @objc private func openChatGPT() { NSWorkspace.shared.open(URL(string: "https://chatgpt.com/")!) }
 
     @objc private func didTapRefresh() { refreshNow() }
 

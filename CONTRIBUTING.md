@@ -125,7 +125,7 @@ Common mistakes to look for:
 ### 끝내기 전에 / Before you call it done
 
 ```sh
-./build.sh test && node --test ChromeExtension/tests.cjs
+./build.sh test && node --test ChromeExtension/*tests.cjs
 ```
 
 둘 다 통과하고, `--once`가 실제 숫자를 뱉는 것까지 **직접 눈으로** 확인하세요. "통과할 것"과 "통과했다"는 다릅니다.
@@ -166,3 +166,14 @@ Before publishing, test installation in a fresh macOS account, verify live provi
 설치된 앱의 버튼은 Google Chrome에 연결합니다. 소스에서 `build/AIUsageBar.app`을 직접 실행하는 개발자는 `./install-chrome-bridge.sh`로 감지된 Chromium 계열 브라우저 프로필에 연결을 등록할 수 있습니다. `./install-chrome-bridge.sh --check`는 등록 상태를 진단합니다. 이 스크립트는 호스트 경로를 `build/` 앱으로 바꾸므로 일반 다운로드 사용자는 앱의 연결 버튼을 쓰세요. 다른 브라우저의 실제 연결은 별도 검증이 필요합니다.
 
 The installed app button supports Google Chrome. Developers running `build/AIUsageBar.app` can use `./install-chrome-bridge.sh` to register detected Chromium-family browser profiles, and `--check` to diagnose registrations. This points the host at the `build/` app; release users should use the app button. Other browsers require separate live verification.
+
+
+## 5. 웹 연결과 GPT 구분 / Web connections and GPT separation
+
+`ProviderID.codex`의 저장값은 이전 버전 호환을 위해 `chatgpt`입니다. 새 `gpt` 항목은 일반 채팅이며 Codex 캐시를 재사용하면 안 됩니다. GPT 잔여량은 검증된 출처가 없으므로 대시와 바로가기를 표시합니다.
+
+The persisted value of `ProviderID.codex` remains `chatgpt` for compatibility. The new `gpt` category must never inherit Codex caches. It shows a dash and shortcut until a verified source for chat quota exists.
+
+`BrowserUsageBridge.swift`와 `ChromeExtension/web-*.js`는 Claude·Codex 웹 연결입니다. 사용량 설정 영역의 개인정보 없는 실제 표시 예시는 `ChromeExtension/fixtures/`에 있습니다. 새 파서는 이 실제 예시를 검증하고 출처 URL·탭·프레임·범위·시각을 검사해야 합니다.
+
+Claude/Codex web reports contain only provider, fixed source URL, time, percentages and quota labels. Keep account identity, credentials, raw pages, screenshots and private captures out of fixtures and releases. The build script whitelists runtime extension assets. The developer installer `--check` currently diagnoses the Gemini bridge, not the new web provider statuses.

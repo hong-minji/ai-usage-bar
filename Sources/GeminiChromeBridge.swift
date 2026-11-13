@@ -208,8 +208,16 @@ enum GeminiChromeBridge {
                 throw BridgeError.invalidMessage
             }
             let now = Date()
-            let report = try validate(readExactly(Int(length)), now: now)
-            try save(report, receivedAt: now)
+            let data = try readExactly(Int(length))
+            if let object = try? JSONSerialization.jsonObject(with: data) as? [String: Any], object["version"] as? Int == 2 {
+                let report = try BrowserUsageBridge.validate(data, now: now)
+                try BrowserUsageBridge.save(report)
+                DistributedNotificationCenter.default().postNotificationName(BrowserUsageBridge.updatedNotificationName,
+                    object: nil, userInfo: nil, deliverImmediately: true)
+            } else {
+                let report = try validate(data, now: now)
+                try save(report, receivedAt: now)
+            }
             try respond(["ok": true])
             exit(0)
         } catch {

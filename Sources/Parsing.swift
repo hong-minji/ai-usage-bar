@@ -94,7 +94,7 @@ func parseChatGPTUsage(_ data: Data, now: Date) throws -> ProviderReading {
     }
     let plan = (root["plan_type"] as? String).map { $0.capitalized }
     return ProviderReading(
-        id: .chatgpt,
+        id: .codex,
         planLabel: plan,
         windows: try chatGPTWindows(from: limit, now: now),
         fetchedAt: now
@@ -114,7 +114,7 @@ func parseCodexSessionRateLimits(line: String, now: Date) throws -> ProviderRead
     let timestamp = (root["timestamp"] as? String).flatMap(parseISODate) ?? now
     let plan = (limit["plan_type"] as? String).map { $0.capitalized }
     return ProviderReading(
-        id: .chatgpt,
+        id: .codex,
         planLabel: plan,
         windows: try chatGPTWindows(from: limit, now: timestamp),
         fetchedAt: timestamp

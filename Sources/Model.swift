@@ -1,22 +1,24 @@
 import Foundation
 
-/// The four things we can report on. `gemini` is the gemini.google.com web app's
+/// Display categories; GPT chat is distinct from the persisted Codex category. `gemini` is the gemini.google.com web app's
 /// chat quota (read through the Chrome extension); `antigravity` is the separate
 /// coding-agent budget read from the `agy` CLI. Google tracks the two
 /// independently even on the same account, so they are distinct providers.
 enum ProviderID: String, CaseIterable, Codable {
     case claude
-    case chatgpt
+    case gpt
+    case codex = "chatgpt"
     case gemini        // gemini.google.com 웹(채팅) 사용량
     case antigravity   // Antigravity 코딩 에이전트 사용량 (별도 집계)
 
     /// Compact tag used in the menu bar, where width is scarce.
     var shortLabel: String {
         switch self {
-        case .claude: return "C"
-        case .chatgpt: return "G"
-        case .gemini: return "Ge"
-        case .antigravity: return "Ag"
+        case .claude: return "Claude"
+        case .gpt: return "GPT"
+        case .codex: return "Codex"
+        case .gemini: return "Gemini"
+        case .antigravity: return "agy"
         }
     }
 
@@ -25,7 +27,7 @@ enum ProviderID: String, CaseIterable, Codable {
     var brandHex: String {
         switch self {
         case .claude: return "D97757"          // Anthropic antique brass
-        case .chatgpt: return "10A37F"         // OpenAI teal green
+        case .gpt, .codex: return "10A37F"         // OpenAI teal green
         // Gemini 웹과 Antigravity는 같은 구글 제품군이라 색을 통일 -- 숫자/라벨로 구분.
         case .gemini: return "3186FF"          // Gemini blue
         case .antigravity: return "3186FF"     // same blue, per user request
@@ -35,7 +37,8 @@ enum ProviderID: String, CaseIterable, Codable {
     var displayName: String {
         switch self {
         case .claude: return "Claude"
-        case .chatgpt: return "ChatGPT"
+        case .gpt: return "GPT (일반 채팅)"
+        case .codex: return "Codex / Work"
         case .gemini: return "Gemini (웹)"
         case .antigravity: return "Antigravity"
         }

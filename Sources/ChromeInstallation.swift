@@ -15,7 +15,7 @@ enum ChromeInstallation {
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
         let manifest: [String: Any] = [
             "name": hostName,
-            "description": "AI Usage Bar: Gemini usage from the signed-in Chrome session",
+            "description": "AI Usage Bar: usage figures from signed-in Chrome pages",
             "path": host.path,
             "type": "stdio",
             "allowed_origins": [GeminiChromeBridge.allowedExtensionOrigin],

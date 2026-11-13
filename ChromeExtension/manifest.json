@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "AI 사용량 · Gemini 연결",
-  "version": "1.0.0",
-  "description": "크롬에 로그인된 Gemini 계정의 사용량을 로컬 AI 사용량 메뉴바에 전달합니다.",
+  "name": "AI 사용량 · 웹 연결",
+  "version": "1.2.0",
+  "description": "Claude · Codex · Gemini 사용량 페이지의 수치를 이 Mac의 메뉴바에 전달합니다.",
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAoH5FMas5A9kYeDS2E1H5vCTVjjV730VB3iWL3h89+eD4rVyV5LC+m5ZbOyB93bRyYBYaknHDivc0eetpQwJ1HJiHgP8vVIIAEcHpYjq2PLUIQaIjeWSdXzm9AvtiVvYJcmgJXmGCOLLWGgDTWXnxiKCH7vYAh+4ec3ee/zDJhhgzforybvnhLqJxLeffAimt56SG6B0Szes4pgG586Kinl1f7kd7L3LYQ6sB4kfY32HdmK9y85Eiht8t4Z0yaX1VUZPLEUfFjDFqZNop5i+1X3kW5mXcHU/LjSc1yqZUohQuNZFJTdMYXODZweMfJtSa+7d33MnAIbAFLK0vZzFBUQIDAQAB",
   "permissions": [
     "alarms",
@@ -10,14 +10,16 @@
     "storage"
   ],
   "host_permissions": [
-    "https://gemini.google.com/*"
+    "https://gemini.google.com/*",
+    "https://claude.ai/*",
+    "https://chatgpt.com/*"
   ],
   "background": {
     "service_worker": "worker.js"
   },
   "action": {
     "default_popup": "popup.html",
-    "default_title": "Gemini 사용량 연결"
+    "default_title": "AI 사용량 웹 연결"
   },
   "content_scripts": [
     {
@@ -28,6 +30,18 @@
       "js": [
         "parser.js",
         "content.js"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://claude.ai/settings/usage*",
+        "https://claude.ai/new*",
+        "https://chatgpt.com/settings/usage*"
+      ],
+      "js": [
+        "web-parser.js",
+        "web-content.js"
       ],
       "run_at": "document_idle"
     }

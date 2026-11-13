@@ -3,7 +3,7 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 command -v node >/dev/null 2>&1 || { echo "Packaging requires Node.js for extension tests." >&2; exit 1; }
-node --test ChromeExtension/tests.cjs
+node --test ChromeExtension/*tests.cjs
 ./build.sh universal
 APP="build/AIUsageBar.app"
 VERSION="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$APP/Contents/Info.plist")"

@@ -10,8 +10,8 @@ ROOT="$PWD"
 BUILD="$ROOT/build"
 APP="$BUILD/AIUsageBar.app"
 BUNDLE_ID="com.local.ai-usage-bar"
-VERSION="1.1.1"
-BUILD_NUMBER="3"
+VERSION="1.2.0"
+BUILD_NUMBER="4"
 
 if [[ "$(uname -s)" != Darwin ]]; then
     echo "macOS에서 실행하세요 / macOS is required." >&2
@@ -26,7 +26,7 @@ TARGET="$ARCH-apple-macosx13.0"
 
 # Pure-logic files only -- these must stay free of AppKit so they can be linked
 # into the test binary.
-TESTABLE=(Sources/Model.swift Sources/Parsing.swift Sources/BarFormatter.swift Sources/FetchError.swift Sources/GeminiChromeBridge.swift Sources/ChromeInstallation.swift)
+TESTABLE=(Sources/Model.swift Sources/Parsing.swift Sources/BarFormatter.swift Sources/FetchError.swift Sources/GeminiChromeBridge.swift Sources/ChromeInstallation.swift Sources/BrowserUsageBridge.swift)
 
 run_tests() {
     echo "==> 테스트"
@@ -52,7 +52,11 @@ build_app() {
         swiftc -O -target "$TARGET" Sources/*.swift -o "$OUTPUT/Contents/MacOS/AIUsageBar"
     fi
 
-    cp -R ChromeExtension "$OUTPUT/Contents/Resources/ChromeExtension"
+    # Ship runtime files only; keep fixtures, local captures and test helpers out.
+    mkdir -p "$OUTPUT/Contents/Resources/ChromeExtension"
+    for file in ChromeExtension/manifest.json ChromeExtension/popup.html ChromeExtension/*.js; do
+        cp "$file" "$OUTPUT/Contents/Resources/ChromeExtension/"
+    done
     cp gemini-native-host "$OUTPUT/Contents/Resources/gemini-native-host"
     chmod 755 "$OUTPUT/Contents/Resources/gemini-native-host"
 
