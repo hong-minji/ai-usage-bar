@@ -12,11 +12,9 @@ Targets macOS 13+ · One download for Apple Silicon and Intel · Korean app UI �
 
 > This is an early public release. It is ad-hoc signed, without Apple Developer ID signing or notarization, so macOS may block the first launch. Read [First launch](#first-launch) below. Windows and Linux are not supported.
 
-```text
-Claude 75% · GPT 81% · Gemini 93% · agy 0%
-```
+![Mac menu bar showing remaining usage for Claude, GPT, Gemini and agy](docs/screenshot.png)
 
-**These are example values. GPT displays the plan allowance from ChatGPT Settings → Usage.** There is one GPT entry with real plan figures, rather than a separate empty chat counter. Its menu links to the usage page to check which features count. Every percentage means **remaining, not used**. If a provider has multiple limits, such as a five-hour and weekly window, the menu bar shows the smallest remaining percentage. Open the menu for individual limits and reset times where available.
+**Actual app screenshot; values change with usage. GPT displays the plan allowance from ChatGPT Settings → Usage.** There is one GPT entry with real plan figures, rather than a separate empty chat counter. Its menu links to the usage page to check which features count. Every percentage means **remaining, not used**. If a provider has multiple limits, such as a five-hour and weekly window, the menu bar shows the smallest remaining percentage. Open the menu for individual limits and reset times where available.
 
 ## Install with AI — share this link
 
