@@ -86,6 +86,19 @@ The extension opens inactive usage tabs and closes them after reading. Tabs you 
 
 ## Connect existing local logins
 
+<img src="docs/settings.png" width="420" alt="AI Usage Bar settings with Claude and GPT set to Local login — direct app query">
+
+*Example settings screen, edited to hide the personal folder path for publication. The app UI is Korean.*
+
+**What does “앱 직접 조회” (direct app query) mean?** AI Usage Bar requests remaining usage from the service using an existing login saved on this Mac.
+
+- **Claude:** Uses existing Claude Code login credentials.
+- **GPT:** Uses existing Codex login credentials on this Mac to display GPT plan usage.
+- You do not need to keep a terminal, Claude Code or Codex open. This mode opens no Chrome usage tabs and sends no prompts to AI models.
+- Without an existing local login, choose **Chrome 웹만 — 터미널 불필요** (Chrome web only — no terminal required) and follow the Chrome setup above.
+
+Both Claude and GPT use local queries in this example. Gemini web still needs the Chrome extension, and agy requires its CLI and sign-in. After switching a service to local queries, **also disable that service's web connection in the extension popup** to stop duplicate checks.
+
 If you already signed into Claude Code or Codex, you can continue using that login. To choose the local account while Chrome is also connected, select **로컬 로그인 — 앱 직접 조회** (Local only) in app Settings. Claude may ask for Keychain access.
 
 agy requires CLI installation and sign-in. Set its executable path if automatic discovery fails. Hide agy if you do not use it.
