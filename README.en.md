@@ -6,7 +6,7 @@ A free, open-source Mac menu bar app with **Claude · GPT · Gemini · agy** ent
 
 [한국어](README.md) · **English**
 
-> **Usage checks do not request AI-generated answers.** The app sends no prompts to models; the verified agy `/quota` response also reported zero model tokens. **Memory use is not zero:** the app, Chrome usage tabs and temporary agy process use memory. Existing local logins allow direct API queries; web users can choose 10-minute automatic checks or manual refresh. Asking an AI to help install the app may consume that assistant's usage allowance.
+> **Usage checks do not request AI-generated answers.** The app sends no prompts to models; the verified agy `/quota` response also reported zero model tokens. **The app itself measured about 30–35 MB of memory on the test Mac** (running v1.3.0, RSS). Usage varies by environment; Chrome and temporary agy processes use additional memory. Existing local logins allow direct API queries; web users can choose 10-minute automatic checks or manual refresh. Asking an AI to help install the app may consume that assistant's usage allowance.
 
 **For ordinary installation, follow option 1 below.** Download the app ZIP without installing an AI tool or terminal CLI. AI-assisted installation is explained separately under option 2.
 
@@ -99,7 +99,7 @@ agy requires CLI installation and sign-in. Set its executable path if automatic 
 
 Automatic mode uses an explicitly enabled web connection, otherwise the local login. It does not benchmark memory or select the cheaper connection. Verify the account before switching: browser and local logins can differ.
 
-Large Codex logs are read from a bounded tail of recent files. Content scripts stop watching after a report is accepted and avoid duplicate in-flight sends. Total app, browser and CLI memory depends on the environment; zero memory or a fixed reduction percentage is not promised.
+Large Codex logs are read from a bounded tail of recent files. Content scripts stop watching after a report is accepted and avoid duplicate in-flight sends. The 30–35 MB figure comes from two measurements of the running app process on the test Mac on November 14, 2026. It is not a peak or a guarantee for every environment, and excludes Chrome and agy memory.
 
 ## Installation option 2 — ask AI for guidance or hands-on help
 
