@@ -60,7 +60,7 @@ private func segment(
     case .stale, .unavailable:
         // Keep the number, but admit it is not current.
         segments.append(BarSegment(
-            text: "(\(koreanRelativeAge(from: reading.fetchedAt, to: now)))",
+            text: "(\(relativeAge(from: reading.fetchedAt, to: now)))",
             style: .plain
         ))
     }
@@ -70,6 +70,31 @@ private func segment(
 /// Plain-text form of the bar, for tests and diagnostics.
 func barPlainText(_ segments: [BarSegment]) -> String {
     segments.map(\.text).joined()
+}
+
+/// One dropdown row. Meter and percent come first so they line up in a
+/// monospaced font; the variable-width window label trails where misalignment
+/// is harmless.
+func windowRowText(_ window: UsageWindow, now: Date) -> String {
+    let remaining = window.remainingPercent
+    let percent = String(format: "%3d", Int(remaining.rounded()))
+    var line = "  \(asciiMeter(remaining: remaining)) \(percent)% \(L("남음", "left"))   \(localizedWindowLabel(window.label))"
+    if let reset = window.resetsAt {
+        line += " · " + L("\(koreanTimeUntil(reset, from: now)) 리셋", "resets \(englishTimeUntil(reset, from: now))")
+    }
+    return line
+}
+
+/// Shown under a reading that could not be refreshed: why, and how old it is.
+func staleNoteText(reason: String, fetchedAt: Date, now: Date) -> String {
+    L("\(reason) · \(koreanRelativeAge(from: fetchedAt, to: now)) 기준",
+      "\(reason) · as of \(englishRelativeAge(from: fetchedAt, to: now))")
+}
+
+/// "방금 갱신 · 5분마다" / "Updated just now · every 5 min"
+func refreshStatusText(lastRefresh: Date, everyMinutes minutes: Int, now: Date) -> String {
+    L("\(koreanRelativeAge(from: lastRefresh, to: now)) 갱신 · \(minutes)분마다",
+      "Updated \(englishRelativeAge(from: lastRefresh, to: now)) · every \(minutes) min")
 }
 
 /// A 10-cell fuel gauge: filled cells are what is left, not what is spent.

@@ -136,7 +136,7 @@ final class MenuBarController: NSObject, NSMenuDelegate {
 
         let visible = Prefs.shared.visibleProviders
         if visible.isEmpty {
-            menu.addItem(disabledItem("설정에서 표시할 항목을 선택하세요"))
+            menu.addItem(disabledItem(L("설정에서 표시할 항목을 선택하세요", "Choose which services to show in Settings")))
         }
 
         for id in visible {
@@ -146,17 +146,20 @@ final class MenuBarController: NSObject, NSMenuDelegate {
                 addWindowRows(reading, to: menu)
             case .stale(let reading, let reason):
                 addWindowRows(reading, to: menu)
-                menu.addItem(noteItem("\(reason) · \(koreanRelativeAge(from: reading.fetchedAt, to: Date())) 기준"))
-                if id == .codex && !Prefs.shared.usesBrowser(id) { menu.addItem(noteItem("로컬 로그인 또는 설정의 Chrome 웹 연결을 확인하세요")) }
+                menu.addItem(noteItem(staleNoteText(reason: reason, fetchedAt: reading.fetchedAt, now: Date())))
+                if id == .codex && !Prefs.shared.usesBrowser(id) {
+                    menu.addItem(noteItem(L("로컬 로그인 또는 설정의 Chrome 웹 연결을 확인하세요",
+                                            "Check your local login, or the Chrome web connection in Settings")))
+                }
             case .unavailable(let reason):
                 menu.addItem(noteItem(reason))
                 menu.addItem(hintItem(for: id))
             case nil:
-                menu.addItem(noteItem("불러오는 중…"))
+                menu.addItem(noteItem(L("불러오는 중…", "Loading…")))
             }
             if id == .codex {
-                menu.addItem(noteItem("ChatGPT 설정의 플랜 한도 기준"))
-                let open = NSMenuItem(title: "ChatGPT 플랜 사용량 확인…", action: #selector(openChatGPT), keyEquivalent: "")
+                menu.addItem(noteItem(L("ChatGPT 설정의 플랜 한도 기준", "Based on the plan limits in ChatGPT settings")))
+                let open = NSMenuItem(title: L("ChatGPT 플랜 사용량 확인…", "Open ChatGPT Plan Usage…"), action: #selector(openChatGPT), keyEquivalent: "")
                 open.target = self
                 menu.addItem(open)
             }
@@ -165,25 +168,25 @@ final class MenuBarController: NSObject, NSMenuDelegate {
 
         menu.addItem(disabledItem(statusLine()))
 
-        let refresh = NSMenuItem(title: "지금 갱신", action: #selector(didTapRefresh), keyEquivalent: "r")
+        let refresh = NSMenuItem(title: L("지금 갱신", "Refresh Now"), action: #selector(didTapRefresh), keyEquivalent: "r")
         refresh.target = self
         refresh.isEnabled = !coordinator.isRefreshing
         menu.addItem(refresh)
 
-        let settingsItem = NSMenuItem(title: "설정…", action: #selector(didTapSettings), keyEquivalent: ",")
+        let settingsItem = NSMenuItem(title: L("설정…", "Settings…"), action: #selector(didTapSettings), keyEquivalent: ",")
         settingsItem.target = self
         menu.addItem(settingsItem)
 
         menu.addItem(.separator())
-        let quit = NSMenuItem(title: "종료", action: #selector(didTapQuit), keyEquivalent: "q")
+        let quit = NSMenuItem(title: L("종료", "Quit"), action: #selector(didTapQuit), keyEquivalent: "q")
         quit.target = self
         menu.addItem(quit)
     }
 
     private func statusLine() -> String {
-        if coordinator.isRefreshing { return "갱신 중…" }
-        guard let last = coordinator.lastRefresh else { return "아직 갱신되지 않음" }
-        return "\(koreanRelativeAge(from: last, to: Date())) 갱신 · \(Prefs.shared.refreshMinutes)분마다"
+        if coordinator.isRefreshing { return L("갱신 중…", "Refreshing…") }
+        guard let last = coordinator.lastRefresh else { return L("아직 갱신되지 않음", "Not refreshed yet") }
+        return refreshStatusText(lastRefresh: last, everyMinutes: Prefs.shared.refreshMinutes, now: Date())
     }
 
     private func headerItem(for id: ProviderID) -> NSMenuItem {
@@ -197,16 +200,10 @@ final class MenuBarController: NSObject, NSMenuDelegate {
         return item
     }
 
-    /// Meter and percent come first so they line up in a monospaced font; the
-    /// variable-width Korean window label trails where misalignment is harmless.
     private func addWindowRows(_ reading: ProviderReading, to menu: NSMenu) {
+        let now = Date()
         for window in reading.windows {
-            let remaining = window.remainingPercent
-            var line = "  \(asciiMeter(remaining: remaining)) \(String(format: "%3d", Int(remaining.rounded())))% 남음   \(window.label)"
-            if let reset = window.resetsAt {
-                line += " · \(koreanTimeUntil(reset, from: Date())) 리셋"
-            }
-
+            let line = windowRowText(window, now: now)
             let item = disabledItem(line)
             item.attributedTitle = NSAttributedString(string: line, attributes: [
                 .font: Self.rowFont,
@@ -219,10 +216,13 @@ final class MenuBarController: NSObject, NSMenuDelegate {
     private func hintItem(for id: ProviderID) -> NSMenuItem {
         let hint: String
         switch id {
-        case .claude: hint = "설정 → Chrome 연결 또는 기존 Claude Code 로그인을 사용하세요"
-        case .codex: hint = "설정 → Chrome 연결 또는 기존 Codex 로그인을 사용하세요"
-        case .gemini: hint = "설정 → Chrome 연결에서 확장 프로그램을 추가하세요"
-        case .antigravity: hint = "agy 를 실행해 로그인하세요"
+        case .claude: hint = L("설정 → Chrome 연결 또는 기존 Claude Code 로그인을 사용하세요",
+                               "Use Settings → Connect Chrome, or an existing Claude Code login")
+        case .codex: hint = L("설정 → Chrome 연결 또는 기존 Codex 로그인을 사용하세요",
+                              "Use Settings → Connect Chrome, or an existing Codex login")
+        case .gemini: hint = L("설정 → Chrome 연결에서 확장 프로그램을 추가하세요",
+                               "Add the extension from Settings → Connect Chrome")
+        case .antigravity: hint = L("agy 를 실행해 로그인하세요", "Run agy to sign in")
         }
         return noteItem(hint)
     }
@@ -251,13 +251,29 @@ final class MenuBarController: NSObject, NSMenuDelegate {
 
     @objc private func didTapSettings() {
         if settings == nil {
-            settings = SettingsWindowController { [weak self] in
-                self?.scheduleTimer()
-                self?.renderBar()
-                self?.refreshNow()
-            }
+            settings = SettingsWindowController(
+                onChange: { [weak self] in
+                    self?.scheduleTimer()
+                    self?.renderBar()
+                    self?.refreshNow()
+                },
+                onLanguageChange: { [weak self] in self?.reopenSettingsInNewLanguage() }
+            )
         }
         settings?.show()
+    }
+
+    /// The settings window builds its labels once, so a language change swaps
+    /// in a fresh window at the same spot. The refresh re-fetches so that error
+    /// text produced in the old language is replaced too.
+    private func reopenSettingsInNewLanguage() {
+        let origin = settings?.frameOrigin
+        settings?.close()
+        settings = nil
+        renderBar()
+        rebuildMenu()
+        didTapSettings()
+        if let origin { settings?.frameOrigin = origin }
     }
 
     @objc private func didTapQuit() { NSApp.terminate(nil) }

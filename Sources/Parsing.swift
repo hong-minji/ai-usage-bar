@@ -7,9 +7,9 @@ enum ParseError: LocalizedError {
 
     var errorDescription: String? {
         switch self {
-        case .badJSON: return "응답을 해석할 수 없음"
-        case .missing(let f): return "응답에 \(f) 없음"
-        case .noUsableWindow: return "사용량 정보 없음"
+        case .badJSON: return L("응답을 해석할 수 없음", "Could not read the response")
+        case .missing(let f): return L("응답에 \(f) 없음", "Response is missing \(f)")
+        case .noUsableWindow: return L("사용량 정보 없음", "No usage information")
         }
     }
 }
@@ -41,6 +41,7 @@ private func object(_ data: Data) throws -> [String: Any] {
 }
 
 /// Turns `limit_window_seconds` into something a human reads at a glance.
+/// These labels are stored as-is; `localizedWindowLabel` translates on display.
 func windowLabel(seconds: Double?) -> String {
     guard let seconds, seconds > 0 else { return "한도" }
     switch seconds {

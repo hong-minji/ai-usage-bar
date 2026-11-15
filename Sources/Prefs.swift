@@ -13,6 +13,7 @@ final class Prefs {
         static let dangerRemaining = "dangerRemainingPercent"
         static let hiddenProviders = "hiddenProviders"
         static let agyPath = "agyPath"
+        static let language = "interfaceLanguage"
     }
 
     private init() {
@@ -59,6 +60,15 @@ final class Prefs {
     var agyPath: String? {
         get { store.string(forKey: Key.agyPath) }
         set { store.set(newValue, forKey: Key.agyPath) }
+    }
+
+    /// `nil` follows the system language; otherwise the interface is pinned.
+    var language: AppLanguage? {
+        get { store.string(forKey: Key.language).flatMap(AppLanguage.init(rawValue:)) }
+        set {
+            if let newValue { store.set(newValue.rawValue, forKey: Key.language) }
+            else { store.removeObject(forKey: Key.language) }
+        }
     }
 
     private var hiddenProviders: Set<String> {

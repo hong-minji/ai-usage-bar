@@ -1,0 +1,134 @@
+{
+  "extName": {
+    "message": "AI Usage Bar · Web Connection"
+  },
+  "extDescription": {
+    "message": "Passes the figures on your Claude, GPT and Gemini usage pages to the menu bar on this Mac."
+  },
+  "actionTitle": {
+    "message": "AI Usage Bar web connection"
+  },
+  "popupTitle": {
+    "message": "AI Usage Bar Web Connection"
+  },
+  "popupIntro": {
+    "message": "Check that this is the Chrome profile and account you want to connect. Web connections need no terminal tools."
+  },
+  "autoRefreshLabel": {
+    "message": "Automatic web checks (every 10 minutes)"
+  },
+  "autoRefreshNote": {
+    "message": "When off, no usage tabs are opened in the background. Press “Refresh now” below when you need a reading."
+  },
+  "claudeEnable": {
+    "message": "Claude web connection"
+  },
+  "claudeRefresh": {
+    "message": "Refresh Claude now"
+  },
+  "claudePage": {
+    "message": "Open Claude usage"
+  },
+  "codexEnable": {
+    "message": "GPT plan web connection"
+  },
+  "codexRefresh": {
+    "message": "Refresh GPT now"
+  },
+  "codexPage": {
+    "message": "Open GPT usage"
+  },
+  "geminiChecking": {
+    "message": "Checking connection…"
+  },
+  "accountLabel": {
+    "message": "Google account to use (optional)"
+  },
+  "accountPlaceholder": {
+    "message": "Leave blank for the current account"
+  },
+  "refreshNow": {
+    "message": "Refresh now"
+  },
+  "openUsagePage": {
+    "message": "Open usage page"
+  },
+  "footnote": {
+    "message": "With automatic checks on, readings refresh every 10 minutes using the account signed in to Chrome. Usage figures are passed to this Mac. For Gemini, the email is also stored locally to verify the account. GPT is the plan usage from ChatGPT settings; check the usage page for which features count."
+  },
+  "geminiLoading": {
+    "message": "Reading Gemini usage…"
+  },
+  "geminiLoginRequired": {
+    "message": "Sign in to Gemini in Chrome."
+  },
+  "geminiAccountMismatch": {
+    "message": "Chrome is using a different Google account from the one you pinned."
+  },
+  "geminiUnavailable": {
+    "message": "Could not read usage. Open the page below and check that you are signed in and usage is shown."
+  },
+  "geminiHostUnavailable": {
+    "message": "The menu bar app is not connected. Press Connect Chrome… in the app's Settings."
+  },
+  "geminiWaiting": {
+    "message": "Waiting for the first connection."
+  },
+  "checkedAt": {
+    "message": "Checked $TIME$",
+    "placeholders": {
+      "time": {
+        "content": "$1"
+      }
+    }
+  },
+  "pinnedOnly": {
+    "message": "Only readings from $ACCOUNT$ are used.",
+    "placeholders": {
+      "account": {
+        "content": "$1"
+      }
+    }
+  },
+  "seenAccount": {
+    "message": "Account currently verified: $ACCOUNT$",
+    "placeholders": {
+      "account": {
+        "content": "$1"
+      }
+    }
+  },
+  "usingSignedIn": {
+    "message": "Uses whichever account is signed in to Chrome."
+  },
+  "invalidEmail": {
+    "message": "That is not a valid email address."
+  },
+  "webLoading": {
+    "message": "Reading usage…"
+  },
+  "webUnavailable": {
+    "message": "Could not read usage. Check the Chrome login and usage page."
+  },
+  "webDisabled": {
+    "message": "Connection off"
+  },
+  "webHostUnavailable": {
+    "message": "Press Connect Chrome… in the app's Settings, then reload the extension."
+  },
+  "webIdle": {
+    "message": "Turn the connection on to check with the current Chrome login."
+  },
+  "label5h": {
+    "message": "5-hour"
+  },
+  "labelWeekly": {
+    "message": "Weekly"
+  },
+  "labelUsage": {
+    "message": "Usage"
+  },
+  "remainingSuffix": {
+    "message": "left"
+  }
+}

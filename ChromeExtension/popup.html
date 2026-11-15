@@ -1,7 +1,7 @@
 <!doctype html>
-<html lang="ko">
+<html lang="en">
 <meta charset="utf-8">
-<title>AI 사용량 웹 연결</title>
+<title>AI Usage Bar</title>
 <style>
   :root { color-scheme: light dark; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
   body { width: 310px; margin: 0; padding: 20px; font-size: 13px; line-height: 1.55; }
@@ -15,22 +15,23 @@
   button { width: 100%; padding: 9px; margin-top: 7px; border: 1px solid #8886; border-radius: 8px; cursor: pointer; }
   small { display: block; opacity: .7; margin-top: 14px; }
 </style>
-<h1>AI 사용량 웹 연결</h1>
-<p>연결할 Chrome 프로필과 로그인 계정을 확인하세요. 웹 연결은 터미널 설치가 필요 없습니다.</p>
-<label><input style="width:auto" type="checkbox" id="auto-refresh"> 웹 자동 조회 (10분마다)</label>
-<small>끄면 백그라운드 사용량 탭을 자동으로 열지 않습니다. 필요할 때 아래 ‘지금 갱신’을 누르세요.</small>
-<section><label><input style="width:auto" type="checkbox" id="claude-enabled"> Claude 웹 연결</label>
-<p id="claude-result"></p><button id="claude-refresh">Claude 지금 갱신</button><button id="claude-page">Claude 사용량 열기</button></section>
-<section><label><input style="width:auto" type="checkbox" id="codex-enabled"> GPT 플랜 웹 연결</label>
-<p id="codex-result"></p><button id="codex-refresh">GPT 지금 갱신</button><button id="codex-page">GPT 사용량 열기</button></section>
+<h1 data-i18n="popupTitle"></h1>
+<p data-i18n="popupIntro"></p>
+<label><input style="width:auto" type="checkbox" id="auto-refresh"> <span data-i18n="autoRefreshLabel"></span></label>
+<small data-i18n="autoRefreshNote"></small>
+<section><label><input style="width:auto" type="checkbox" id="claude-enabled"> <span data-i18n="claudeEnable"></span></label>
+<p id="claude-result"></p><button id="claude-refresh" data-i18n="claudeRefresh"></button><button id="claude-page" data-i18n="claudePage"></button></section>
+<section><label><input style="width:auto" type="checkbox" id="codex-enabled"> <span data-i18n="codexEnable"></span></label>
+<p id="codex-result"></p><button id="codex-refresh" data-i18n="codexRefresh"></button><button id="codex-page" data-i18n="codexPage"></button></section>
 <hr><h2>Gemini</h2>
-<p id="result">연결 상태 확인 중…</p>
-<label for="account">사용할 Google 계정 (선택)</label>
-<input id="account" type="email" autocomplete="off" spellcheck="false" placeholder="비워두면 현재 로그인 계정">
+<p id="result" data-i18n="geminiChecking"></p>
+<label for="account" data-i18n="accountLabel"></label>
+<input id="account" type="email" autocomplete="off" spellcheck="false" data-i18n-placeholder="accountPlaceholder">
 <p id="hint"></p>
-<button id="refresh">지금 갱신</button>
-<button id="usage">사용량 페이지 열기</button>
-<small>크롬에 로그인된 계정으로 자동 조회를 켜면 10분마다 갱신합니다. 사용량 수치를 이 Mac으로 전달합니다. Gemini는 계정 확인을 위해 이메일도 로컬에 저장합니다. GPT는 ChatGPT 설정의 플랜 사용량입니다. 포함되는 기능은 사용량 페이지에서 확인하세요.</small>
+<button id="refresh" data-i18n="refreshNow"></button>
+<button id="usage" data-i18n="openUsagePage"></button>
+<small data-i18n="footnote"></small>
+<script src="i18n.js"></script>
 <script src="parser.js"></script>
 <script src="popup.js"></script>
 <script src="web-parser.js"></script>

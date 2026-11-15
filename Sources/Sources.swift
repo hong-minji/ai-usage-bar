@@ -191,7 +191,7 @@ enum AgySource {
         Thread.sleep(forTimeInterval: 0.05)  // let the drain finish
 
         lock.lock(); let data = collected; lock.unlock()
-        guard !data.isEmpty else { throw FetchError.toolFailed("agy 응답 없음") }
+        guard !data.isEmpty else { throw FetchError.toolFailed(L("agy 응답 없음", "No response from agy")) }
         return try parseAgyQuota(data, now: now)
     }
 }

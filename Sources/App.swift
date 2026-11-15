@@ -9,6 +9,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var controller: MenuBarController?
 
     static func main() {
+        // Before anything builds user-visible text, including the one-shot modes.
+        AppLanguage.override = Prefs.shared.language
+
         if CommandLine.arguments.contains("--gemini-chrome-host") {
             GeminiChromeBridge.runNativeHost()
         }

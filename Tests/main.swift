@@ -21,6 +21,10 @@ func section(_ name: String) { print("\n\(name)") }
 
 let now = Date(timeIntervalSince1970: 1_794_000_000)  // fixed clock
 
+// Most expectations below are written against the Korean interface. Pin it so
+// the result does not depend on the language of the machine running the tests.
+AppLanguage.override = .korean
+
 // Fixtures are verbatim captures from this machine, trimmed of irrelevant keys.
 
 section("Claude — api.anthropic.com/api/oauth/usage")
@@ -429,6 +433,84 @@ do {
     equal(try sessionLogTail(file, maximumBytes: 0), "", "zero budget performs no read")
     try String(repeating: "x", count: 256).write(to: file, atomically: true, encoding: .utf8)
     equal(try sessionLogTail(file, maximumBytes: 128), "", "oversized partial event is not parsed")
+}
+
+section("Interface language — Korean and English")
+do {
+    equal(AppLanguage.resolve(preferredLanguages: ["ko-KR", "en-US"]), .korean, "Korean listed first")
+    equal(AppLanguage.resolve(preferredLanguages: ["en-KR", "ko-KR"]), .english, "English listed first")
+    equal(AppLanguage.resolve(preferredLanguages: ["ja-JP", "ko-KR"]), .korean, "first language the app has, not the first listed")
+    equal(AppLanguage.resolve(preferredLanguages: ["fr-FR", "de-DE"]), .english, "other languages fall back to English")
+    equal(AppLanguage.resolve(preferredLanguages: []), .english, "empty list falls back to English")
+    equal(AppLanguage.resolve(preferredLanguages: ["ko"]), .korean, "bare language code")
+    equal(AppLanguage.resolve(preferredLanguages: ["kok-IN", "en"]), .english, "a longer code starting with ko is not Korean")
+
+    let window = UsageWindow(label: "5시간", usedPercent: 54, resetsAt: now.addingTimeInterval(21600))
+    let old = ProviderReading(id: .codex, planLabel: "Pro", windows: [
+        UsageWindow(label: "7일", usedPercent: 72, resetsAt: nil),
+    ], fetchedAt: now.addingTimeInterval(-2 * 86400))
+    let emptyFolder = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+
+    equal(L("한", "en"), "한", "Korean interface picks the Korean string")
+    equal(windowRowText(window, now: now), "  █████░░░░░  46% 남음   5시간 · 6시간 후 리셋", "Korean dropdown row")
+    equal(staleNoteText(reason: "토큰 만료됨", fetchedAt: now.addingTimeInterval(-720), now: now),
+          "토큰 만료됨 · 12분 전 기준", "Korean stale note")
+    equal(refreshStatusText(lastRefresh: now, everyMinutes: 5, now: now), "방금 갱신 · 5분마다", "Korean status line")
+    equal(ProviderID.codex.displayName, "GPT (플랜 사용량)", "Korean display name")
+    equal(localizedWindowLabel("5시간"), "5시간", "Korean labels are shown as stored")
+
+    AppLanguage.override = .english
+    equal(L("한", "en"), "en", "English interface picks the English string")
+    equal(ProviderID.codex.displayName, "GPT (plan usage)", "English display name")
+    equal(ProviderID.gemini.displayName, "Gemini (web)", "English Gemini name")
+    equal(ProviderID.allCases.map(\.shortLabel), ["Claude", "GPT", "Gemini", "agy"], "menu bar tags do not change with language")
+
+    for (stored, shown) in [("5시간", "5-hour"), ("7일", "7-day"), ("1일", "1-day"), ("3시간", "3-hour"),
+                            ("주간", "Weekly"), ("일간", "Daily"), ("월간", "Monthly"), ("한도", "Limit"),
+                            ("사용량", "Usage"), ("Gemini", "Gemini"), ("Claude/GPT", "Claude/GPT")] {
+        equal(localizedWindowLabel(stored), shown, "\(stored) is shown as \(shown)")
+    }
+    equal(localizedWindowLabel("5시간", language: .korean), "5시간", "explicit Korean keeps the stored label")
+
+    equal(englishRelativeAge(from: now, to: now), "just now", "just now")
+    equal(englishRelativeAge(from: now.addingTimeInterval(-720), to: now), "12m ago", "minutes ago")
+    equal(englishRelativeAge(from: now.addingTimeInterval(-10800), to: now), "3h ago", "hours ago")
+    equal(englishRelativeAge(from: now.addingTimeInterval(-172800), to: now), "2d ago", "days ago")
+    equal(englishTimeUntil(now.addingTimeInterval(2100), from: now), "in 35m", "minutes until")
+    equal(englishTimeUntil(now.addingTimeInterval(21600), from: now), "in 6h", "hours until")
+    equal(englishTimeUntil(now.addingTimeInterval(4 * 86400), from: now), "in 4d", "days until")
+    equal(englishTimeUntil(now.addingTimeInterval(-50), from: now), "soon", "already past")
+
+    equal(windowRowText(window, now: now), "  █████░░░░░  46% left   5-hour · resets in 6h", "English dropdown row")
+    equal(windowRowText(UsageWindow(label: "주간", usedPercent: 0, resetsAt: nil), now: now),
+          "  ██████████ 100% left   Weekly", "English row without a reset time")
+    equal(staleNoteText(reason: "Token expired", fetchedAt: now.addingTimeInterval(-720), now: now),
+          "Token expired · as of 12m ago", "English stale note")
+    equal(refreshStatusText(lastRefresh: now, everyMinutes: 5, now: now), "Updated just now · every 5 min", "English status line")
+    let stale = barSegments(for: [.codex], states: [.codex: .stale(old, reason: "401")],
+                            warnBelow: 20, dangerBelow: 5, now: now)
+    equal(barPlainText(stale), "GPT 28%(2d ago)", "English stale reading in the menu bar")
+
+    equal(FetchError.unauthorized.localizedDescription, "Token expired", "English fetch error")
+    equal(FetchError.notSignedIn("Claude Code").localizedDescription, "No Claude Code login found", "English sign-in error")
+    equal(ParseError.missing("rate_limit").localizedDescription, "Response is missing rate_limit", "English parse error")
+    equal(BrowserUsageBridge.state(.claude, now: now, in: emptyFolder).failureReason,
+          "Turn on Claude in the Chrome extension popup", "English web connection hint")
+
+    // Stored labels and the extension protocol never change with the language.
+    let web = try parseGeminiWebUsage(Data(#"{"used":[95,32]}"#.utf8), now: now)
+    equal(web.windows.map(\.label), ["5시간", "주간"], "parsed labels stay in their stored form")
+    let f = ISO8601DateFormatter()
+    let report = try JSONSerialization.data(withJSONObject: ["version": 2, "provider": "claude", "status": "ok",
+        "sourceURL": "https://claude.ai/settings/usage", "observedAt": f.string(from: now),
+        "used": [20, 40], "labels": ["5시간", "주간"]] as [String: Any])
+    let accepted = try BrowserUsageBridge.validate(report, now: now)
+    equal(accepted.reading?.windows.map(\.label), ["5시간", "주간"], "extension labels are accepted unchanged")
+    equal(accepted.reading?.planLabel, "Chrome web", "English source tag on web readings")
+
+    AppLanguage.override = .korean
+    equal(FetchError.unauthorized.localizedDescription, "토큰 만료됨", "switching back restores Korean")
+    equal(accepted.reading?.planLabel, "Chrome 웹", "Korean source tag on web readings")
 }
 
 print("\n\(checks - failures)/\(checks) checks passed")

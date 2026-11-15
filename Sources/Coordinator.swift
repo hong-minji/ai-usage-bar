@@ -20,7 +20,7 @@ final class UsageCoordinator {
         for id in ProviderID.allCases {
             if Prefs.shared.usesBrowser(id) { states[id] = BrowserUsageBridge.state(id); continue }
             if let cached = ReadingCache.shared.reading(for: id) {
-                states[id] = .stale(cached, reason: "갱신 대기 중")
+                states[id] = .stale(cached, reason: L("갱신 대기 중", "Waiting to refresh"))
             }
         }
     }
@@ -161,8 +161,8 @@ final class UsageCoordinator {
     private static func message(for error: Error) -> String {
         if let fetchError = error as? FetchError { return fetchError.localizedDescription }
         if let parseError = error as? ParseError { return parseError.localizedDescription }
-        if (error as? URLError)?.code == .notConnectedToInternet { return "네트워크 연결 없음" }
-        if error is URLError { return "네트워크 오류" }
+        if (error as? URLError)?.code == .notConnectedToInternet { return L("네트워크 연결 없음", "No network connection") }
+        if error is URLError { return L("네트워크 오류", "Network error") }
         return error.localizedDescription
     }
 }

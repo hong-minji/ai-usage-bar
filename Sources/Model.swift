@@ -36,8 +36,8 @@ enum ProviderID: String, CaseIterable, Codable {
     var displayName: String {
         switch self {
         case .claude: return "Claude"
-        case .codex: return "GPT (플랜 사용량)"
-        case .gemini: return "Gemini (웹)"
+        case .codex: return L("GPT (플랜 사용량)", "GPT (plan usage)")
+        case .gemini: return L("Gemini (웹)", "Gemini (web)")
         case .antigravity: return "Antigravity"
         }
     }
@@ -126,4 +126,29 @@ func koreanTimeUntil(_ date: Date, from now: Date) -> String {
     if seconds < 3600 { return "\(max(1, Int((seconds / 60).rounded())))분 후" }
     if seconds < 86400 { return "\(Int((seconds / 3600).rounded(.down)))시간 후" }
     return "\(Int((seconds / 86400).rounded(.down)))일 후"
+}
+
+/// "just now", "12m ago", "3h ago", "2d ago" -- kept short for the menu bar.
+func englishRelativeAge(from then: Date, to now: Date) -> String {
+    let seconds = max(0, now.timeIntervalSince(then))
+    if seconds < 90 { return "just now" }
+    let minutes = Int((seconds / 60).rounded())
+    if minutes < 60 { return "\(minutes)m ago" }
+    let hours = Int((seconds / 3600).rounded(.down))
+    if hours < 24 { return "\(hours)h ago" }
+    return "\(Int((seconds / 86400).rounded(.down)))d ago"
+}
+
+/// "in 4d", "in 6h", "in 35m", "soon".
+func englishTimeUntil(_ date: Date, from now: Date) -> String {
+    let seconds = date.timeIntervalSince(now)
+    if seconds <= 0 { return "soon" }
+    if seconds < 3600 { return "in \(max(1, Int((seconds / 60).rounded())))m" }
+    if seconds < 86400 { return "in \(Int((seconds / 3600).rounded(.down)))h" }
+    return "in \(Int((seconds / 86400).rounded(.down)))d"
+}
+
+/// Age of a reading in the current interface language.
+func relativeAge(from then: Date, to now: Date) -> String {
+    AppLanguage.current == .korean ? koreanRelativeAge(from: then, to: now) : englishRelativeAge(from: then, to: now)
 }

@@ -14,7 +14,7 @@ final class GeminiWebSource {
 
     func presentLogin() {
         guard let chromeURL = NSWorkspace.shared.urlForApplication(withBundleIdentifier: "com.google.Chrome") else {
-            showError("Google Chrome을 먼저 설치하고 한 번 실행하세요.")
+            showError(L("Google Chrome을 먼저 설치하고 한 번 실행하세요.", "Install Google Chrome and open it once first."))
             return
         }
         guard let resources = Bundle.main.resourceURL else { return }
@@ -22,7 +22,7 @@ final class GeminiWebSource {
             try ChromeInstallation.register(resources: resources,
                 home: FileManager.default.homeDirectoryForCurrentUser)
         } catch {
-            showError("Chrome 연결을 등록하지 못했습니다.\n\(error.localizedDescription)")
+            showError(L("Chrome 연결을 등록하지 못했습니다.", "Could not register the Chrome connection.") + "\n\(error.localizedDescription)")
             return
         }
         let extensionURL = resources.appendingPathComponent("ChromeExtension")
@@ -34,7 +34,7 @@ final class GeminiWebSource {
                                 configuration: NSWorkspace.OpenConfiguration()) { _, error in
             if error != nil {
                 Task { @MainActor in
-                    self.showError("Chrome에서 chrome://extensions/ 를 직접 열어주세요.")
+                    self.showError(L("Chrome에서 chrome://extensions/ 를 직접 열어주세요.", "Open chrome://extensions/ in Chrome yourself."))
                 }
             }
         }
@@ -42,7 +42,7 @@ final class GeminiWebSource {
 
     private func showError(_ message: String) {
         let alert = NSAlert()
-        alert.messageText = "AI 사용량 Chrome 연결"
+        alert.messageText = L("AI 사용량 Chrome 연결", "AI Usage Bar — Connect Chrome")
         alert.informativeText = message
         alert.runModal()
     }

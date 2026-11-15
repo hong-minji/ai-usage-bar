@@ -61,12 +61,12 @@ enum GeminiChromeBridge {
 
         var errorDescription: String? {
             switch self {
-            case .invalidMessage: return "Gemini 연동 메시지 형식이 올바르지 않습니다"
-            case .invalidSource: return "Gemini 사용량 페이지에서 보낸 메시지만 허용됩니다"
-            case .invalidAccount: return "Gemini 계정을 확인할 수 없습니다"
-            case .invalidTime: return "Gemini 사용량 시각이 오래되었거나 올바르지 않습니다"
-            case .invalidUsage: return "Gemini 사용량 수치가 올바르지 않습니다"
-            case .incompleteFrame: return "Gemini 연동 메시지가 완전하지 않습니다"
+            case .invalidMessage: return L("Gemini 연동 메시지 형식이 올바르지 않습니다", "The Gemini bridge message is malformed")
+            case .invalidSource: return L("Gemini 사용량 페이지에서 보낸 메시지만 허용됩니다", "Only messages from the Gemini usage page are accepted")
+            case .invalidAccount: return L("Gemini 계정을 확인할 수 없습니다", "The Gemini account could not be verified")
+            case .invalidTime: return L("Gemini 사용량 시각이 오래되었거나 올바르지 않습니다", "The Gemini usage time is stale or invalid")
+            case .invalidUsage: return L("Gemini 사용량 수치가 올바르지 않습니다", "The Gemini usage figures are invalid")
+            case .incompleteFrame: return L("Gemini 연동 메시지가 완전하지 않습니다", "The Gemini bridge message is incomplete")
             }
         }
     }
@@ -128,23 +128,23 @@ enum GeminiChromeBridge {
 
     static func fetch(now: Date = Date()) throws -> ProviderReading {
         guard let cache = loadCache() else {
-            throw FetchError.toolFailed("설정에서 Gemini 크롬 연결을 완료하세요")
+            throw FetchError.toolFailed(L("설정에서 Gemini 크롬 연결을 완료하세요", "Finish the Chrome connection for Gemini in Settings"))
         }
         guard let observed = cache.latest.observationDate,
               cache.receivedAt.timeIntervalSince(now) <= 60,
               observed.timeIntervalSince(now) <= 60,
               now.timeIntervalSince(observed) <= maximumAge
-        else { throw FetchError.toolFailed("Gemini 크롬 연결에서 새 사용량을 기다리는 중") }
+        else { throw FetchError.toolFailed(L("Gemini 크롬 연결에서 새 사용량을 기다리는 중", "Waiting for a new Gemini reading from Chrome")) }
         switch cache.latest.status {
         case "ok":
             guard let reading = cache.latest.reading else { throw BridgeError.invalidUsage }
             return reading
         case "login_required":
-            throw FetchError.toolFailed("크롬에서 Gemini 로그인이 만료되었습니다")
+            throw FetchError.toolFailed(L("크롬에서 Gemini 로그인이 만료되었습니다", "The Gemini login in Chrome has expired"))
         case "account_mismatch":
-            throw FetchError.toolFailed("크롬에 지정한 계정과 다른 Google 계정이 선택되어 있습니다")
+            throw FetchError.toolFailed(L("크롬에 지정한 계정과 다른 Google 계정이 선택되어 있습니다", "Chrome is using a different Google account from the one you pinned"))
         default:
-            throw FetchError.toolFailed("크롬에서 Gemini 사용량을 읽지 못했습니다")
+            throw FetchError.toolFailed(L("크롬에서 Gemini 사용량을 읽지 못했습니다", "Could not read Gemini usage in Chrome"))
         }
     }
 
@@ -222,7 +222,7 @@ enum GeminiChromeBridge {
             exit(0)
         } catch {
             // Only our short, non-sensitive validation errors are returned.
-            let message = (error as? BridgeError)?.localizedDescription ?? "Gemini 연동 데이터를 저장하지 못했습니다"
+            let message = (error as? BridgeError)?.localizedDescription ?? L("Gemini 연동 데이터를 저장하지 못했습니다", "Could not save the Gemini bridge data")
             try? respond(["ok": false, "error": message])
             exit(1)
         }

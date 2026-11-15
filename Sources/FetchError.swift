@@ -10,12 +10,12 @@ enum FetchError: LocalizedError {
 
     var errorDescription: String? {
         switch self {
-        case .notSignedIn(let what): return "\(what) 로그인 정보 없음"
-        case .unauthorized: return "토큰 만료됨"
-        case .http(let code): return "서버 오류 \(code)"
-        case .toolMissing(let name): return "\(name) 설치되지 않음"
+        case .notSignedIn(let what): return L("\(what) 로그인 정보 없음", "No \(what) login found")
+        case .unauthorized: return L("토큰 만료됨", "Token expired")
+        case .http(let code): return L("서버 오류 \(code)", "Server error \(code)")
+        case .toolMissing(let name): return L("\(name) 설치되지 않음", "\(name) is not installed")
         case .toolFailed(let detail): return detail
-        case .timedOut: return "응답 시간 초과"
+        case .timedOut: return L("응답 시간 초과", "Timed out")
         }
     }
 }

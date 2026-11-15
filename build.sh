@@ -10,8 +10,8 @@ ROOT="$PWD"
 BUILD="$ROOT/build"
 APP="$BUILD/AIUsageBar.app"
 BUNDLE_ID="com.local.ai-usage-bar"
-VERSION="1.3.0"
-BUILD_NUMBER="6"
+VERSION="1.4.0"
+BUILD_NUMBER="7"
 
 if [[ "$(uname -s)" != Darwin ]]; then
     echo "macOS에서 실행하세요 / macOS is required." >&2
@@ -26,7 +26,7 @@ TARGET="$ARCH-apple-macosx13.0"
 
 # Pure-logic files only -- these must stay free of AppKit so they can be linked
 # into the test binary.
-TESTABLE=(Sources/Model.swift Sources/Parsing.swift Sources/BarFormatter.swift Sources/FetchError.swift Sources/GeminiChromeBridge.swift Sources/ChromeInstallation.swift Sources/BrowserUsageBridge.swift Sources/SessionLogTail.swift)
+TESTABLE=(Sources/L10n.swift Sources/Model.swift Sources/Parsing.swift Sources/BarFormatter.swift Sources/FetchError.swift Sources/GeminiChromeBridge.swift Sources/ChromeInstallation.swift Sources/BrowserUsageBridge.swift Sources/SessionLogTail.swift)
 
 run_tests() {
     echo "==> 테스트"
@@ -57,8 +57,19 @@ build_app() {
     for file in ChromeExtension/manifest.json ChromeExtension/popup.html ChromeExtension/*.js; do
         cp "$file" "$OUTPUT/Contents/Resources/ChromeExtension/"
     done
+    # The manifest names its text by message key, so Chrome refuses to load the
+    # extension without the locale catalogs beside it.
+    cp -R ChromeExtension/_locales "$OUTPUT/Contents/Resources/ChromeExtension/"
+    test -f "$OUTPUT/Contents/Resources/ChromeExtension/_locales/en/messages.json"
+    test -f "$OUTPUT/Contents/Resources/ChromeExtension/_locales/ko/messages.json"
     cp gemini-native-host "$OUTPUT/Contents/Resources/gemini-native-host"
     chmod 755 "$OUTPUT/Contents/Resources/gemini-native-host"
+
+    # Declaring both interface languages lets macOS offer a per-app language
+    # choice and keeps system-drawn controls in the same language as the app.
+    mkdir -p "$OUTPUT/Contents/Resources/en.lproj" "$OUTPUT/Contents/Resources/ko.lproj"
+    printf 'CFBundleDisplayName = "AI Usage Bar";\n' > "$OUTPUT/Contents/Resources/en.lproj/InfoPlist.strings"
+    printf 'CFBundleDisplayName = "AI 사용량";\n' > "$OUTPUT/Contents/Resources/ko.lproj/InfoPlist.strings"
 
     cat > "$OUTPUT/Contents/Info.plist" <<PLIST
 <?xml version="1.0" encoding="UTF-8"?>
@@ -66,7 +77,8 @@ build_app() {
 <plist version="1.0">
 <dict>
     <key>CFBundleName</key><string>AIUsageBar</string>
-    <key>CFBundleDisplayName</key><string>AI 사용량</string>
+    <key>CFBundleDisplayName</key><string>AI Usage Bar</string>
+    <key>CFBundleDevelopmentRegion</key><string>en</string>
     <key>CFBundleIdentifier</key><string>$BUNDLE_ID</string>
     <key>CFBundleExecutable</key><string>AIUsageBar</string>
     <key>CFBundlePackageType</key><string>APPL</string>

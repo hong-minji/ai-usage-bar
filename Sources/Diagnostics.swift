@@ -20,7 +20,7 @@ enum Diagnostics {
             RunLoop.main.run(mode: .default, before: Date().addingTimeInterval(0.1))
         }
         if !finished {
-            print("시간 초과")
+            print(L("시간 초과", "Timed out"))
             exit(1)
         }
         exit(0)
@@ -37,12 +37,12 @@ enum Diagnostics {
             now: now
         )
 
-        print("메뉴바:  \(barPlainText(segments))")
+        print("\(L("메뉴바", "Menu bar")):  \(barPlainText(segments))")
         print(String(repeating: "─", count: 52))
 
         for id in prefs.visibleProviders {
             guard let state = coordinator.states[id] else {
-                print("\(id.displayName): 상태 없음")
+                print("\(id.displayName): \(L("상태 없음", "no state"))")
                 continue
             }
 
@@ -51,13 +51,7 @@ enum Diagnostics {
             print(header)
 
             for window in state.reading?.windows ?? [] {
-                let remaining = window.remainingPercent
-                var line = "  \(asciiMeter(remaining: remaining)) "
-                    + "\(String(format: "%3d", Int(remaining.rounded())))% 남음   \(window.label)"
-                if let reset = window.resetsAt {
-                    line += " · \(koreanTimeUntil(reset, from: now)) 리셋"
-                }
-                print(line)
+                print(windowRowText(window, now: now))
             }
 
             if let reason = state.failureReason {
@@ -68,7 +62,7 @@ enum Diagnostics {
         print(String(repeating: "─", count: 52))
         let hidden = ProviderID.allCases.filter { !prefs.isVisible($0) }
         if !hidden.isEmpty {
-            print("숨김: \(hidden.map(\.displayName).joined(separator: ", "))")
+            print("\(L("숨김", "Hidden")): \(hidden.map(\.displayName).joined(separator: ", "))")
         }
     }
 }

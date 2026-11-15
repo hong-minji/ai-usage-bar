@@ -23,7 +23,7 @@ enum BrowserUsageBridge {
         }
         var reading: ProviderReading? {
             guard status == "ok", let id, let date else { return nil }
-            return ProviderReading(id: id, planLabel: "Chrome 웹", windows: zip(labels, used).map {
+            return ProviderReading(id: id, planLabel: L("Chrome 웹", "Chrome web"), windows: zip(labels, used).map {
                 UsageWindow(label: $0.0, usedPercent: $0.1, resetsAt: nil)
             }, fetchedAt: date)
         }
@@ -58,7 +58,7 @@ enum BrowserUsageBridge {
         guard data.count <= 16384, let r = try? JSONDecoder().decode(Report.self, from: data),
               validFields(r), let date = r.date, date.timeIntervalSince(now) <= 60,
               now.timeIntervalSince(date) <= maximumAge else {
-            throw FetchError.toolFailed("웹 사용량 보고서가 올바르지 않습니다")
+            throw FetchError.toolFailed(L("웹 사용량 보고서가 올바르지 않습니다", "The web usage report is invalid"))
         }
         return r
     }
@@ -80,14 +80,14 @@ enum BrowserUsageBridge {
     }
     static func save(_ report: Report, in folder: URL = directory) throws {
         guard validFields(report), let id = report.id, let url = canonicalURL(report.provider) else {
-            throw FetchError.toolFailed("웹 사용량 보고서가 올바르지 않습니다")
+            throw FetchError.toolFailed(L("웹 사용량 보고서가 올바르지 않습니다", "The web usage report is invalid"))
         }
         let fm = FileManager.default
         try fm.createDirectory(at: folder, withIntermediateDirectories: true)
         let lock = open(folder.appendingPathComponent(".browser-\(report.provider).lock").path, O_CREAT | O_RDWR, 0o600)
-        guard lock >= 0 else { throw FetchError.toolFailed("웹 캐시를 열지 못했습니다") }
+        guard lock >= 0 else { throw FetchError.toolFailed(L("웹 캐시를 열지 못했습니다", "Could not open the web cache")) }
         defer { close(lock) }
-        guard flock(lock, LOCK_EX) == 0 else { throw FetchError.toolFailed("웹 캐시를 잠그지 못했습니다") }
+        guard flock(lock, LOCK_EX) == 0 else { throw FetchError.toolFailed(L("웹 캐시를 잠그지 못했습니다", "Could not lock the web cache")) }
         defer { flock(lock, LOCK_UN) }
         let previous = load(id, in: folder)
         if let old = previous?.latest.date, let date = report.date, date < old { return }
@@ -101,11 +101,11 @@ enum BrowserUsageBridge {
     }
     static func state(_ id: ProviderID, now: Date = Date(), in folder: URL = directory) -> ProviderState {
         guard let cache = load(id, in: folder), cache.latest.status != "disabled" else {
-            return .unavailable(reason: "Chrome 확장 팝업에서 \(id.shortLabel) 연결을 켜세요")
+            return .unavailable(reason: L("Chrome 확장 팝업에서 \(id.shortLabel) 연결을 켜세요", "Turn on \(id.shortLabel) in the Chrome extension popup"))
         }
         if let date = cache.latest.date, date.timeIntervalSince(now) <= 60,
            now.timeIntervalSince(date) <= maximumAge, let reading = cache.latest.reading { return .ok(reading) }
-        let reason = "Chrome의 \(id.shortLabel) 로그인·사용량 페이지를 확인하세요"
+        let reason = L("Chrome의 \(id.shortLabel) 로그인·사용량 페이지를 확인하세요", "Check the \(id.shortLabel) login and usage page in Chrome")
         if let reading = cache.lastSuccess?.reading { return .stale(reading, reason: reason) }
         return .unavailable(reason: reason)
     }
