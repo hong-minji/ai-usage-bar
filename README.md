@@ -25,6 +25,7 @@
   <a href="https://github.com/hong-minji/ai-usage-bar/releases/download/v1.4.0/AIUsageBar-1.4.0-universal.zip"><b>↓ Mac용 다운로드 — v1.4.0</b></a>
   &nbsp;·&nbsp; <a href="#설치">설치</a>
   &nbsp;·&nbsp; <a href="#연결-방법">연결 방법</a>
+  &nbsp;·&nbsp; <a href="https://hong-minji.github.io/ai-usage-bar/">소개 페이지</a>
   &nbsp;·&nbsp; <a href="https://github.com/hong-minji/ai-usage-bar/releases">릴리스</a>
   &nbsp;·&nbsp; <a href="https://github.com/hong-minji/ai-usage-bar/issues">문제 신고</a>
 </p>

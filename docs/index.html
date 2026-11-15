@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Usage Bar — Claude·ChatGPT·Gemini 남은 사용량을 Mac 메뉴바 한 줄로</title>
+<meta name="description" content="Claude(클로드), ChatGPT(챗GPT)·Codex, Gemini(제미나이), Antigravity의 남은 사용 한도를 Mac 메뉴바에 나란히 보여주는 무료 오픈소스 앱. 터미널 없이 Chrome 웹 로그인으로 연결됩니다.">
+<link rel="canonical" href="https://hong-minji.github.io/ai-usage-bar/">
+<link rel="alternate" hreflang="ko" href="https://hong-minji.github.io/ai-usage-bar/">
+<link rel="alternate" hreflang="en" href="https://hong-minji.github.io/ai-usage-bar/en/">
+<link rel="alternate" hreflang="x-default" href="https://hong-minji.github.io/ai-usage-bar/en/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="AI Usage Bar">
+<meta property="og:title" content="AI Usage Bar — Claude·ChatGPT·Gemini 남은 사용량을 Mac 메뉴바 한 줄로">
+<meta property="og:description" content="Claude(클로드), ChatGPT(챗GPT)·Codex, Gemini(제미나이), Antigravity의 남은 사용 한도를 Mac 메뉴바에 나란히 보여주는 무료 오픈소스 앱. 터미널 없이 Chrome 웹 로그인으로 연결됩니다.">
+<meta property="og:url" content="https://hong-minji.github.io/ai-usage-bar/">
+<meta property="og:image" content="https://hong-minji.github.io/ai-usage-bar/hero-ko.png">
+<meta property="og:image:width" content="2560">
+<meta property="og:image:height" content="1280">
+<meta property="og:locale" content="ko_KR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#09090c">
+<meta name="color-scheme" content="dark">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2315151a'/%3E%3Crect x='6' y='8' width='20' height='4' rx='2' fill='%23e08a6d'/%3E%3Crect x='6' y='14' width='13' height='4' rx='2' fill='%2319c39a'/%3E%3Crect x='6' y='20' width='17' height='4' rx='2' fill='%234c97ff'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "AI Usage Bar", "operatingSystem": "macOS 13 or later", "applicationCategory": "UtilitiesApplication", "description": "Claude(클로드), ChatGPT(챗GPT)·Codex, Gemini(제미나이), Antigravity의 남은 사용 한도를 Mac 메뉴바에 나란히 보여주는 무료 오픈소스 앱. 터미널 없이 Chrome 웹 로그인으로 연결됩니다.", "url": "https://hong-minji.github.io/ai-usage-bar/", "image": "https://hong-minji.github.io/ai-usage-bar/hero-ko.png", "downloadUrl": "https://github.com/hong-minji/ai-usage-bar/releases/latest", "isAccessibleForFree": true, "inLanguage": ["ko", "en"], "license": "https://opensource.org/licenses/MIT", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "퍼센트는 쓴 양인가요, 남은 양인가요?", "acceptedAnswer": {"@type": "Answer", "text": "남은 양입니다. 숫자가 작을수록 한도에 가깝습니다. 5시간 한도와 주간 한도가 함께 있으면 메뉴바에는 가장 적게 남은 쪽이 표시되고, 메뉴를 펼치면 각각 볼 수 있습니다."}}, {"@type": "Question", "name": "사용량을 확인하면 토큰이나 한도가 줄어드나요?", "acceptedAnswer": {"@type": "Answer", "text": "사용량 조회 요청만 보내고 모델에는 프롬프트를 보내지 않습니다. Antigravity의 /quota 실측에서도 토큰과 턴 수는 0이었습니다."}}, {"@type": "Question", "name": "Claude Code나 Codex 같은 터미널 도구가 없어도 되나요?", "acceptedAnswer": {"@type": "Answer", "text": "네. Chrome에서 Claude·ChatGPT·Gemini에 로그인되어 있으면 앱에 포함된 확장으로 연결할 수 있습니다. 이미 터미널 도구를 쓴다면 그 로그인을 그대로 써도 됩니다."}}, {"@type": "Question", "name": "확장이 쿠키나 대화 내용을 읽나요?", "acceptedAnswer": {"@type": "Answer", "text": "아니요. 사용량 페이지에 표시된 숫자만 읽어 이 Mac의 앱으로 전달합니다. 쿠키·비밀번호·인증 토큰을 추출하지 않고 대화 원문을 전송하지 않습니다."}}, {"@type": "Question", "name": "GPT 숫자는 무엇을 뜻하나요?", "acceptedAnswer": {"@type": "Answer", "text": "ChatGPT 설정 → 사용량에 표시되는 플랜 한도입니다. 채팅 횟수나 별도 모델 한도를 추정하지 않습니다. 어떤 기능이 포함되는지는 ChatGPT 사용량 페이지와 README의 안내를 확인하세요."}}, {"@type": "Question", "name": "macOS가 실행을 막아요.", "acceptedAnswer": {"@type": "Answer", "text": "Apple Developer ID 서명·공증이 아직 없어서입니다. 한 번 실행을 시도한 뒤 시스템 설정 → 개인정보 보호 및 보안 → 그래도 열기에서 허용하면 됩니다. 회사에서 관리하는 Mac에서는 제한될 수 있습니다."}}, {"@type": "Question", "name": "Windows나 Linux에서도 되나요?", "acceptedAnswer": {"@type": "Answer", "text": "아니요. macOS 13 이상에서만 실행됩니다."}}]}</script>
+</head>
+<body>
+<header class="menubar">
+  <a class="mb-app" href="#top">AI Usage Bar</a>
+  <nav class="mb-nav" aria-label="페이지 내 이동"><a href="#why">기능</a><a href="#connect">연결</a><a href="#compare">비교</a><a href="#install">설치</a><a href="#faq">FAQ</a></nav>
+  <div class="mb-right">
+    <span class="mb-usage" role="img" aria-label="메뉴바 표시 예시: Claude 46%, GPT 95%, Gemini 70%, agy 68% 남음"><span class="c">Claude </span><span data-demo="bar">46</span>%<span class="sep">·</span><span class="g">GPT </span>95%<span class="opt"><span class="sep">·</span><span class="b">Gemini </span>70%<span class="sep">·</span><span class="b">agy </span>68%</span></span>
+    <a class="mb-lang" href="en/" hreflang="en" lang="en">English</a>
+  </div>
+</header>
+
+<main id="top">
+  <div class="hero">
+    <div class="wrap">
+      <div class="hero-copy">
+        <p class="eyebrow">macOS 메뉴바 앱 · 무료 오픈소스</p>
+        <h1>AI 사용량,<br>메뉴바 한 줄로.</h1>
+        <p class="lede"><strong>Claude · ChatGPT · Gemini · Antigravity</strong>의 남은 한도를 나란히 보여줍니다. 터미널 없이, 이미 로그인해 둔 Chrome 웹 로그인만으로 연결됩니다.</p>
+        <p class="pointer"><b>↑</b> 맨 위 메뉴바의 저 한 줄이 이 앱의 전부입니다.</p>
+        <div class="cta">
+          <a class="btn btn-primary" href="https://github.com/hong-minji/ai-usage-bar/releases/latest">↓ Mac용 다운로드 <small>무료</small></a>
+          <a class="btn btn-ghost" href="https://github.com/hong-minji/ai-usage-bar">GitHub에서 보기</a>
+        </div>
+        <div class="brew"><code>brew install --cask hong-minji/tap/ai-usage-bar</code><button class="copy" type="button" data-copy="brew install --cask hong-minji/tap/ai-usage-bar" data-done="복사됨">복사</button></div>
+        <p class="meta">macOS 13 이상 · Apple Silicon / Intel · 한국어 / English · MIT</p>
+      </div>
+    </div>
+    <div class="menu" role="img" aria-label="펼친 메뉴 예시. 서비스별 5시간·주간 한도의 남은 비율과 리셋 시각을 보여줍니다.">
+      <div class="menu-head c">Claude<span>Chrome 웹</span></div>
+      <div class="menu-row">  <span class="meter"><span data-demo="meter-on">█████</span><span class="off" data-demo="meter-off">░░░░░</span></span>  <span data-demo="row">46</span>% 남음   5시간</div>
+      <div class="menu-row">  <span class="meter">█████<span class="off">░░░░░</span></span>  52% 남음   주간</div>
+      <hr>
+      <div class="menu-head g">GPT (플랜 사용량)<span>Chrome 웹</span></div>
+      <div class="menu-row">  <span class="meter">██████████<span class="off"></span></span>  95% 남음   주간</div>
+      <div class="menu-note">ChatGPT 설정의 플랜 한도 기준</div>
+      <hr>
+      <div class="menu-head b">Gemini (웹)</div>
+      <div class="menu-row">  <span class="meter">███████<span class="off">░░░</span></span>  70% 남음   5시간</div>
+      <div class="menu-row">  <span class="meter">█████████<span class="off">░</span></span>  90% 남음   주간</div>
+      <hr>
+      <div class="menu-head b">Antigravity</div>
+      <div class="menu-row">  <span class="meter">███████<span class="off">░░░</span></span>  68% 남음   Claude/GPT · 6일 후 리셋</div>
+      <div class="menu-row">  <span class="meter">██████████<span class="off"></span></span> 100% 남음   Gemini · 1일 후 리셋</div>
+      <hr>
+      <div class="menu-status">방금 갱신 · 5분마다</div>
+      <div class="menu-item"><span>지금 갱신</span><kbd>⌘R</kbd></div>
+      <div class="menu-item"><span>설정…</span><kbd>⌘,</kbd></div>
+      <hr>
+      <div class="menu-item"><span>종료</span><kbd>⌘Q</kbd></div>
+      <p class="menu-caption">예시 수치입니다. 실제 화면은 아래에 있습니다.</p>
+    </div>
+  </div>
+
+  <section id="why">
+    <div class="wrap">
+      <p class="kicker">01 — 왜 쓰나요</p>
+      <h2>확인하러 다니지 않아도 됩니다</h2>
+      <p class="section-lede">한도가 얼마나 남았는지 보려고 서비스마다 설정 페이지를 여는 대신, 메뉴바를 한 번 보면 됩니다.</p>
+      <div class="features">
+      <div class="feature"><div><h3>메뉴바 한 줄, 남은 양 기준</h3><p>숫자는 쓴 양이 아니라 남은 양입니다. 작을수록 한도에 가깝습니다. 5시간·주간 한도가 함께 있으면 가장 적게 남은 쪽을 보여줍니다.</p></div></div>
+      <div class="feature"><div><h3>터미널 없이 웹 로그인으로</h3><p>Chrome에서 Claude·ChatGPT·Gemini에 로그인되어 있으면 됩니다. CLI 설치도 API 키도 필요 없습니다.</p></div></div>
+      <div class="feature"><div><h3>Gemini 웹 한도까지</h3><p>gemini.google.com의 사용 한도와 Antigravity(agy) 코딩 할당량을 각각 보여줍니다.</p></div></div>
+      <div class="feature"><div><h3>쿠키·토큰을 꺼내지 않는 연결</h3><p>앱에 포함된 Chrome 확장은 사용량 페이지에 표시된 숫자만 읽어 이 Mac으로 전달합니다. 쿠키·비밀번호·대화 내용은 읽지 않습니다.</p></div></div>
+      <div class="feature"><div><h3>AI 호출 없이 사용량만 조회</h3><p>모델에 프롬프트를 보내지 않습니다. 앱 자체 메모리는 테스트 Mac에서 약 30–35MB로 측정됐습니다(v1.3.0 기준).</p></div></div>
+      <div class="feature"><div><h3>모르는 값을 0%로 꾸미지 않습니다</h3><p>조회에 실패하면 마지막 성공값과 경과 시간, 오류를 그대로 보여줍니다. 개발자 서버·분석·광고·텔레메트리도 없습니다.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="screens">
+    <div class="wrap">
+      <p class="kicker">02 — 실제 화면</p>
+      <h2>꾸미지 않은 실제 앱 화면</h2>
+      <div class="shots">
+        <figure class="shot"><img src="screenshot.png" width="447" height="521" loading="lazy" alt="Claude 46%, GPT 95%, Gemini 70%, agy 0%를 표시하는 메뉴바와 펼쳐진 AI Usage Bar 메뉴"><figcaption>메뉴바와 펼친 메뉴. 수치는 사용 시점에 따라 달라집니다.</figcaption></figure>
+        <figure class="shot"><img src="settings.png" width="508" height="763" loading="lazy" alt="Claude와 GPT를 로컬 로그인으로 설정한 AI Usage Bar 설정 창"><figcaption>설정 창. 표시할 서비스와 연결 방식, 언어를 고릅니다.</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <section id="connect">
+    <div class="wrap">
+      <p class="kicker">03 — 연결 방법</p>
+      <h2>쓰던 로그인을 그대로 씁니다</h2>
+      <p class="section-lede">웹만 쓰는 사람과 터미널 도구를 쓰는 사람 모두를 위한 두 가지 방법이 있습니다. 서비스마다 다르게 골라도 됩니다.</p>
+      <div class="paths">
+        <div class="path"><span class="tag">방법 A</span><h3>Chrome 웹 연결</h3><p>터미널이 필요 없습니다. Claude · GPT · Gemini에 쓸 수 있습니다.</p><ol><li>앱에서 <b>설정… → 웹 연결 → Chrome 연결…</b>을 누릅니다.</li><li><code>chrome://extensions/</code>에서 <b>개발자 모드</b>를 켭니다.</li><li><b>압축해제된 확장 프로그램 로드</b> → ⌘⇧G → 붙여넣기 → 폴더 선택.</li><li>확장 팝업에서 Claude · GPT 연결을 켭니다. Gemini는 자동으로 연결됩니다.</li></ol></div>
+        <div class="path"><span class="tag">방법 B</span><h3>기존 로컬 로그인</h3><p>Claude Code · Codex · agy에 이미 로그인했다면 가장 가볍습니다.</p><ol><li>앱 설정에서 연결 방식을 <b>로컬 로그인 — 앱 직접 조회</b>로 고릅니다.</li><li>Claude는 macOS가 키체인 접근을 물으면 허용합니다. 토큰은 읽기만 합니다.</li><li>agy는 CLI 설치·로그인 후 <b>표시 항목</b>에서 켭니다.</li><li>터미널을 켜 둘 필요도, Chrome 탭을 열 필요도 없습니다.</li></ol></div>
+      </div>
+      <p class="section-lede" style="margin:30px 0 0">단계별 설명과 주의사항은 <a href="https://github.com/hong-minji/ai-usage-bar#연결-방법">README의 연결 방법</a>에 있습니다.</p>
+    </div>
+  </section>
+
+  <section id="compare">
+    <div class="wrap">
+      <p class="kicker">04 — 비교</p>
+      <h2>다른 도구와 무엇이 다른가요</h2>
+      <p class="section-lede">AI 사용량을 보여주는 도구는 이미 여럿 있습니다. 고르기 쉽도록 성격이 다른 대표 도구 두 가지와 나란히 놓았습니다. 다른 프로젝트의 내용은 각 README 기준이며 2026-11-16에 확인했습니다.</p>
+      <div class="table-scroll" tabindex="0">
+      <table>
+        <thead><tr><th scope="col"></th><th scope="col">AI Usage Bar</th><th scope="col">CodexBar</th><th scope="col">ccusage</th></tr></thead>
+        <tbody>
+        <tr><th scope="row">형태</th><td>Mac 메뉴바 앱</td><td>Mac 메뉴바 앱 (Linux 지원)</td><td>터미널 CLI</td></tr>
+        <tr><th scope="row">보여주는 것</th><td>구독 플랜의 남은 한도, 서비스 4개</td><td>100개가 넘는 서비스의 한도·크레딧·비용</td><td>코딩 에이전트 CLI의 토큰 사용량과 비용</td></tr>
+        <tr><th scope="row">잘 맞는 사람</th><td>웹에서 AI를 쓰는 사람, 가볍게 한도만 보고 싶은 사람</td><td>코딩 에이전트를 여러 개 쓰는 개발자</td><td>Claude Code·Codex 등 CLI 사용자</td></tr>
+        <tr><th scope="row">웹 로그인 연결</th><td>Chrome 확장이 사용량 페이지의 숫자만 읽음</td><td>브라우저 쿠키 가져오기 (선택 사항)</td><td>해당 없음</td></tr>
+        <tr><th scope="row">Gemini</th><td>gemini.google.com 웹 한도</td><td>Gemini CLI 로그인 기반 할당량</td><td>해당 없음</td></tr>
+        <tr><th scope="row">지원 macOS</th><td>13 이상</td><td>14 이상</td><td>해당 없음</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <ul class="pick"><li>코딩 에이전트 여러 개와 API 크레딧까지 한곳에서 보고 싶다면 <b>CodexBar</b>가 더 맞습니다.</li><li>토큰 사용량과 비용을 날짜·세션별로 분석하고 싶다면 <b>ccusage</b>가 맞습니다.</li><li>터미널을 쓰지 않거나, Claude·ChatGPT·Gemini 구독의 남은 한도만 가볍게 보고 싶다면 <b>AI Usage Bar</b>를 써보세요.</li></ul>
+    </div>
+  </section>
+
+  <section id="install">
+    <div class="wrap">
+      <p class="kicker">05 — 설치</p>
+      <h2>내려받아 옮기면 끝</h2>
+      <div class="install">
+        <div>
+          <ol class="steps"><li><b>릴리스에서 ZIP을 내려받습니다.</b> Apple Silicon·Intel 공용이라 고를 필요가 없습니다.</li><li><b>앱을 응용 프로그램 폴더로 옮긴 뒤 실행합니다.</b> Dock 아이콘 없이 메뉴바에 나타납니다.</li><li><b>설정…에서 쓰는 서비스만 켜고 연결합니다.</b> 위의 방법 A 또는 B를 따르면 됩니다.</li></ol>
+          <div class="cta">
+            <a class="btn btn-primary" href="https://github.com/hong-minji/ai-usage-bar/releases/latest">↓ Mac용 다운로드 <small>무료</small></a>
+            <a class="btn btn-ghost" href="https://github.com/hong-minji/ai-usage-bar">GitHub에서 보기</a>
+          </div>
+          <div class="brew"><code>brew install --cask hong-minji/tap/ai-usage-bar</code><button class="copy" type="button" data-copy="brew install --cask hong-minji/tap/ai-usage-bar" data-done="복사됨">복사</button></div>
+        </div>
+        <div class="notice"><p><b>처음 실행할 때 macOS가 막을 수 있습니다.</b> 아직 Apple Developer ID 서명·공증이 없는 초기 버전입니다. 한 번 실행을 시도한 뒤 <b>시스템 설정 → 개인정보 보호 및 보안 → 그래도 열기</b>에서 허용하세요.</p><p>Windows·Linux에서는 실행되지 않습니다.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq" class="faq">
+    <div class="wrap">
+      <p class="kicker">06 — 자주 묻는 질문</p>
+      <h2>궁금할 만한 것들</h2>
+      <details><summary>퍼센트는 쓴 양인가요, 남은 양인가요?</summary><p>남은 양입니다. 숫자가 작을수록 한도에 가깝습니다. 5시간 한도와 주간 한도가 함께 있으면 메뉴바에는 가장 적게 남은 쪽이 표시되고, 메뉴를 펼치면 각각 볼 수 있습니다.</p></details>
+      <details><summary>사용량을 확인하면 토큰이나 한도가 줄어드나요?</summary><p>사용량 조회 요청만 보내고 모델에는 프롬프트를 보내지 않습니다. Antigravity의 /quota 실측에서도 토큰과 턴 수는 0이었습니다.</p></details>
+      <details><summary>Claude Code나 Codex 같은 터미널 도구가 없어도 되나요?</summary><p>네. Chrome에서 Claude·ChatGPT·Gemini에 로그인되어 있으면 앱에 포함된 확장으로 연결할 수 있습니다. 이미 터미널 도구를 쓴다면 그 로그인을 그대로 써도 됩니다.</p></details>
+      <details><summary>확장이 쿠키나 대화 내용을 읽나요?</summary><p>아니요. 사용량 페이지에 표시된 숫자만 읽어 이 Mac의 앱으로 전달합니다. 쿠키·비밀번호·인증 토큰을 추출하지 않고 대화 원문을 전송하지 않습니다.</p></details>
+      <details><summary>GPT 숫자는 무엇을 뜻하나요?</summary><p>ChatGPT 설정 → 사용량에 표시되는 플랜 한도입니다. 채팅 횟수나 별도 모델 한도를 추정하지 않습니다. 어떤 기능이 포함되는지는 ChatGPT 사용량 페이지와 README의 안내를 확인하세요.</p></details>
+      <details><summary>macOS가 실행을 막아요.</summary><p>Apple Developer ID 서명·공증이 아직 없어서입니다. 한 번 실행을 시도한 뒤 시스템 설정 → 개인정보 보호 및 보안 → 그래도 열기에서 허용하면 됩니다. 회사에서 관리하는 Mac에서는 제한될 수 있습니다.</p></details>
+      <details><summary>Windows나 Linux에서도 되나요?</summary><p>아니요. macOS 13 이상에서만 실행됩니다.</p></details>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>MIT 라이선스. 각 서비스의 계정·구독은 별도로 필요합니다. Anthropic, OpenAI, Google과 제휴하거나 이들의 승인을 받은 프로젝트가 아닙니다.</p>
+    <p><a href="https://github.com/hong-minji/ai-usage-bar">GitHub</a> <a href="https://github.com/hong-minji/ai-usage-bar/releases">릴리스</a> <a href="https://github.com/hong-minji/ai-usage-bar/issues">문제 신고</a> <a href="https://github.com/hong-minji/ai-usage-bar#readme">README</a> </p>
+  </div>
+</footer>
+<script src="site.js" defer></script>
+</body>
+</html>
