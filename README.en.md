@@ -22,7 +22,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/hong-minji/ai-usage-bar/releases/download/v1.3.0/AIUsageBar-1.3.0-universal.zip"><b>↓ Download for Mac — v1.3.0</b></a>
+  <a href="https://github.com/hong-minji/ai-usage-bar/releases/download/v1.4.0/AIUsageBar-1.4.0-universal.zip"><b>↓ Download for Mac — v1.4.0</b></a>
   &nbsp;·&nbsp; <a href="#install">Install</a>
   &nbsp;·&nbsp; <a href="#connect-your-services">Connect</a>
   &nbsp;·&nbsp; <a href="https://github.com/hong-minji/ai-usage-bar/releases">Releases</a>
@@ -32,7 +32,7 @@
 A free, open-source Mac menu bar app that shows how much of your Claude, ChatGPT/Codex, Gemini and Antigravity allowance is left, side by side. **Connect with the web logins you already have in Chrome, with no terminal or CLI**, or keep using existing Claude Code and Codex logins and the agy CLI. Runs on macOS 13 or later, on both Apple Silicon and Intel.
 
 > [!NOTE]
-> The app's interface is currently Korean. This guide gives each label in Korean with its English meaning, so setup works either way.
+> The app follows your system language, in English or Korean. You can also choose one under **Settings… → Language**. The extension popup follows Chrome's language.
 
 ## Why AI Usage Bar?
 
@@ -48,20 +48,36 @@ A free, open-source Mac menu bar app that shows how much of your Claude, ChatGPT
 
 <br clear="right">
 
-The screenshot is the actual app; values change with usage. Open the menu for each service's individual limits and reset times where available.
+The screenshot is the actual app; values change with usage. Open the menu for each service's individual limits and reset times where available. It shows the Korean interface. In English the same readings appear as:
+
+```text
+Claude 46% · GPT 95% · Gemini 70% · agy 0%
+
+Claude  Chrome web
+  █████░░░░░  46% left   5-hour
+  █████░░░░░  52% left   Weekly
+GPT (plan usage)  Chrome web
+  ██████████  95% left   Weekly
+```
 
 ## Install
 
 No terminal, Xcode, Homebrew or Node.js required.
 
-1. Download **[AIUsageBar-1.3.0-universal.zip](https://github.com/hong-minji/ai-usage-bar/releases/download/v1.3.0/AIUsageBar-1.3.0-universal.zip)**. The same file supports Apple Silicon and Intel.
+1. Download **[AIUsageBar-1.4.0-universal.zip](https://github.com/hong-minji/ai-usage-bar/releases/download/v1.4.0/AIUsageBar-1.4.0-universal.zip)**. The same file supports Apple Silicon and Intel.
 2. Double-click the ZIP to extract it. It contains `AIUsageBar.app`, `START-HERE.txt` and `LICENSE.txt`.
 3. **Move the app to Applications before opening it.** Choose its permanent location before connecting Chrome.
-4. Find the app in the menu bar at the top of the screen. Open **설정…** (Settings) → **표시 항목** (Visible items) and keep only the services you use. There is no Dock icon.
+4. Find the app in the menu bar at the top of the screen. Open **Settings… → Show** and keep only the services you use. There is no Dock icon.
 5. Connect your services using whichever option fits under [Connect your services](#connect-your-services).
 
 > [!IMPORTANT]
 > This is an early public release. It is ad-hoc signed, without Apple Developer ID signing or notarization, so macOS may block the first launch. Read [First launch](#first-launch) below. Windows and Linux are not supported.
+
+If you use Homebrew, one line installs it. Because the app is not notarized, the first-launch approval is still required.
+
+```sh
+brew install --cask hong-minji/tap/ai-usage-bar
+```
 
 GitHub's **Code → Download ZIP** and the **Source code** release assets contain source files; the runnable app is in `AIUsageBar-…-universal.zip` linked above. A service's login tool or Chrome is needed only when you connect that service.
 
@@ -92,12 +108,12 @@ Web connections for Claude, GPT and Gemini need no CLI installation. If you alre
 
 The extension is bundled in the app and is not on the Chrome Web Store. Usage pages must be in Korean or English. Sign in to the services in the Chrome profile you want to use.
 
-1. In the installed app, open **설정… → 웹 연결 → Chrome 연결…** (Settings → Web connection → Connect Chrome). This registers the app and copies the extension folder path.
+1. In the installed app, open **Settings… → Web connection → Connect Chrome…**. This registers the app and copies the extension folder path.
 2. Open `chrome://extensions/` in that Chrome profile and enable **Developer mode**.
 3. Choose **Load unpacked**, press **⌘⇧G**, paste, press **Enter**, then select the folder.
-4. Open **AI 사용량 · 웹 연결** from Chrome's extension menu.
-5. Turn on **Claude 웹 연결** and/or **GPT 플랜 웹 연결**. Gemini connects automatically.
-6. Press the service's **지금 갱신** (Refresh now). The app labels these readings **Chrome 웹** (Chrome web).
+4. Open **AI Usage Bar · Web Connection** from Chrome's extension menu.
+5. Turn on **Claude web connection** and/or **GPT plan web connection**. Gemini connects automatically.
+6. Press the service's refresh button. The app labels these readings **Chrome web**.
 
 The extension opens inactive usage tabs and closes them after reading. Tabs you select yourself are preserved. If you move the app, reconnect Chrome and load the extension from the new location. Keep the app and extension folder in place.
 
@@ -107,20 +123,20 @@ For Gemini, you can optionally pin a Google email in the extension popup. Otherw
 
 ### B. Use existing local logins (Claude Code · Codex · agy)
 
-<img src="docs/settings.png" width="420" alt="AI Usage Bar settings with Claude and GPT set to Local login — direct app query">
+<img src="docs/settings-en.png" width="420" alt="AI Usage Bar settings with Claude and GPT set to Local login — direct app query">
 
-*Example settings screen, edited to hide the personal folder path for publication. The app UI is Korean.*
+*Example settings screen. The published image shows a default path in place of a personal folder path.*
 
 If you are already signed in to Claude Code or Codex, you can keep using that login without a web connection. **Installation alone is not enough: you must also be signed in.** You do not need to leave a terminal window open or repeat commands. Codex depends on its local login file, not on whether you personally use its CLI.
 
-**What does “앱 직접 조회” (direct app query) mean?** AI Usage Bar requests remaining usage from the service using an existing login saved on this Mac.
+**What does “direct app query” mean?** AI Usage Bar requests remaining usage from the service using an existing login saved on this Mac.
 
 - **Claude:** Uses the existing Claude Code login. macOS may ask for Keychain access.
 - **GPT:** Uses the existing Codex login on this Mac to display GPT plan usage.
 - **agy:** Requires the CLI installed and signed in. Set its executable path if automatic discovery fails. Hide agy if you do not use it.
 - You do not need to keep a terminal, Claude Code or Codex open. This mode opens no Chrome usage tabs and sends no prompts to AI models.
 
-Both Claude and GPT use local queries in this example. Gemini web still needs the Chrome extension. To use the local account while Chrome is also connected, select **로컬 로그인 — 앱 직접 조회** (Local only) in app Settings, and **also disable that service's web connection in the extension popup** to stop duplicate checks.
+Both Claude and GPT use local queries in this example. Gemini web still needs the Chrome extension. To use the local account while Chrome is also connected, select **Local login — direct app query** in app Settings, and **also disable that service's web connection in the extension popup** to stop duplicate checks.
 
 ### Choosing a connection mode
 
@@ -128,9 +144,9 @@ App Settings offers three choices for Claude and GPT.
 
 | Choice | Behavior |
 |---|---|
-| 자동 — 웹 연결 시 웹 사용 / Automatic | Uses an enabled Chrome connection when present, otherwise the existing local login |
-| Chrome 웹만 — 터미널 불필요 / Chrome only | Reads browser reports without querying local credentials |
-| 로컬 로그인 — 앱 직접 조회 / Local only | Uses existing Claude Code / Codex credentials |
+| Automatic — web when connected | Uses an enabled Chrome connection when present, otherwise the existing local login |
+| Chrome web only — no terminal | Reads browser reports without querying local credentials |
+| Local login — direct app query | Uses existing Claude Code / Codex credentials |
 
 A browser error does not silently switch to a different local account. **Your browser and local apps may be signed in to different accounts: check the Chrome profile you choose.** Claude/GPT web reports use that profile's current signed-in account without collecting its email. Use one Chrome profile for the connection.
 
@@ -140,14 +156,14 @@ Automatic mode uses an explicitly enabled web connection, otherwise the local lo
 
 - Choose visible services in Settings. agy is hidden by default; enable it only if you use the CLI.
 - The app refreshes every five minutes. Opening its menu does not trigger extra API queries or launch agy. The interval is configurable from 1 to 120 minutes.
-- Chrome polls every ten minutes while running. Turn off **웹 자동 조회** (automatic web checks) to prevent scheduled usage tabs; use the per-service Refresh now buttons when needed. An in-progress check finishes normally. Manual mode keeps the previous reading and shows its age when stale.
+- Chrome polls every ten minutes while running. Turn off **Automatic web checks** in the extension popup to prevent scheduled usage tabs; use the per-service Refresh now buttons when needed. An in-progress check finishes normally. Manual mode keeps the previous reading and shows its age when stale.
 - Failures show the previous successful reading with its age and an error, never a fabricated `0%`.
 - Only usage queries are made. No model prompts are sent.
 
 ### Reduce resource use
 
-- **Already signed in to local Claude Code/Codex?** Select **로컬 로그인 — 앱 직접 조회** (direct local-login query). This reads usage through HTTP using the existing login, without launching Claude Code/Codex agents or Chrome usage tabs. Also disable that service in the extension to stop duplicate browser polling.
-- **Web-only user?** Download the app and connect Chrome. Turn off **웹 자동 조회** to refresh only when needed; no CLI installation is required.
+- **Already signed in to local Claude Code/Codex?** Select **Local login — direct app query**. This reads usage through HTTP using the existing login, without launching Claude Code/Codex agents or Chrome usage tabs. Also disable that service in the extension to stop duplicate browser polling.
+- **Web-only user?** Download the app and connect Chrome. Turn off **Automatic web checks** to refresh only when needed; no CLI installation is required.
 - **Do not use agy?** Hide it in app Settings. When enabled, its CLI runs briefly for each quota check. The verified `/quota` response reported zero input, output and thinking tokens and zero turns.
 - Increase the app refresh interval to reduce local API/agy checks. The extension's automatic interval is independently set to ten minutes.
 
@@ -191,9 +207,9 @@ This is an independent app. Changes to a provider's authentication, responses or
 | GPT login unavailable | Enable Chrome web access or check the existing local Codex login. |
 | GPT shows `–` | No plan reading is available yet. Check Chrome access or the existing local Codex login. |
 | No web reading | Check extension reload, site permissions, service login and connection toggles. |
-| Gemini needs a menu bar app connection | Click **Chrome 연결…** in the currently installed app and reload the extension. |
-| Gemini shows old values | Check that Chrome is running and signed in, then press **지금 갱신** in the extension popup. |
-| An unused service shows an error | Disable it under **설정… → 표시 항목**. |
+| Gemini needs a menu bar app connection | Click **Connect Chrome…** in the currently installed app and reload the extension. |
+| Gemini shows old values | Check that Chrome is running and signed in, then press **Refresh now** in the extension popup. |
+| An unused service shows an error | Disable it under **Settings… → Show**. |
 | Antigravity fails | Check `agy` sign-in and the executable path. |
 
 Still stuck? [Open an issue](https://github.com/hong-minji/ai-usage-bar/issues/new/choose) with the app version, macOS version, Mac architecture, affected service and reproduction steps. Do not include emails, tokens, authentication files or private conversations.
@@ -233,9 +249,9 @@ You may need to complete sign-in and macOS security approvals yourself. Do not p
 
 ## Update and uninstall
 
-**Update:** Quit the existing app from its menu → download the new ZIP from [Releases](https://github.com/hong-minji/ai-usage-bar/releases) → replace the app in the same Applications location → reopen it. Updates are manual. Reload the web extension at `chrome://extensions/`. If the app moved, reconnect Chrome and toggle launch at login off and on.
+**Update:** Quit the existing app from its menu → download the new ZIP from [Releases](https://github.com/hong-minji/ai-usage-bar/releases) → replace the app in the same Applications location → reopen it. Updates are manual. If you installed with Homebrew, quit the app and run `brew upgrade --cask ai-usage-bar`. Reload the web extension at `chrome://extensions/`. If the app moved, reconnect Chrome and toggle launch at login off and on.
 
-**Uninstall:** In Settings, turn off **로그인 시 자동 실행** (Launch at login), quit, then move the app to Trash. If you connected Chrome, remove the extension and the registration file below. Remove the cache folder to erase usage history, and the preferences file to erase settings.
+**Uninstall:** In Settings, turn off **Launch at login**, quit, then move the app to Trash. If you connected Chrome, remove the extension and the registration file below. Remove the cache folder to erase usage history, and the preferences file to erase settings.
 
 ```text
 Chrome registration: ~/Library/Application Support/Google/Chrome/NativeMessagingHosts/com.local.ai_usage_bar.gemini.json
@@ -251,9 +267,9 @@ Turning off launch at login removes its file. If you used the developer installe
 Stated plainly rather than hidden.
 
 - No Apple Developer ID signing or notarization, so you must approve the first launch yourself.
-- No automatic updates. New versions are downloaded from Releases.
+- No automatic updates. New versions are downloaded from Releases or upgraded with Homebrew.
 - The web extension is not on the Chrome Web Store, so it is added in Developer mode, and usage pages must be in Korean or English.
-- The app interface is Korean only.
+- The app interface is available in English and Korean only.
 - Installation and execution have not been verified on macOS 13 or every supported Mac model.
 
 Have a suggestion, or a service you would like supported? [Open an issue](https://github.com/hong-minji/ai-usage-bar/issues).
@@ -276,15 +292,15 @@ node --test ChromeExtension/*tests.cjs # Extension tests; requires Node.js
 ./build/AIUsageBar.app/Contents/MacOS/AIUsageBar --once # One live check
 ```
 
-For `v1.3.0`, 149 Swift checks and 41 extension tests passed, along with the universal build, ZIP extraction and signature verification. Live verification scope is recorded in the release notes. GPT shows the reported plan allowance; it does not estimate a separate chat counter.
+For `v1.4.0`, 200 Swift checks and 48 extension tests passed, along with the universal build, ZIP extraction and signature verification. Live verification scope is recorded in the release notes. GPT shows the reported plan allowance; it does not estimate a separate chat counter.
 
 To verify file integrity, download the release ZIP and its `.sha256` file into the same folder, then run:
 
 ```sh
-shasum -a 256 -c AIUsageBar-1.3.0-universal.zip.sha256
+shasum -a 256 -c AIUsageBar-1.4.0-universal.zip.sha256
 ```
 
-Want to add a service you use? The steps are in the [contributing guide](CONTRIBUTING.md). · [Chrome extension](ChromeExtension/) · [Release notes](docs/releases/v1.3.0.md)
+Want to add a service you use? The steps are in the [contributing guide](CONTRIBUTING.md). · [Chrome extension](ChromeExtension/) · [Release notes](docs/releases/v1.4.0.md)
 
 ## If it helps
 

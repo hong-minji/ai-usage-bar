@@ -20,6 +20,7 @@ Read this first — nearly every design decision in the project follows from it.
 | **조회가 사용량을 소모하면 안 된다** <br> Polling must not consume quota | 5분마다 도는 코드입니다. 추론 엔드포인트를 부르면 측정 대상을 측정 행위가 깎습니다. <br> It runs every 5 minutes; an inference call would eat the thing being measured. |
 | **`usedPercent`로 저장하고 `remainingPercent`로 표시한다** <br> Store used, display remaining | 서비스마다 '쓴 양'과 '남은 양' 중 아무거나 주기 때문에 저장 단계에서 하나로 정규화합니다. <br> Upstreams report either one; normalise at the parse boundary. |
 | **테스트는 네트워크 없이 돈다** <br> Tests run offline | 실제 응답을 픽스처로 박아 둡니다. 로그인 없이도 전부 통과해야 합니다. <br> Real responses are pinned as fixtures. |
+| **화면 문구는 `L(한국어, 영어)`로 쓰고, 저장되는 라벨은 번역하지 않는다** <br> Visible text goes through `L(korean, english)`; stored labels are not translated | 앱은 한국어와 영어 화면을 함께 제공합니다. `5시간`·`주간` 같은 한도 라벨은 캐시와 Chrome 확장이 공유하는 값이라 그대로 저장하고, 그릴 때 `localizedWindowLabel`로 바꿉니다. <br> Both interface languages ship. Window labels are shared with caches and the extension, so they are stored as-is and translated on display. |
 | **`TESTABLE` 파일에 AppKit을 넣지 않는다** <br> No AppKit in `TESTABLE` files | `build.sh`의 `TESTABLE` 목록은 테스트 바이너리로 링크됩니다. AppKit이 들어가면 빌드가 깨집니다. <br> Those files link into the test binary. |
 
 ---
@@ -66,7 +67,7 @@ For a new one, run its CLI's usage command, or find the endpoint its usage page 
 
 5. **`Sources/Coordinator.swift`** — `fetchX(skip:)`를 추가하고 `refresh()`의 `async let` 묶음과 `next[...]` 대입에 연결합니다. 실패 경로는 반드시 `degrade(...)`를 거쳐 마지막 성공값으로 떨어져야 합니다.
 
-6. **`Sources/MenuBarController.swift`** — `hintItem(for:)`에 로그인 안내 문구 한 줄.
+6. **`Sources/MenuBarController.swift`** — `hintItem(for:)`에 로그인 안내 문구 한 줄. 한국어와 영어를 `L("…", "…")`로 함께 씁니다.
 
 7. **`Sources/Prefs.swift`** — 소수만 쓰는 서비스라면 `hiddenProviders` 기본값에 넣어 기본 숨김으로 둡니다.
 
@@ -138,6 +139,7 @@ Run both suites and look at `--once` output yourself. "Should pass" and "passed"
 
 - **파서가 깨졌을 때** — 서비스가 응답 형식이나 페이지 문구를 바꾸면 파싱이 실패합니다. 이슈에 **실제 응답(토큰은 지우고)** 이나 사용량 페이지의 해당 문구를 붙여주시면 가장 빠릅니다.
 - **다른 언어의 Gemini 페이지** — 현재 파서는 한국어·영어 문구만 인식합니다. `ChromeExtension/parser.js`의 `parseUsage`와 `labelFor`에 패턴을 추가하고 `tests.cjs`에 케이스를 넣어주세요.
+- **화면 번역** — 앱 문구는 `Sources`의 `L("한국어", "English")` 호출에, 확장 문구는 `ChromeExtension/_locales/{ko,en}/messages.json`에 있습니다. 어색한 영어 표현을 고치는 기여도 환영합니다.
 - **버그** — macOS 버전, 어느 프로바이더인지, `--once` 출력(계정 이메일은 지우고)을 함께 적어주세요.
 
 If a provider changes its response shape, paste the **real** response (with tokens removed) into the issue — that is the one thing that makes the fix quick.

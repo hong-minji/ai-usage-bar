@@ -22,7 +22,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/hong-minji/ai-usage-bar/releases/download/v1.3.0/AIUsageBar-1.3.0-universal.zip"><b>↓ Mac용 다운로드 — v1.3.0</b></a>
+  <a href="https://github.com/hong-minji/ai-usage-bar/releases/download/v1.4.0/AIUsageBar-1.4.0-universal.zip"><b>↓ Mac용 다운로드 — v1.4.0</b></a>
   &nbsp;·&nbsp; <a href="#설치">설치</a>
   &nbsp;·&nbsp; <a href="#연결-방법">연결 방법</a>
   &nbsp;·&nbsp; <a href="https://github.com/hong-minji/ai-usage-bar/releases">릴리스</a>
@@ -33,7 +33,7 @@
   <sub>A free, open-source macOS menu bar app showing your remaining Claude / ChatGPT / Gemini / Antigravity quota in one line. <a href="README.en.md">Read in English →</a></sub>
 </p>
 
-Claude(클로드), ChatGPT(챗GPT)·Codex, Gemini(제미나이), Antigravity의 남은 사용 한도를 Mac 메뉴바에 나란히 보여주는 무료 오픈소스 앱입니다. **터미널이나 CLI 없이 Chrome 웹 로그인만으로 연결**할 수 있고, 이미 쓰고 있는 Claude Code·Codex 로그인과 agy CLI도 그대로 쓸 수 있습니다. macOS 13 이상, Apple Silicon·Intel 공용이며 앱 화면은 한국어입니다.
+Claude(클로드), ChatGPT(챗GPT)·Codex, Gemini(제미나이), Antigravity의 남은 사용 한도를 Mac 메뉴바에 나란히 보여주는 무료 오픈소스 앱입니다. **터미널이나 CLI 없이 Chrome 웹 로그인만으로 연결**할 수 있고, 이미 쓰고 있는 Claude Code·Codex 로그인과 agy CLI도 그대로 쓸 수 있습니다. macOS 13 이상, Apple Silicon·Intel 공용이며 앱 화면은 한국어와 영어를 지원합니다.
 
 ## 왜 AI Usage Bar인가요?
 
@@ -55,7 +55,7 @@ Claude(클로드), ChatGPT(챗GPT)·Codex, Gemini(제미나이), Antigravity의 
 
 터미널도 Xcode·Homebrew·Node.js도 필요 없습니다.
 
-1. **[AIUsageBar-1.3.0-universal.zip](https://github.com/hong-minji/ai-usage-bar/releases/download/v1.3.0/AIUsageBar-1.3.0-universal.zip)** 을 내려받습니다. Apple Silicon·Intel 중 고를 필요가 없습니다.
+1. **[AIUsageBar-1.4.0-universal.zip](https://github.com/hong-minji/ai-usage-bar/releases/download/v1.4.0/AIUsageBar-1.4.0-universal.zip)** 을 내려받습니다. Apple Silicon·Intel 중 고를 필요가 없습니다.
 2. ZIP을 더블클릭해 압축을 풉니다. `AIUsageBar.app`, `START-HERE.txt`, `LICENSE.txt`가 들어 있습니다.
 3. **앱을 응용 프로그램 폴더로 옮긴 뒤** 실행합니다. Chrome 연결 전에 설치 위치를 정해주세요.
 4. 화면 위쪽 메뉴바에서 앱을 열고 **설정… → 표시 항목**에서 쓰는 서비스만 남겨둡니다. Dock 아이콘은 없습니다.
@@ -63,6 +63,12 @@ Claude(클로드), ChatGPT(챗GPT)·Codex, Gemini(제미나이), Antigravity의 
 
 > [!IMPORTANT]
 > 초기 공개 버전이라 Apple Developer ID 서명·공증이 아직 없습니다. 첫 실행 때 macOS가 차단할 수 있으니 아래 [처음 실행할 때](#처음-실행할-때)를 먼저 읽어주세요. Windows·Linux에서는 실행되지 않습니다.
+
+Homebrew를 쓴다면 한 줄로도 설치할 수 있습니다. 공증이 없으므로 첫 실행 승인은 똑같이 필요합니다.
+
+```sh
+brew install --cask hong-minji/tap/ai-usage-bar
+```
 
 GitHub의 **Code → Download ZIP**과 릴리스의 **Source code**는 개발용 소스입니다. 실행할 앱은 위 링크의 `AIUsageBar-…-universal.zip`입니다. 각 서비스의 로그인 도구나 Chrome은 해당 서비스를 연결할 때만 필요합니다.
 
@@ -96,7 +102,7 @@ Claude·GPT·Gemini를 웹으로 연결하면 터미널용 도구를 따로 설�
 1. 설치한 앱에서 **설정… → 웹 연결 → Chrome 연결…**을 누릅니다. 현재 앱 위치를 등록하고 확장 폴더 경로를 복사합니다.
 2. 해당 Chrome 프로필에서 `chrome://extensions/`를 열고 **개발자 모드**를 켭니다.
 3. **압축해제된 확장 프로그램을 로드합니다** → **⌘⇧G → 붙여넣기 → Enter** 후 폴더를 선택합니다.
-4. Chrome 확장 메뉴에서 **AI 사용량 · 웹 연결**을 엽니다.
+4. Chrome 확장 메뉴에서 **AI 사용량 · 웹 연결**을 엽니다. 영어 Chrome에서는 **AI Usage Bar · Web Connection**으로 보입니다.
 5. 사용할 **Claude 웹 연결**, **GPT 플랜 웹 연결**을 켭니다. Gemini는 자동으로 연결됩니다.
 6. ‘지금 갱신’을 눌러 수치를 확인합니다. 앱에서는 연결 출처가 **Chrome 웹**으로 표시됩니다.
 
@@ -110,7 +116,7 @@ Gemini는 확장 팝업에서 Google 계정을 이메일로 고정할 수 있습
 
 <img src="docs/settings.png" width="420" alt="Claude와 GPT를 로컬 로그인 — 앱 직접 조회로 설정한 AI Usage Bar 설정 화면">
 
-*설정 화면 예시입니다. 공개용 이미지는 개인 폴더 경로를 가려 편집했습니다.*
+*설정 화면 예시입니다. 공개용 이미지에는 개인 폴더 경로 대신 기본 경로를 넣었습니다.*
 
 Claude Code 또는 Codex에 이미 로그인했다면 별도 웹 연결 없이 사용할 수 있습니다. **설치뿐 아니라 로그인까지 되어 있어야** 합니다. 이후 터미널 창을 켜 두거나 직접 명령을 반복할 필요는 없습니다. Codex는 CLI 설치 자체보다 해당 Mac의 로그인 파일 유무가 중요합니다.
 
@@ -140,6 +146,7 @@ Claude Code 또는 Codex에 이미 로그인했다면 별도 웹 연결 없이 �
 ## 갱신 주기와 동작
 
 - 표시 항목은 설정에서 선택합니다. agy는 기본 숨김이며 CLI를 쓰는 사람만 켜면 됩니다.
+- 앱 화면은 시스템 언어를 따라 한국어 또는 영어로 표시됩니다. **설정… → 언어**에서 직접 고를 수도 있습니다. 확장 팝업은 Chrome의 언어를 따릅니다.
 - 앱은 기본 5분마다 갱신합니다. 메뉴를 여는 것만으로 추가 API 조회나 agy 실행을 하지 않습니다. 간격은 1–120분으로 설정할 수 있습니다.
 - 웹 확장은 Chrome 실행 중 기본 10분마다 수치를 확인합니다. 팝업의 **웹 자동 조회**를 끄면 자동으로 사용량 탭을 열지 않으며, 필요할 때 서비스별 **지금 갱신**을 누르면 됩니다. 진행 중이던 조회는 마무리됩니다. 수동 모드에서는 이전 값이 남고 오래되면 경과 시간이 표시됩니다.
 - 실패를 `0%`로 표시하지 않습니다. 이전 성공값이 있으면 경과 시간과 오류를 표시합니다.
@@ -233,7 +240,7 @@ https://github.com/hong-minji/ai-usage-bar
 
 ## 업데이트와 삭제
 
-**업데이트:** 메뉴바에서 기존 앱을 종료 → [릴리스](https://github.com/hong-minji/ai-usage-bar/releases)에서 새 ZIP 다운로드 → 같은 응용 프로그램 위치의 앱 교체 → 다시 실행합니다. 자동 업데이트는 없습니다. 웹 확장은 `chrome://extensions/`에서 새로고침(↻)하세요. 앱 위치가 바뀌었다면 Chrome 연결을 다시 하고 로그인 시 자동 실행도 껐다 켜세요.
+**업데이트:** 메뉴바에서 기존 앱을 종료 → [릴리스](https://github.com/hong-minji/ai-usage-bar/releases)에서 새 ZIP 다운로드 → 같은 응용 프로그램 위치의 앱 교체 → 다시 실행합니다. 자동 업데이트는 없습니다. Homebrew로 설치했다면 앱을 종료한 뒤 `brew upgrade --cask ai-usage-bar`를 실행하세요. 웹 확장은 `chrome://extensions/`에서 새로고침(↻)하세요. 앱 위치가 바뀌었다면 Chrome 연결을 다시 하고 로그인 시 자동 실행도 껐다 켜세요.
 
 **삭제:** 설정에서 **로그인 시 자동 실행**을 끄고 종료한 뒤 앱을 휴지통으로 옮깁니다. 웹 연결을 했다면 Chrome 확장과 아래 등록 파일도 삭제하세요. 기록을 지우려면 아래 캐시 폴더를, 설정까지 지우려면 환경설정 파일도 삭제합니다.
 
@@ -251,9 +258,9 @@ https://github.com/hong-minji/ai-usage-bar
 숨기지 않고 적어 둡니다.
 
 - Apple Developer ID 서명·공증이 없어 첫 실행 때 직접 허용해야 합니다.
-- 자동 업데이트가 없습니다. 새 버전은 릴리스에서 직접 받습니다.
+- 자동 업데이트가 없습니다. 새 버전은 릴리스에서 직접 받거나 Homebrew로 올립니다.
 - 웹 연결 확장은 Chrome 웹 스토어에 없어 개발자 모드로 직접 추가해야 하고, 사용량 페이지가 한국어 또는 영어여야 합니다.
-- 앱 화면은 한국어만 지원합니다.
+- 앱 화면은 한국어와 영어만 지원합니다.
 - macOS 13 및 모든 Mac 기종에서 실제 설치·실행을 검증한 것은 아닙니다.
 
 개선 제안이나 지원했으면 하는 서비스가 있다면 [이슈](https://github.com/hong-minji/ai-usage-bar/issues)로 알려주세요.
@@ -276,15 +283,15 @@ node --test ChromeExtension/*tests.cjs # 확장 검사 (Node.js 필요)
 ./build/AIUsageBar.app/Contents/MacOS/AIUsageBar --once # 실제 연결 1회 조회
 ```
 
-`v1.3.0`에서 Swift 검사 149개와 확장 테스트 41개, 통합 빌드, ZIP 압축 해제·서명 검증을 통과했습니다. 실제 연결 검증 범위는 릴리스 노트에 기록합니다. GPT는 제공되는 플랜 사용량을 표시하며 별도 채팅 횟수를 추정하지 않습니다.
+`v1.4.0`에서 Swift 검사 200개와 확장 테스트 48개, 통합 빌드, ZIP 압축 해제·서명 검증을 통과했습니다. 실제 연결 검증 범위는 릴리스 노트에 기록합니다. GPT는 제공되는 플랜 사용량을 표시하며 별도 채팅 횟수를 추정하지 않습니다.
 
 릴리스의 ZIP과 `.sha256` 파일을 같은 폴더에 저장하면 터미널에서 파일 무결성을 확인할 수 있습니다.
 
 ```sh
-shasum -a 256 -c AIUsageBar-1.3.0-universal.zip.sha256
+shasum -a 256 -c AIUsageBar-1.4.0-universal.zip.sha256
 ```
 
-쓰는 서비스를 직접 추가하고 싶다면 [개발·기여 가이드](CONTRIBUTING.md)에 순서가 정리되어 있습니다. · [Chrome 확장](ChromeExtension/) · [릴리스 노트](docs/releases/v1.3.0.md)
+쓰는 서비스를 직접 추가하고 싶다면 [개발·기여 가이드](CONTRIBUTING.md)에 순서가 정리되어 있습니다. · [Chrome 확장](ChromeExtension/) · [릴리스 노트](docs/releases/v1.4.0.md)
 
 ## 도움이 됐다면
 

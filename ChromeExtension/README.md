@@ -11,6 +11,8 @@ Reads displayed Claude, GPT and Gemini usage figures into the local app. Claude 
 3. 압축해제된 확장 프로그램 로드 → `⌘⇧G` → 복사된 경로 붙여넣기 → 폴더 선택. / Load unpacked, press `⌘⇧G`, paste and select the folder.
 4. **AI 사용량 · 웹 연결** 팝업에서 Claude / GPT 연결을 켜고 지금 갱신을 누릅니다. Gemini는 자동 연결됩니다. / Enable Claude and/or GPT in the popup and refresh. Gemini connects automatically.
 
+확장 이름과 팝업은 Chrome 언어를 따라 한국어 또는 영어로 표시됩니다. 영어에서는 **AI Usage Bar · Web Connection**입니다. / The extension name and popup follow Chrome's language, in Korean or English.
+
 v1.1.1에서 업데이트하면 확장을 새로고침하고 새 사이트 권한을 확인하세요. / Reload and review new site permissions when upgrading from v1.1.1.
 
 ## 데이터 / Data
@@ -35,7 +37,9 @@ Claude 콘텐츠 스크립트는 `/settings/usage`와 `/new`에서 로드되지�
 node --test ChromeExtension/*tests.cjs
 ```
 
-`fixtures/` contains only sanitized quota-section excerpts; no names, emails, account IDs, cookies or tokens. Only runtime JS, HTML and the manifest are bundled in the released app.
+`fixtures/` contains only sanitized quota-section excerpts; no names, emails, account IDs, cookies or tokens. Only runtime JS, HTML, the manifest and the `_locales` catalogs are bundled in the released app.
+
+Popup and manifest text lives in `_locales/ko` and `_locales/en`. `i18n-tests.cjs` fails if the two catalogs drift apart or the popup uses a missing key. The window labels `5시간`, `주간` and `사용량` are protocol values shared with the app; they are translated only for display.
 
 The internal `codex` report/cache identifier remains unchanged for compatibility. The visible label is GPT.
 
