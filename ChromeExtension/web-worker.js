@@ -15,8 +15,14 @@
     await chrome.alarms.clear('web-timeout.'+id);
     if(!record) return;
     try {
-      const tab=await chrome.tabs.get(record.tabId);
-      if(!tab.active && !record.userTouched && !touched.has(record.tabId)) await chrome.tabs.remove(record.tabId);
+      // A minimized poll window closes as a whole: its tab is the window's
+      // active tab, so removing the tab alone would leave the window behind.
+      if(record.windowId!==undefined) {
+        if(!record.userTouched && !touched.has(record.tabId)) await chrome.windows.remove(record.windowId);
+      } else {
+        const tab=await chrome.tabs.get(record.tabId);
+        if(!tab.active && !record.userTouched && !touched.has(record.tabId)) await chrome.tabs.remove(record.tabId);
+      }
     } catch (_) {}
     touched.delete(record.tabId);
   }
@@ -34,14 +40,28 @@
   function failure(id,state='unavailable') {
     return {version:2,provider:id,status:state,sourceURL:p.URLS[id],observedAt:new Date().toISOString(),used:[],labels:[]};
   }
+  // A poll must never raise a window the user did not open: a background tab
+  // while a normal window exists, or a minimized window when Chrome is running
+  // windowless -- its usual state on macOS after the last window closes, where
+  // tabs.create would otherwise pop a new window every 10 minutes.
+  async function openPollTab(url) {
+    const windows=await chrome.windows.getAll({windowTypes:['normal']});
+    if(windows.some(w=>w.state!=='minimized')) {
+      const tab=await chrome.tabs.create({url,active:false});
+      return {tab,windowId:undefined};
+    }
+    const win=await chrome.windows.create({url,state:'minimized',focused:false});
+    if(!win?.tabs?.length) throw new Error('no poll tab');
+    return {tab:win.tabs[0],windowId:win.id};
+  }
   async function poll(id) {
     if(!Object.hasOwn(p.URLS,id) || !await enabled(id)) return {started:false};
     const record=await pending(id);
     if(record && Date.now()-record.startedAt<60000) return {started:false};
     await finish(id);
     try {
-      const tab=await chrome.tabs.create({url:p.URLS[id],active:false});
-      await chrome.storage.session.set({[key(id)]:{tabId:tab.id,startedAt:Date.now(),userTouched:touched.has(tab.id)}});
+      const home=await openPollTab(p.URLS[id]);
+      await chrome.storage.session.set({[key(id)]:{tabId:home.tab.id,windowId:home.windowId,startedAt:Date.now(),userTouched:touched.has(home.tab.id)}});
       await chrome.alarms.create('web-timeout.'+id,{when:Date.now()+35000});
       await status(id,{state:'loading'});
       return {started:true};

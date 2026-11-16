@@ -23,6 +23,15 @@ async function status(values) {
 async function closeOwnedTab(record) {
   if (!record) return;
   try {
+    // A window opened minimized just for the poll is removed whole: its tab is
+    // the active tab of that window, so closing the tab alone would leave the
+    // window behind. A window the user restored counts as touched, not ours.
+    if (record.windowId !== undefined) {
+      if (!record.userTouched && !userTouchedTabs.has(record.tabId)) {
+        await chrome.windows.remove(record.windowId);
+      }
+      return;
+    }
     const tab = await chrome.tabs.get(record.tabId);
     // Chrome may redirect to sign-in or its SPA may drop the marker fragment.
     // Ownership comes from the session-stored tab ID, not the current URL. A tab
@@ -52,6 +61,23 @@ async function deliver(value) {
   }
 }
 
+// A poll must never raise a window the user did not open. While a normal
+// window exists, active:false leaves their current tab selected. Chrome on
+// macOS keeps running after the last window is closed, and tabs.create would
+// then pop a fresh window every 10 minutes, so a windowless poll loads in a
+// minimized window that closeOwnedTab removes whole. Minimized windows do not
+// count as open, so overlapping polls never share one hidden window.
+async function openPollTab(url) {
+  const windows = await chrome.windows.getAll({ windowTypes: ['normal'] });
+  if (windows.some(w => w.state !== 'minimized')) {
+    const tab = await chrome.tabs.create({ url, active: false });
+    return { tab, windowId: undefined };
+  }
+  const win = await chrome.windows.create({ url, state: 'minimized', focused: false });
+  if (!win?.tabs?.length) throw new Error('no poll tab');
+  return { tab: win.tabs[0], windowId: win.id };
+}
+
 async function poll() {
   await parser.syncAccount();
   const previous = await pending();
@@ -59,10 +85,10 @@ async function poll() {
   if (previous) await finish(previous);
   const nonce = crypto.randomUUID();
   try {
-    // Reuse the user's signed-in profile. active:false leaves their current tab
-    // selected; no passwords, cookies or remote-debugging port are needed.
-    const tab = await chrome.tabs.create({ url: parser.USAGE_URL + '#ai-usage-bar=' + nonce, active: false });
-    await chrome.storage.session.set({ pending: { tabId: tab.id, nonce, startedAt: Date.now(), userTouched: userTouchedTabs.has(tab.id) } });
+    // Reuse the user's signed-in profile; no passwords, cookies or
+    // remote-debugging port are needed. openPollTab keeps the poll invisible.
+    const home = await openPollTab(parser.USAGE_URL + '#ai-usage-bar=' + nonce);
+    await chrome.storage.session.set({ pending: { tabId: home.tab.id, windowId: home.windowId, nonce, startedAt: Date.now(), userTouched: userTouchedTabs.has(home.tab.id) } });
     await chrome.alarms.create(DEADLINE, { when: Date.now() + 35000 });
     await status({ state: 'loading' });
     return { started: true };
