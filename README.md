@@ -22,7 +22,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/hong-minji/ai-usage-bar/releases/download/v1.4.0/AIUsageBar-1.4.0-universal.zip"><b>↓ Mac용 다운로드 — v1.4.0</b></a>
+  <a href="https://github.com/hong-minji/ai-usage-bar/releases/download/v1.4.1/AIUsageBar-1.4.1-universal.zip"><b>↓ Mac용 다운로드 — v1.4.1</b></a>
   &nbsp;·&nbsp; <a href="#설치">설치</a>
   &nbsp;·&nbsp; <a href="#연결-방법">연결 방법</a>
   &nbsp;·&nbsp; <a href="https://hong-minji.github.io/ai-usage-bar/">소개 페이지</a>
@@ -56,7 +56,7 @@ Claude(클로드), ChatGPT(챗GPT)·Codex, Gemini(제미나이), Antigravity의 
 
 터미널도 Xcode·Homebrew·Node.js도 필요 없습니다.
 
-1. **[AIUsageBar-1.4.0-universal.zip](https://github.com/hong-minji/ai-usage-bar/releases/download/v1.4.0/AIUsageBar-1.4.0-universal.zip)** 을 내려받습니다. Apple Silicon·Intel 중 고를 필요가 없습니다.
+1. **[AIUsageBar-1.4.1-universal.zip](https://github.com/hong-minji/ai-usage-bar/releases/download/v1.4.1/AIUsageBar-1.4.1-universal.zip)** 을 내려받습니다. Apple Silicon·Intel 중 고를 필요가 없습니다.
 2. ZIP을 더블클릭해 압축을 풉니다. `AIUsageBar.app`, `START-HERE.txt`, `LICENSE.txt`가 들어 있습니다.
 3. **앱을 응용 프로그램 폴더로 옮긴 뒤** 실행합니다. Chrome 연결 전에 설치 위치를 정해주세요.
 4. 화면 위쪽 메뉴바에서 앱을 열고 **설정… → 표시 항목**에서 쓰는 서비스만 남겨둡니다. Dock 아이콘은 없습니다.
@@ -284,15 +284,15 @@ node --test ChromeExtension/*tests.cjs # 확장 검사 (Node.js 필요)
 ./build/AIUsageBar.app/Contents/MacOS/AIUsageBar --once # 실제 연결 1회 조회
 ```
 
-`v1.4.0`에서 Swift 검사 200개와 확장 테스트 48개, 통합 빌드, ZIP 압축 해제·서명 검증을 통과했습니다. 실제 연결 검증 범위는 릴리스 노트에 기록합니다. GPT는 제공되는 플랜 사용량을 표시하며 별도 채팅 횟수를 추정하지 않습니다.
+`v1.4.1`에서 Swift 검사 200개와 확장 테스트 52개, 통합 빌드, ZIP 압축 해제·서명 검증을 통과했습니다. 실제 연결 검증 범위는 릴리스 노트에 기록합니다. GPT는 제공되는 플랜 사용량을 표시하며 별도 채팅 횟수를 추정하지 않습니다.
 
 릴리스의 ZIP과 `.sha256` 파일을 같은 폴더에 저장하면 터미널에서 파일 무결성을 확인할 수 있습니다.
 
 ```sh
-shasum -a 256 -c AIUsageBar-1.4.0-universal.zip.sha256
+shasum -a 256 -c AIUsageBar-1.4.1-universal.zip.sha256
 ```
 
-쓰는 서비스를 직접 추가하고 싶다면 [개발·기여 가이드](CONTRIBUTING.md)에 순서가 정리되어 있습니다. · [Chrome 확장](ChromeExtension/) · [릴리스 노트](docs/releases/v1.4.0.md)
+쓰는 서비스를 직접 추가하고 싶다면 [개발·기여 가이드](CONTRIBUTING.md)에 순서가 정리되어 있습니다. · [Chrome 확장](ChromeExtension/) · [릴리스 노트](docs/releases/v1.4.1.md)
 
 ## 도움이 됐다면
 

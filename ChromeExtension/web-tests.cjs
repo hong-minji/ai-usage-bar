@@ -35,13 +35,13 @@ test('messages are bounded, fresh and cannot substitute a different provider', (
 const vm = require('node:vm');
 function event(){const handlers=[];return {addListener:f=>handlers.push(f),emit:(...args)=>Promise.all(handlers.map(f=>f(...args)))}};
 function area(){const data={};return {data,async get(k){return {[k]:data[k]}},async set(v){Object.assign(data,structuredClone(v))},async remove(k){delete data[k]}}};
-function worker(initial={}) {
-  let id=0,works=true;
-  const tabs=new Map(),removed=[],native=[];
-  const chrome={storage:{local:area(),session:area()},runtime:{onInstalled:event(),onStartup:event(),onMessage:event(),getURL:s=>'chrome-extension://test/'+s,async sendNativeMessage(host,v){if(!works)throw Error('host');native.push(structuredClone(v));return {ok:true}}},tabs:{onRemoved:event(),onActivated:event(),async create(v){const t={...v,id:++id};tabs.set(id,t);return t},async get(i){if(!tabs.has(i))throw Error('missing');return tabs.get(i)},async remove(i){tabs.delete(i);removed.push(i)}},alarms:{onAlarm:event(),async create(){},async clear(){}}};
+function worker(initial={},openWindows=1) {
+  let id=0,works=true,nextWin=0;
+  const tabs=new Map(),removed=[],native=[],createdWindows=[],closedWindows=[];
+  const chrome={storage:{local:area(),session:area()},runtime:{onInstalled:event(),onStartup:event(),onMessage:event(),getURL:s=>'chrome-extension://test/'+s,async sendNativeMessage(host,v){if(!works)throw Error('host');native.push(structuredClone(v));return {ok:true}}},tabs:{onRemoved:event(),onActivated:event(),async create(v){const t={...v,id:++id};tabs.set(id,t);return t},async get(i){if(!tabs.has(i))throw Error('missing');return tabs.get(i)},async remove(i){tabs.delete(i);removed.push(i)}},windows:{async getAll(){return Array.from({length:openWindows},(_,i)=>({id:i+1,state:'normal'}))},async create(v){const t={id:++id,active:true,url:v.url};tabs.set(t.id,t);const w={id:1000+nextWin++,state:v.state,tabs:[t]};createdWindows.push({...v,id:w.id});return w},async remove(i){closedWindows.push(i)}},alarms:{onAlarm:event(),async create(){},async clear(){}}};
   Object.assign(chrome.storage.local.data,initial);
   vm.runInNewContext(fs.readFileSync(__dirname+'/web-worker.js','utf8'),{chrome,WebUsageParser:p,Date,Promise,Set});
-  return {chrome,tabs,removed,native,failHost(){works=false},message:(m,s={url:'chrome-extension://test/popup.html'})=>new Promise(resolve=>chrome.runtime.onMessage.emit(m,s,resolve)),async alarm(name){await chrome.alarms.onAlarm.emit({name})}};
+  return {chrome,tabs,removed,native,createdWindows,closedWindows,failHost(){works=false},message:(m,s={url:'chrome-extension://test/popup.html'})=>new Promise(resolve=>chrome.runtime.onMessage.emit(m,s,resolve)),async alarm(name){await chrome.alarms.onAlarm.emit({name})}};
 }
 test('web polling is opt-in and separate per provider; concurrent refresh coalesces',async()=>{
   const h=worker(); await h.alarm('web-refresh'); assert.equal(h.tabs.size,0);
@@ -101,4 +101,21 @@ test('manual mode suppresses automatic web polling without losing enabled provid
   assert.equal(h.tabs.size,0);
   await h.message({kind:'webRefresh',provider:'codex'});
   assert.equal(h.tabs.size,1);assert.deepEqual(h.chrome.storage.local.data.webEnabled,['claude','codex']);
+});
+test('windowless Chrome hides web polls in a minimized window closed whole',async()=>{
+  const h=worker({webEnabled:['claude']},0);await h.alarm('web-refresh');
+  assert.equal(h.createdWindows.length,1);assert.equal(h.createdWindows[0].state,'minimized');
+  assert.equal(h.createdWindows[0].focused,false);
+  const record=h.chrome.storage.session.data['webPending.claude'];
+  assert.equal(record.windowId,h.createdWindows[0].id);
+  await h.alarm('web-timeout.claude');
+  assert.deepEqual(h.closedWindows,[record.windowId]);assert.deepEqual(h.removed,[]);
+  assert.equal(h.chrome.storage.session.data['webPending.claude'],undefined);
+});
+test('a web poll window the user restored is left open',async()=>{
+  const h=worker({webEnabled:['claude']},0);await h.alarm('web-refresh');
+  const record=h.chrome.storage.session.data['webPending.claude'];
+  await h.chrome.tabs.onActivated.emit({tabId:record.tabId});
+  await h.alarm('web-timeout.claude');
+  assert.deepEqual(h.closedWindows,[]);assert.deepEqual(h.removed,[]);
 });

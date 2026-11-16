@@ -22,7 +22,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/hong-minji/ai-usage-bar/releases/download/v1.4.0/AIUsageBar-1.4.0-universal.zip"><b>↓ Download for Mac — v1.4.0</b></a>
+  <a href="https://github.com/hong-minji/ai-usage-bar/releases/download/v1.4.1/AIUsageBar-1.4.1-universal.zip"><b>↓ Download for Mac — v1.4.1</b></a>
   &nbsp;·&nbsp; <a href="#install">Install</a>
   &nbsp;·&nbsp; <a href="#connect-your-services">Connect</a>
   &nbsp;·&nbsp; <a href="https://hong-minji.github.io/ai-usage-bar/en/">Website</a>
@@ -65,7 +65,7 @@ GPT (plan usage)  Chrome web
 
 No terminal, Xcode, Homebrew or Node.js required.
 
-1. Download **[AIUsageBar-1.4.0-universal.zip](https://github.com/hong-minji/ai-usage-bar/releases/download/v1.4.0/AIUsageBar-1.4.0-universal.zip)**. The same file supports Apple Silicon and Intel.
+1. Download **[AIUsageBar-1.4.1-universal.zip](https://github.com/hong-minji/ai-usage-bar/releases/download/v1.4.1/AIUsageBar-1.4.1-universal.zip)**. The same file supports Apple Silicon and Intel.
 2. Double-click the ZIP to extract it. It contains `AIUsageBar.app`, `START-HERE.txt` and `LICENSE.txt`.
 3. **Move the app to Applications before opening it.** Choose its permanent location before connecting Chrome.
 4. Find the app in the menu bar at the top of the screen. Open **Settings… → Show** and keep only the services you use. There is no Dock icon.
@@ -293,15 +293,15 @@ node --test ChromeExtension/*tests.cjs # Extension tests; requires Node.js
 ./build/AIUsageBar.app/Contents/MacOS/AIUsageBar --once # One live check
 ```
 
-For `v1.4.0`, 200 Swift checks and 48 extension tests passed, along with the universal build, ZIP extraction and signature verification. Live verification scope is recorded in the release notes. GPT shows the reported plan allowance; it does not estimate a separate chat counter.
+For `v1.4.1`, 200 Swift checks and 52 extension tests passed, along with the universal build, ZIP extraction and signature verification. Live verification scope is recorded in the release notes. GPT shows the reported plan allowance; it does not estimate a separate chat counter.
 
 To verify file integrity, download the release ZIP and its `.sha256` file into the same folder, then run:
 
 ```sh
-shasum -a 256 -c AIUsageBar-1.4.0-universal.zip.sha256
+shasum -a 256 -c AIUsageBar-1.4.1-universal.zip.sha256
 ```
 
-Want to add a service you use? The steps are in the [contributing guide](CONTRIBUTING.md). · [Chrome extension](ChromeExtension/) · [Release notes](docs/releases/v1.4.0.md)
+Want to add a service you use? The steps are in the [contributing guide](CONTRIBUTING.md). · [Chrome extension](ChromeExtension/) · [Release notes](docs/releases/v1.4.1.md)
 
 ## If it helps
 

@@ -98,12 +98,14 @@ function storageArea() {
     async remove(key) { delete data[key]; },
   };
 }
-function harness(initialRecord) {
+function harness(initialRecord, openWindows = 1) {
   let nextId = 1;
   const tabs = new Map();
   const removed = [];
   const native = [];
   const alarms = new Map();
+  const createdWindows = [];
+  const closedWindows = [];
   let hostWorks = true;
   const chrome = {
     storage: { local: storageArea(), session: storageArea() },
@@ -122,6 +124,17 @@ function harness(initialRecord) {
       async get(id) { if (!tabs.has(id)) throw new Error('missing'); return tabs.get(id); },
       async remove(id) { removed.push(id); tabs.delete(id); },
     },
+    windows: {
+      async getAll() { return Array.from({ length: openWindows }, (_, index) => ({ id: index + 1, state: 'normal' })); },
+      async create(options) {
+        const tab = { id: nextId++, active: true, url: options.url };
+        tabs.set(tab.id, tab);
+        const window = { id: 1000 + createdWindows.length, state: options.state, tabs: [tab] };
+        createdWindows.push({ options, id: window.id });
+        return window;
+      },
+      async remove(id) { closedWindows.push(id); },
+    },
     alarms: {
       onAlarm: event(),
       async create(name, options) { alarms.set(name, options); },
@@ -136,7 +149,7 @@ function harness(initialRecord) {
   const context = vm.createContext({ chrome, GeminiUsageParser: parser, importScripts() {}, URL, Date, Promise, crypto: { randomUUID } });
   vm.runInContext(fs.readFileSync(__dirname + '/worker.js', 'utf8'), context);
   return {
-    chrome, tabs, removed, native, alarms,
+    chrome, tabs, removed, native, alarms, createdWindows, closedWindows,
     hostFails() { hostWorks = false; },
     async start() { await chrome.runtime.onInstalled.emit(); },
     message(message, sender) { return new Promise(resolve => chrome.runtime.onMessage.emit(message, sender, resolve)); },
@@ -249,4 +262,27 @@ test('manual mode stops Gemini automatic polls but permits explicit refresh', as
   assert.equal(h.tabs.size,0);
   await h.message({kind:'refresh'},{url:'chrome-extension://test/popup.html'});
   assert.equal(h.tabs.size,1);
+});
+test('windowless Chrome hides the poll in a minimized window that is closed whole', async () => {
+  const h = harness(null, 0);
+  await h.start();
+  const record = h.chrome.storage.session.data.pending;
+  assert.equal(h.createdWindows.length, 1);
+  assert.equal(h.createdWindows[0].options.state, 'minimized');
+  assert.equal(h.createdWindows[0].options.focused, false);
+  assert.equal(record.windowId, h.createdWindows[0].id);
+  assert.ok([...h.tabs.keys()].includes(record.tabId), 'the poll tab lives inside the created window');
+  await h.chrome.alarms.onAlarm.emit({ name: 'gemini-usage-timeout' });
+  assert.deepEqual(h.closedWindows, [record.windowId]);
+  assert.deepEqual(h.removed, []);
+  assert.equal(h.chrome.storage.session.data.pending, undefined);
+});
+test('a minimized poll window the user restored is left open', async () => {
+  const h = harness(null, 0);
+  await h.start();
+  const record = h.chrome.storage.session.data.pending;
+  await h.chrome.tabs.onActivated.emit({ tabId: record.tabId });
+  await h.chrome.alarms.onAlarm.emit({ name: 'gemini-usage-timeout' });
+  assert.deepEqual(h.closedWindows, []);
+  assert.deepEqual(h.removed, []);
 });

@@ -1,4 +1,4 @@
-AI Usage Bar v1.4.0 — 한국어 / English
+AI Usage Bar v1.4.1 — 한국어 / English
 
 https://github.com/hong-minji/ai-usage-bar
 한국어: https://github.com/hong-minji/ai-usage-bar#readme
